@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { ParametroModelo } from 'src/app/modelos/parametro.modelo';
 import { ParametrosService } from 'src/app/servicios/parametros.service';
 import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-medicamento',
@@ -23,7 +24,8 @@ export class MedicamentoComponent implements OnInit {
   listaUnidadMedida: ParametroModelo;
   opcion = "";
 
-  constructor( private medicamentosService: MedicamentosService,
+  constructor( private tokenService: TokenService,
+               private medicamentosService: MedicamentosService,
                private parametrosService: ParametrosService,
                private route: ActivatedRoute,
                private router: Router,
@@ -76,11 +78,11 @@ export class MedicamentoComponent implements OnInit {
 
     if ( medicamento.medicamentoId ) {
       //Modificar
-      medicamento.usuarioModificacion = 'admin';
+      medicamento.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.medicamentosService.actualizarMedicamento( medicamento );
     } else {
       //Agregar
-      medicamento.usuarioCreacion = 'admin';
+      medicamento.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.medicamentosService.crearMedicamento( medicamento);
     }
 
@@ -103,7 +105,7 @@ export class MedicamentoComponent implements OnInit {
       });
     }, e => {Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: this.comunes.obtenerError(e),
             })
        }

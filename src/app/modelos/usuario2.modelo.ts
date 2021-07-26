@@ -1,5 +1,6 @@
 import { PersonaModelo } from './persona.modelo';
 import { FuncionarioModelo } from './funcionario.modelo';
+import { RolModelo } from './rol.modelo';
 
 export class Usuario2Modelo {
 
@@ -11,7 +12,7 @@ export class Usuario2Modelo {
     usuarioCreacion: string;
     fechaModificacion: Date;
     usuarioModificacion: string;
-    personas: PersonaModelo;
+    roles: Set<RolModelo>;
     funcionarios: FuncionarioModelo
 
     constructor() {

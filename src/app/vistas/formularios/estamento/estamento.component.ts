@@ -8,6 +8,7 @@ import { EstamentoModelo } from '../../../modelos/estamento.modelo';
 import { EstamentosService } from '../../../servicios/estamentos.service';
 
 import Swal from 'sweetalert2';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-estamento',
@@ -20,7 +21,8 @@ export class EstamentoComponent implements OnInit {
   alertGuardar:boolean=false;
   estamento: EstamentoModelo = new EstamentoModelo();
 
-  constructor( private estamentosService: EstamentosService,
+  constructor( private tokenService: TokenService,
+               private estamentosService: EstamentosService,
                private route: ActivatedRoute,
                private router: Router,
                private comunes: ComunesService,
@@ -71,11 +73,11 @@ export class EstamentoComponent implements OnInit {
 
     if ( this.estamento.estamentoId ) {
       //Modificar
-      this.estamento.usuarioModificacion = 'admin';
+      this.estamento.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.estamentosService.actualizarEstamento( this.estamento );
     } else {
       //Agregar
-      this.estamento.usuarioCreacion = 'admin';
+      this.estamento.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.estamentosService.crearEstamento( this.estamento );
     }
 
@@ -98,7 +100,7 @@ export class EstamentoComponent implements OnInit {
       });
     }, e => {Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }

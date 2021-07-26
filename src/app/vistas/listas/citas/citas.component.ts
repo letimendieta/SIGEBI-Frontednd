@@ -47,7 +47,8 @@ export class CitasComponent implements OnDestroy, OnInit {
   buscador: CitaModelo = new CitaModelo();
   cargando = false;
   alert:boolean=false;
-
+  loadBuscadorPacientes = false;
+  loadBuscadorFuncionarios = false;
 
   constructor( private citasService: CitasService,
               public router: Router,
@@ -136,7 +137,7 @@ export class CitasComponent implements OnDestroy, OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
@@ -160,18 +161,20 @@ export class CitasComponent implements OnDestroy, OnInit {
       this.alert=true;
       return;
     }
-    this.cargando = true;
+    
+    this.loadBuscadorPacientes = true;
     this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
     .subscribe( resp => {
+      this.loadBuscadorPacientes = false;
       this.pacientes = resp;
       this.cargando = false;
     }, e => {
+      this.loadBuscadorPacientes = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
-      this.cargando = false;
     });
   }
 
@@ -185,17 +188,19 @@ export class CitasComponent implements OnDestroy, OnInit {
     persona.apellidos = this.buscadorFuncionariosForm.get('apellidos').value;
     buscador.personas = persona;
     buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
+
+    this.loadBuscadorFuncionarios = true;
     this.funcionariosService.buscarFuncionariosFiltros(buscador)
     .subscribe( resp => {
+      this.loadBuscadorFuncionarios = false;
       this.funcionarios = resp;
-      this.cargando = false;
     }, e => {
+      this.loadBuscadorFuncionarios = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
-      this.cargando = false;
     });
   }
 
@@ -344,7 +349,7 @@ export class CitasComponent implements OnDestroy, OnInit {
         }, e => {            
             Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: this.comunes.obtenerError(e)
             })
           }

@@ -46,7 +46,9 @@
                 <!--Modal buscador de pacientes-->
                 <ng-template #modalPacientes let-modal>
                   <div class="modal-header">
-                  <h3 class="modal-title" id="modalPacientesLabel">Buscador Pacientes</h3>
+                  <h3 class="modal-title" id="modalPacientesLabel">Buscador Pacientes
+                    <img *ngIf="loadBuscadorPacientes" src="../assets/images/loading2.gif">
+                  </h3>
                   <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
                         <span aria-hidden="true">&times;</span> 
                   </button>
@@ -76,11 +78,13 @@
                                 <input matInput type="text" placeholder="Apellidos" 
                                       formControlName="apellidos" id="apellidos">
                           </mat-form-field>
-                        </div>
-                        &nbsp;                                                                            
+                        </div>                       
+                      </div>
+                      <div class="form-row justify-content-center">
                         <div class="align-self-center">
-                              <button type="submit" hidden="true" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
-                              <button (click)="limpiarModalPacientes($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                          <button type="submit" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+                          &nbsp; &nbsp;
+                          <button (click)="limpiarModalPacientes($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
                         </div>
                       </div>
                     </form>
@@ -181,7 +185,9 @@
               <!--Modal buscador de funcionarios-->
               <ng-template #modalFuncionarios let-modal>
                 <div class="modal-header">
-                <h3 class="modal-title" id="modalFuncionariosLabel">Buscador Funcionarios</h3>
+                <h3 class="modal-title" id="modalFuncionariosLabel">Buscador Funcionarios
+                  <img *ngIf="loadBuscadorFuncionarios" src="../assets/images/loading2.gif">
+                </h3>
                 <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
                       <span aria-hidden="true">&times;</span> 
                 </button>
@@ -211,12 +217,14 @@
                                               <input matInput type="text" placeholder="Apellidos" 
                                                     formControlName="apellidos" id="apellidos">
                                         </mat-form-field>
-                                  </div>
-                                  &nbsp;                                                                            
-                                  <div class="align-self-center">
-                                        <button type="submit" hidden="true" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
-                                        <button (click)="limpiarModalFuncionarios($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
-                                  </div>
+                                  </div>                                  
+                            </div>
+                            <div class="form-row justify-content-center">
+                              <div class="align-self-center">
+                                <button type="submit" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+                                &nbsp; &nbsp;
+                                <button (click)="limpiarModalFuncionarios($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                              </div>
                             </div>
                       </form>
                       <br>

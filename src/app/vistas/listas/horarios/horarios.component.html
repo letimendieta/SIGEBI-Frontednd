@@ -28,7 +28,9 @@
                   formControlName="fecha" name="fecha" id="fecha">
               </mat-form-field>
             </p>
-          
+          </div>
+          &nbsp;&nbsp; 
+          <div>
             <p>
               <mat-form-field appearance="fill">
                 <mat-label>Estado</mat-label>
@@ -38,7 +40,9 @@
                   <mat-option value="I">INACTIVO</mat-option>
                 </mat-select>
               </mat-form-field>
+            </p>
 
+            <p>
               <mat-form-field appearance="fill">
                 <mat-label>&Aacute;rea</mat-label>
                 <mat-select formControlName="areaId" name="areaId">
@@ -48,10 +52,10 @@
                     {{item.codigo}} - {{item.descripcion}}</mat-option>
                 </mat-select>
               </mat-form-field>              
-            </p>       
+            </p>      
 
           </div>
-
+          &nbsp;&nbsp; 
           <div formGroupName="funcionarios"> 
             <p>
               <mat-form-field appearance="fill">
@@ -59,14 +63,15 @@
                 <input matInput matInput type="number" placeholder="Funcionario id" 
                   formControlName="funcionarioId" name="funcionarioId" id="funcionarioId">
               </mat-form-field>
-
+            </p>
+            <p>
               <mat-form-field appearance="fill">
                 <mat-label>Funcionario c&eacute;dula</mat-label>
                 <input matInput matInput type="text" placeholder="Funcionario c&eacute;dula" 
                   formControlName="cedula" name="cedula" id="cedula">
               </mat-form-field>
             </p>
-            <p>
+            <!--p>
               <mat-form-field appearance="fill">
                 <mat-label>Funcionario nombres</mat-label>
                 <input matInput matInput type="text" placeholder="Funcionario nombres" 
@@ -78,7 +83,7 @@
                 <input matInput matInput type="text" placeholder="Funcionario apellidos" 
                   formControlName="apellidos" name="apellidos" id="apellidos">
               </mat-form-field>
-            </p>           
+            </p-->           
           </div> 
           &nbsp; &nbsp; &nbsp;
           <div class="align-self-center">

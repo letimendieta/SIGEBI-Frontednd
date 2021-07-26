@@ -7,7 +7,8 @@ import { TokenService } from '../servicios/token.service';
 })
 export class EstamentosGuardService implements CanActivate {
 
-  realRol: string;
+  realRol = [];
+  autorized : boolean = false;
 
   constructor(
     private tokenService: TokenService,
@@ -15,15 +16,30 @@ export class EstamentosGuardService implements CanActivate {
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    this.autorized = false;
+    this.realRol = [];
     const expectedRol = route.data.expectedRol;
     const roles = this.tokenService.getAuthorities();
-    this.realRol = 'user';
+    this.realRol.push('user');
     roles.forEach(rol => {
-      if (rol === 'ROLE_ADMIN') {
-        this.realRol = 'admin';
+      if( rol === 'ROL_ADMIN' ) {
+        this.realRol.push('admin');
+      }
+      if( rol === 'ROL_CONFIGURACIONES' ){
+        this.realRol.push('configuraciones');
+      }
+      if( rol === 'ROL_ABM_CONFIGURACION' ){
+        this.realRol.push('configuracion');
       }
     });
-    if (!this.tokenService.getToken() || expectedRol.indexOf(this.realRol) === -1) {
+    
+    this.realRol.forEach( real => {
+      if( expectedRol.indexOf(real) > -1 ){
+        this.autorized = true;
+      }
+    })
+
+    if (!this.tokenService.getToken() || !this.autorized ) {
       this.router.navigate(['/']);
       return false;
     }

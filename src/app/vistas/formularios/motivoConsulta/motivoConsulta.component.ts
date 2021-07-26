@@ -7,6 +7,7 @@ import { MotivoConsultaModelo } from '../../../modelos/motivoConsulta.modelo';
 import { MotivosConsultaService } from '../../../servicios/motivosConsulta.service';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import Swal from 'sweetalert2';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-motivoConsulta',
@@ -19,7 +20,8 @@ export class MotivoConsultaComponent implements OnInit {
   alertGuardar:boolean=false;
   motivoConsulta: MotivoConsultaModelo = new MotivoConsultaModelo();
 
-  constructor( private motivosConsultaService: MotivosConsultaService,
+  constructor( private tokenService: TokenService,
+               private motivosConsultaService: MotivosConsultaService,
                private route: ActivatedRoute,
                private comunes: ComunesService,
                private router: Router,
@@ -70,11 +72,11 @@ export class MotivoConsultaComponent implements OnInit {
 
     if ( this.motivoConsulta.motivoConsultaId ) {
       //Modificar
-      this.motivoConsulta.usuarioModificacion = 'admin';
+      this.motivoConsulta.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.motivosConsultaService.actualizarMotivoConsulta( this.motivoConsulta );
     } else {
       //Agregar
-      this.motivoConsulta.usuarioCreacion = 'admin';
+      this.motivoConsulta.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.motivosConsultaService.crearMotivoConsulta( this.motivoConsulta );
     }
 
@@ -97,7 +99,7 @@ export class MotivoConsultaComponent implements OnInit {
       });
     }, e => {Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }

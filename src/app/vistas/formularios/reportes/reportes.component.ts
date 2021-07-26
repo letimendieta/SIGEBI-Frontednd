@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { Reporte2Modelo } from '../../../modelos/reporte2.modelo';
 import { ReportesService } from '../../../servicios/reportes.service';
 import { ComunesService } from '../../../servicios/comunes.service';
@@ -28,10 +27,8 @@ export class ReportesComponent implements OnInit {
     this.crearFormulario();
   }              
 
-  ngOnInit() {
-    
-      this.crear = true;
-    
+  ngOnInit() {    
+    this.crear = true;    
   }  
 
   guardar( ) {
@@ -48,87 +45,54 @@ export class ReportesComponent implements OnInit {
       });
     }
     
-
     var reporte = new Reporte2Modelo();
-
- 
 
     reporte = this.reporteForm.getRawValue();
 
+    Swal.fire({
+      title: 'Espere',
+      text: 'Generando reporte',
+      icon: 'info',
+      allowOutsideClick: false
+    });
+    Swal.showLoading();
 
-      this.reportesService
-      .generarReporte(reporte)
-      .subscribe(
-        data => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Reporte ',
-            text: 'reporte generado'
-          }).then( resp => {
-            const file = new Blob([data], { type: 'application/pdf' });
-            const fileURL = URL.createObjectURL(file);
-            window.open(fileURL);
-    if ( resp.value ) {
-     
-        this.limpiar();
-    }
-  });
-  
-        }, e => {      
-          Swal.fire({
-            icon: 'info',
-            title: 'Algo salio mal',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
-          })
-        });
-
-
+    this.reportesService.generarReporte(reporte).subscribe(
+      data => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Reporte ',
+          text: 'reporte generado'
+        }).then( resp => {
+          const file = new Blob([data], { type: 'application/pdf' });
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL);
+        if ( resp.value ) {     
+            this.limpiar();
+        }
+      });  
+      }, e => {      
+        Swal.fire({
+          icon: 'info',
+          title: 'Algo salió mal',
+          text: this.comunes.obtenerError(e)
+        })
+      });
   }
 
   limpiar(){
     this.reporteForm.reset();
     
   }
-
-  obtenerError(e : any){
-    var mensaje = "Error indefinido ";
-      if(e.error){
-        if(e.error.mensaje){
-          mensaje = e.error.mensaje;
-        }
-        if(e.error.message){
-          mensaje = e.error.message;
-        }
-        if(e.error.errors){
-          mensaje = mensaje + ' ' + e.error.errors[0];
-        }
-        if(e.error.error){
-          mensaje = mensaje + ' ' + e.error.error;
-        }
-      }
-      if(e.message){
-        mensaje = mensaje + ' ' + e.message;
-      }
-    return mensaje;  
-  }
-
   
   crearFormulario() {
-
     this.reporteForm = this.fb.group({
-      mes  : [null, [] ],
-      
-      anho: [null, [] ]
-
-  
-      
+      mes  : [null, [] ],      
+      anho: [null, [] ]       
     });
-
-
   }
+
   cerrarAlertGuardar(){
     this.alertGuardar=false;
-  }
-
-  
+  }  
 }

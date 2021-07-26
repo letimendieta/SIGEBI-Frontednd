@@ -5,6 +5,7 @@ import { map, delay } from 'rxjs/operators';
 import { HttpParams } from "@angular/common/http";
 import { FuncionarioModelo } from '../modelos/funcionario.modelo';
 import { GlobalConstants } from '../common/global-constants';
+import { nuevoUsuarioModelo } from '../modelos/nuevoUsuario.modelo';
 
 @Injectable({
   providedIn: 'root'
@@ -16,19 +17,19 @@ export class UsuariosService {
   constructor( private http: HttpClient ) { }
 
 
-  crearUsuario( usuario: Usuario2Modelo ) {
+  crearUsuario( nuevoUsuario: nuevoUsuarioModelo ) {
 
-    return this.http.post(`${ this.url }/usuarios`, usuario);
+    return this.http.post(`${ this.url }/nuevo`, nuevoUsuario);
 
   }
 
-  actualizarUsuario( usuario: Usuario2Modelo ) {
+  actualizarUsuario( nuevoUsuario: nuevoUsuarioModelo ) {
 
     const usuarioTemp = {
-      ...usuario
+      ...nuevoUsuario
     };
 
-    return this.http.put(`${ this.url }/usuarios/`, usuarioTemp);
+    return this.http.post(`${ this.url }/actualizar`, usuarioTemp);
   }
 
   borrarUsuario( id: number ) {
@@ -40,6 +41,13 @@ export class UsuariosService {
   getUsuario( id: number ) {
 
     return this.http.get(`${ this.url }/usuarios/${ id }`);
+  }
+
+  generarNombreUsuario( personaId: number ) {
+
+    var response = this.http.get(`${ this.url }/usuarios/generar/${ personaId }`);
+
+    return response;
   }
 
 
@@ -74,6 +82,12 @@ export class UsuariosService {
   getPersona( id: number ) {
 
     return this.http.get(`${ this.url }/personas/${ id }`);
+
+  }
+
+  listarRoles() {
+
+    return this.http.get(`${ this.url }/rol`);
 
   }
 

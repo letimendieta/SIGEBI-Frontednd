@@ -27,6 +27,7 @@ import { GlobalConstants } from 'src/app/common/global-constants';
 import { InsumoMedicoModelo } from 'src/app/modelos/insumoMedico.modelo';
 import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
 import { DataTableDirective } from 'angular-datatables';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-procedimiento',
@@ -83,7 +84,8 @@ export class ProcedimientoComponent implements OnInit {
   loadBuscadorPacientes = false;
   loadBuscadorFuncionarios = false;
 
-  constructor( private procedimientosService: ProcedimientosService,
+  constructor( private tokenService: TokenService,
+               private procedimientosService: ProcedimientosService,
                private pacientesService: PacientesService,
                private funcionariosService: FuncionariosService,
                private stockService: StocksService,
@@ -196,7 +198,7 @@ export class ProcedimientoComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -233,6 +235,7 @@ export class ProcedimientoComponent implements OnInit {
     var orderDir = "asc";
     var area = new AreaModelo();
     area.estado = "A";
+    area.tipo = "SERVICIO"
 
     this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
       .subscribe( (resp: AreaModelo) => {
@@ -295,10 +298,10 @@ export class ProcedimientoComponent implements OnInit {
     procesoProcedimientoInsumo.procedimientoInsumoList = procedimientoInsumo;
   
     if ( procedimiento.procedimientoId ) {
-      procesoProcedimientoInsumo.procedimiento.usuarioModificacion = 'admin';
+      procesoProcedimientoInsumo.procedimiento.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.procedimientosService.actualizarProcedimiento( procesoProcedimientoInsumo );
     } else {
-      procesoProcedimientoInsumo.procedimiento.usuarioCreacion = 'admin';
+      procesoProcedimientoInsumo.procedimiento.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.procedimientosService.crearProcedimiento( procesoProcedimientoInsumo );
     }
 
@@ -321,7 +324,7 @@ export class ProcedimientoComponent implements OnInit {
     }, e => {          
         Swal.fire({
           icon: 'error',
-          title: 'Algo salio mal',
+          title: 'Algo salió mal',
           text: this.comunes.obtenerError(e),
         })          
       }
@@ -537,7 +540,7 @@ export class ProcedimientoComponent implements OnInit {
       this.loadBuscadorPacientes = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
@@ -565,7 +568,7 @@ export class ProcedimientoComponent implements OnInit {
       this.loadBuscadorFuncionarios = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
@@ -630,7 +633,7 @@ export class ProcedimientoComponent implements OnInit {
       this.loadBuscador = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -680,7 +683,7 @@ export class ProcedimientoComponent implements OnInit {
       this.loadInsumo = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -731,7 +734,7 @@ export class ProcedimientoComponent implements OnInit {
       this.loadMedicamento = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });

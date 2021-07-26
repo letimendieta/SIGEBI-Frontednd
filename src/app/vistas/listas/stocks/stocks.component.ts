@@ -38,6 +38,8 @@ export class StocksComponent implements OnDestroy, OnInit {
   cargando = false;  
   alert:boolean=false;
   alertMedicamento:boolean=false;
+  loadBuscadorInsumo = false;
+  loadBuscadorMedicamento = false;
 
   constructor( private stocksService: StocksService,
                private insumosService: InsumosMedicosService,
@@ -188,7 +190,7 @@ export class StocksComponent implements OnDestroy, OnInit {
     }, e => {
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e),
       })
       this.cargando = false;
@@ -231,7 +233,7 @@ export class StocksComponent implements OnDestroy, OnInit {
         }, e => {            
             Swal.fire({
               icon: 'info',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: this.comunes.obtenerError(e)
             })
             this.cargando = false;
@@ -362,13 +364,16 @@ export class StocksComponent implements OnDestroy, OnInit {
       this.alert=true;
       return;
     }
+    this.loadBuscadorInsumo = true;
     this.insumosService.buscarInsumosMedicosFiltrosTabla(buscador)
     .subscribe( resp => {
+      this.loadBuscadorInsumo = false;
       this.insumos = resp;
     }, e => {
+      this.loadBuscadorInsumo = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -383,13 +388,16 @@ export class StocksComponent implements OnDestroy, OnInit {
       this.alertMedicamento=true;
       return;
     }
+    this.loadBuscadorMedicamento = true;
     this.medicamentosService.buscarMedicamentosFiltrosTabla(buscador)
     .subscribe( resp => {
+      this.loadBuscadorMedicamento = false;
       this.medicamentos = resp;
     }, e => {
+      this.loadBuscadorMedicamento = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });

@@ -152,7 +152,7 @@ export class PacientesComponent implements OnDestroy, OnInit {
     }, e => {
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
@@ -200,7 +200,7 @@ export class PacientesComponent implements OnDestroy, OnInit {
         }, e => {              
             Swal.fire({
               icon: 'info',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: this.comunes.obtenerError(e),
             })
           }

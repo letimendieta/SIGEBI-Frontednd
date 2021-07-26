@@ -7,6 +7,7 @@ import { EnfermedadCie10Modelo } from '../../../modelos/enfermedadCie10.modelo';
 import { EnfermedadesCie10Service } from '../../../servicios/enfermedadesCie10.service';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import Swal from 'sweetalert2';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-enfermedadCie10',
@@ -19,7 +20,8 @@ export class EnfermedadCie10Component implements OnInit {
   alertGuardar:boolean=false;
   enfermedadCie10: EnfermedadCie10Modelo = new EnfermedadCie10Modelo();
 
-  constructor( private enfermedadesCie10Service: EnfermedadesCie10Service,
+  constructor( private tokenService: TokenService,
+               private enfermedadesCie10Service: EnfermedadesCie10Service,
                private route: ActivatedRoute,
                private comunes: ComunesService,
                private router: Router,
@@ -70,11 +72,11 @@ export class EnfermedadCie10Component implements OnInit {
 
     if ( this.enfermedadCie10.enfermedadCie10Id ) {
       //Modificar
-      this.enfermedadCie10.usuarioModificacion = 'admin';
+      this.enfermedadCie10.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.enfermedadesCie10Service.actualizarEnfermedadCie10( this.enfermedadCie10 );
     } else {
       //Agregar
-      this.enfermedadCie10.usuarioCreacion = 'admin';
+      this.enfermedadCie10.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.enfermedadesCie10Service.crearEnfermedadCie10( this.enfermedadCie10 );
     }
 
@@ -97,7 +99,7 @@ export class EnfermedadCie10Component implements OnInit {
       });
     }, e => {Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }

@@ -20,6 +20,7 @@ import { EstamentosService } from '../../../servicios/estamentos.service';
 import { UploadFileService } from 'src/app/servicios/upload-file.service';
 
 import Swal from 'sweetalert2';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-persona',
@@ -46,7 +47,8 @@ export class PersonaComponent implements OnInit {
   size:any=0;
   nombre:any = "";
 
-  constructor( private personasService: PersonasService,
+  constructor( private tokenService: TokenService,
+               private personasService: PersonasService,
                private parametrosService: ParametrosService,
                private carrerasService: CarrerasService,
                private departamentosService: DepartamentosService,
@@ -206,11 +208,11 @@ export class PersonaComponent implements OnInit {
 
     if ( persona.personaId ) {
       //Modificar
-      persona.usuarioModificacion = 'admin';
+      persona.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.personasService.actualizarPersona( persona );
     } else {
       //Agregar
-      persona.usuarioCreacion = 'admin';
+      persona.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.personasService.crearPersona( persona );
     }
 
@@ -252,7 +254,7 @@ export class PersonaComponent implements OnInit {
       });
     }, e => {Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: this.comunes.obtenerError(e)
             })
        }

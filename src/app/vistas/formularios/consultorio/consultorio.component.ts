@@ -304,7 +304,7 @@ export class ConsultorioComponent implements OnInit {
     }, e => {
       Swal.fire({
           icon: 'error',
-          title: 'Algo salio mal',
+          title: 'Algo salió mal',
           text: this.comunes.obtenerError(e),
         })
     });
@@ -315,8 +315,8 @@ export class ConsultorioComponent implements OnInit {
       this.rolesUsuario.push(this.tokenService.roles[i].toString());
     }
 
-    if(this.rolesUsuario.includes(GlobalConstants.ROLE_CLINICA_MEDICA)
-      || this.rolesUsuario.includes(GlobalConstants.ROLE_ADMIN)){
+    if(this.rolesUsuario.includes(GlobalConstants.ROL_CLINICA_MEDICA)
+      || this.rolesUsuario.includes(GlobalConstants.ROL_ADMIN)){
         this.deshabilitarMedicamentos = false;
         this.deshabilitarActualizarHC = false;
         this.deshabilitarPestanhaAnamnesis = false;
@@ -403,7 +403,7 @@ export class ConsultorioComponent implements OnInit {
     }, e => {
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });   
@@ -1296,7 +1296,7 @@ export class ConsultorioComponent implements OnInit {
       this.loadBuscadorPacientes = false;;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
       //this.cargando = false;
@@ -1346,7 +1346,7 @@ export class ConsultorioComponent implements OnInit {
       this.loadBuscadorMedicamentos = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -1371,7 +1371,7 @@ export class ConsultorioComponent implements OnInit {
       this.loadBuscadorCie = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -1813,7 +1813,7 @@ export class ConsultorioComponent implements OnInit {
     }, e => {
       Swal.fire({
           icon: 'error',
-          title: 'Algo salio mal',
+          title: 'Algo salió mal',
           text: this.comunes.obtenerError(e),
         })
     });
@@ -1869,7 +1869,7 @@ export class ConsultorioComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -1902,7 +1902,7 @@ export class ConsultorioComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });

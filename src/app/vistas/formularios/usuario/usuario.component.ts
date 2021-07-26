@@ -15,6 +15,10 @@ import { PersonasService } from '../../../servicios/personas.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import Swal from 'sweetalert2';
+import { nuevoUsuarioModelo } from 'src/app/modelos/nuevoUsuario.modelo';
+import { DualListComponent } from 'angular-dual-listbox';
+import { RolModelo } from 'src/app/modelos/rol.modelo';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-usuario',
@@ -23,7 +27,7 @@ import Swal from 'sweetalert2';
 })
 export class UsuarioComponent implements OnInit {
   crear = false;
-  usuario: Usuario2Modelo = new Usuario2Modelo();
+  //usuario: Usuario2Modelo = new Usuario2Modelo();
   persona: PersonaModelo = new PersonaModelo();
   personas: PersonaModelo[] = [];
   funcionarios: FuncionarioModelo[] = [];
@@ -38,8 +42,27 @@ export class UsuarioComponent implements OnInit {
   alertGuardar:boolean=false;
   dtOptions: any = {};
   cargando = false;
+  listaRoles = [];
+  sourceStations: any;
+  confirmedStations: any;
 
-  constructor( private usuariosService: UsuariosService,
+  key: string;
+  display: any;
+  keepSorted: boolean;
+  source2: any;
+  confirmed: any;
+  id:any;
+  permisosSeleccionados: boolean;
+  loadBuscadorFuncionarios = false;
+  esCambioContrasenha : boolean = false;
+
+  format = {
+    add: 'Agregar', remove: 'Remover', all: 'Todos', none: 'Ninguno',
+    direction: DualListComponent.LTR, draggable: true, locale: 'da'
+  };
+
+  constructor( private tokenService: TokenService,
+               private usuariosService: UsuariosService,
                private funcionariosService: FuncionariosService,
                private personasService: PersonasService,
                private areasService: AreasService,
@@ -56,14 +79,18 @@ export class UsuarioComponent implements OnInit {
   ngOnInit() {
     this.listarAreas();
     const id = this.route.snapshot.paramMap.get('id');
-
+    this.listarRoles(Number(id));
     if ( id !== 'nuevo' ) {
+      this.usuarioForm.get('funcionarios').get('funcionarioId').disable();
+      this.usuarioForm.get('password').disable();
       this.usuariosService.getUsuario( Number(id) )
         .subscribe( (resp: Usuario2Modelo) => {
           this.usuarioForm.patchValue(resp);
         });
     }else{
       this.crear = true;
+      this.usuarioForm.get('estado').setValue('A');
+      this.usuarioForm.get('nombreUsuario').enable();
     }
   }
 
@@ -79,41 +106,134 @@ export class UsuarioComponent implements OnInit {
     });
   }
 
-  obtenerFuncionario( event ){
+  listarRoles(id : number) {    
+    this.usuariosService.listarRoles()
+    .subscribe( (resp : any) => {      
+      if ( resp.length > 0){
+        this.listaRoles = resp;
+        this.doReset();
+
+        if(typeof id !== 'undefined'){
+          this.id =id;
+          this.buscarUsuario(id);
+          /*this.usuariosService.getUsuario(id).subscribe((r: any) =>{
+              this.confirmed = r
+              if(r.length>0){
+                this.permisosSeleccionados = true;
+              }
+          }*/          
+        }
+
+      }else{
+        Swal.fire({
+          icon: 'info',
+          text: 'No se encontraron roles'
+        })   
+      }
+    });
+    
+  }
+
+  doReset(data?) {
+    this.sourceStations = JSON.parse(JSON.stringify(this.listaRoles));
+    this.confirmedStations = new Array<any>( );
+    this.useStations();
+  }
+
+  private useStations() {
+    this.key = 'id';
+    this.display = this.stationLabel;
+    this.keepSorted = true;
+    this.source2 = this.sourceStations;
+    this.confirmed = this.confirmedStations;
+  }
+
+  echo(e) {      
+    if (e.length > 0) {
+      this.permisosSeleccionados = true;
+    } else {
+      this.permisosSeleccionados = false;
+    }
+  }
+
+  private stationLabel(item: any) {
+    return item.rolNombre;
+  }
+
+  obtenerFuncionario( event: { preventDefault: () => void; } ){
     event.preventDefault();
     var id = this.usuarioForm.get('funcionarios').get('funcionarioId').value;
     this.funcionariosService.getFuncionario( id )
         .subscribe( (resp: FuncionarioModelo) => {
-          this.usuarioForm.get('funcionarios').patchValue(resp);
-          this.usuarioForm.get('personas').patchValue(resp.personas);
-          if(resp.funcionarioId){
-            this.usuarioForm.get('personas').get('personaId').disable();
-          }
+          this.usuarioForm.get('funcionarios').patchValue(resp);  
+          var personaId = this.usuarioForm.get('funcionarios').get("personas").get("personaId").value;
+          var funcionarioId = this.usuarioForm.get('funcionarios').get("funcionarioId").value;
+          this.buscarFuncionarioUsuario(funcionarioId);
+          this.generarNombreUsuario(personaId);
         }, e => {
             Swal.fire({
               icon: 'info',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e),
             })
           }
         );
   }
 
-  obtenerPersona( event ){
-    event.preventDefault();
-    var id = this.usuarioForm.get('personas').get('personaId').value;
-    this.usuariosService.getPersona( id )
-      .subscribe( (resp: PersonaModelo) => {
-        this.usuarioForm.get('personas').patchValue(resp);
-      }, e => {
-          Swal.fire({
-            icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e),
-          })
-          this.usuarioForm.get('personas').get('personaId').setValue(null);
-        }
-      );
+  generarNombreUsuario ( personaId: number ){
+    this.usuariosService.generarNombreUsuario(personaId)
+    .subscribe( (resp : Usuario2Modelo ) => {
+      this.usuarioForm.get('nombreUsuario').setValue(resp.nombreUsuario);
+      this.buscarNombreUsuario(resp.nombreUsuario);
+    }, e => {
+      console.log(this.comunes.obtenerError(e));
+    });
   }
-  
+
+  buscarNombreUsuario( nombreUsurio: string){
+    var buscador: Usuario2Modelo = new Usuario2Modelo();
+    
+    buscador.nombreUsuario = nombreUsurio;
+    this.usuariosService.buscarUsuariosFiltros(buscador)
+    .subscribe( resp => {      
+      if ( resp.length > 0){
+        Swal.fire({
+          icon: 'info',
+          text: 'Nombre de usuario ya existe'
+        })        
+      }
+    });
+  }
+
+  buscarUsuario( id: number){
+
+    this.usuariosService.getUsuario(id)
+    .subscribe( ( resp : Usuario2Modelo )=> {   
+      var rolesUsuario : RolModelo [] = []; 
+      resp.roles.forEach(rol => {
+          rolesUsuario.push(rol);
+      });
+      this.confirmed = rolesUsuario;
+    });
+  }
+
+  buscarFuncionarioUsuario( funcionarioId: number){
+    var buscador: Usuario2Modelo = new Usuario2Modelo();
+    var funcionario: FuncionarioModelo = new FuncionarioModelo();
+
+    funcionario.funcionarioId = funcionarioId;
+    buscador.funcionarios = funcionario;
+    
+    this.usuariosService.buscarUsuariosFiltros(buscador)
+    .subscribe( resp => {       
+      if ( resp.length > 0){
+        Swal.fire({
+          icon: 'info',
+          text: 'El funcionario ya cuenta con un usuario'
+        })
+      }
+    });
+  }
+    
   guardar( ) {
 
     if ( this.usuarioForm.invalid ){
@@ -136,47 +256,71 @@ export class UsuarioComponent implements OnInit {
     Swal.showLoading();
 
     let peticion: Observable<any>; 
-    
-    this.usuario = this.usuarioForm.getRawValue();
+    var usuario = new Usuario2Modelo();
+    var nuevoUsuario = new nuevoUsuarioModelo();
+    usuario = this.usuarioForm.getRawValue();
 
-    if ( this.usuario.id ) {
-      this.usuario.usuarioModificacion = 'admin';
-      peticion = this.usuariosService.actualizarUsuario( this.usuario );
+    nuevoUsuario.usuario = usuario;
+
+    nuevoUsuario.esCambioContrasenha = this.esCambioContrasenha;
+
+    var listaRoles : Array<RolModelo> = [];
+    for (let i = 0; i < this.confirmed.length; i++) {
+      listaRoles.push(this.confirmed[i]);
+    }
+    if( listaRoles.length > 0 ){
+      nuevoUsuario.rolesList = listaRoles;
+    }
+
+    if ( usuario.id ) {
+      usuario.usuarioModificacion = this.tokenService.getUserName().toString();
+      peticion = this.usuariosService.actualizarUsuario( nuevoUsuario );
     } else {
-      this.usuario.usuarioCreacion = 'admin';
-      peticion = this.usuariosService.crearUsuario( this.usuario );
+      usuario.usuarioCreacion = this.tokenService.getUserName().toString();
+      peticion = this.usuariosService.crearUsuario( nuevoUsuario );
     }
 
     peticion.subscribe( resp => {
 
       Swal.fire({
                 icon: 'success',
-                title: this.usuario.nombreUsuario ? this.usuario.nombreUsuario.toString() : '',
+                title: usuario.nombreUsuario ? usuario.nombreUsuario.toString() : '',
                 text: resp.mensaje,
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.usuario.id ) {
+          if ( usuario.id ) {
             this.router.navigate(['/usuarios']);
           }else{
-            this.limpiar();
+            this.limpiar(event);
+            this.listarRoles(null);
           }
         }
       });
     }, e => {
         Swal.fire({
           icon: 'error',
-          title: 'Algo salio mal',
-          text: e.status +'. '+ this.comunes.obtenerError(e),
+          title: 'Algo salió mal',
+          text: this.comunes.obtenerError(e),
         })          
       }
     );
   }
 
-  limpiar(){
+  cambiarContrasenha(event) {
+    //var switchPass = ((document.getElementById("switchPass") as HTMLInputElement).value);
+    if( event == true ){
+      this.usuarioForm.get('password').enable();
+    }else{
+      this.usuarioForm.get('password').disable();
+    }
+  }
+
+  limpiar(event: Event){
+    event.preventDefault();
     this.usuarioForm.reset();
-    this.usuarioForm.get('personas').get('personaId').enable();
-    this.usuario = new Usuario2Modelo();
+    //this.usuarioForm.get('personas').get('personaId').enable();
+    //this.usuario = new Usuario2Modelo();
     this.usuarioForm.get('estado').setValue('A');
   }
 
@@ -197,14 +341,14 @@ export class UsuarioComponent implements OnInit {
     return mensaje;  
   }
 
-  get personaIdNoValido() {
+  /*get personaIdNoValido() {
     return this.usuarioForm.get('personas').get('personaId').invalid 
       && this.usuarioForm.get('personas').get('personaId').touched
-  }
+  }*/
 
   get usuarioNoValido() {
-    return this.usuarioForm.get('codigoUsuario').invalid 
-      && this.usuarioForm.get('codigoUsuario').touched
+    return this.usuarioForm.get('nombreUsuario').invalid 
+      && this.usuarioForm.get('nombreUsuario').touched
   }
 
   get passNoValido() {
@@ -219,19 +363,21 @@ export class UsuarioComponent implements OnInit {
 
   crearFormulario() {
     this.usuarioForm = this.fb.group({
-      usuarioId  : [null, [] ],
+      id  : [null, [] ],
       funcionarios : this.fb.group({
         funcionarioId  : [null, [] ],
-        areaId : [null, [] ],
+        personas : this.fb.group({
+          personaId : [null, [Validators.required] ],
+          cedula : [null, [] ],
+          nombres : [null, [] ],
+          apellidos : [null, [] ]
+        }),
+        areas  : this.fb.group({
+          areaId: [null, [ Validators.required] ]
+        }),
         estado : [null, [] ]
-      }),
-      personas : this.fb.group({
-        personaId : [null, [Validators.required] ],
-        cedula : [null, [] ],
-        nombres : [null, [] ],
-        apellidos : [null, [] ]
-      }),      
-      codigoUsuario : [null, [Validators.required] ],
+      }),            
+      nombreUsuario : [null, [Validators.required] ],
       password : [null, [Validators.required] ],
       estado : [null, [Validators.required] ],
       fechaCreacion: [null, [] ],
@@ -254,13 +400,14 @@ export class UsuarioComponent implements OnInit {
       apellidos: ['', [] ]   
     });
 
-    this.usuarioForm.get('usuarioId').disable();
-    this.usuarioForm.get('funcionarios').get('areaId').disable();
+    this.usuarioForm.get('id').disable();
+    this.usuarioForm.get('nombreUsuario').disable();
+    this.usuarioForm.get('funcionarios').get('areas').get('areaId').disable();
     this.usuarioForm.get('funcionarios').get('estado').disable();
 
-    this.usuarioForm.get('personas').get('cedula').disable();
-    this.usuarioForm.get('personas').get('nombres').disable();
-    this.usuarioForm.get('personas').get('apellidos').disable();
+    this.usuarioForm.get('funcionarios').get('personas').get('cedula').disable();
+    this.usuarioForm.get('funcionarios').get('personas').get('nombres').disable();
+    this.usuarioForm.get('funcionarios').get('personas').get('apellidos').disable();
 
     this.usuarioForm.get('fechaCreacion').disable();
     this.usuarioForm.get('fechaModificacion').disable();
@@ -270,7 +417,7 @@ export class UsuarioComponent implements OnInit {
 
 
 
-  buscadorPersonas(event) {
+  buscadorPersonas(event: { preventDefault: () => void; }) {
     event.preventDefault();
     
     var persona: PersonaModelo = new PersonaModelo();
@@ -292,14 +439,14 @@ export class UsuarioComponent implements OnInit {
     }, e => {
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        title: 'Algo salió mal',
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
   }
 
-  buscadorFuncionarios(event) {
+  buscadorFuncionarios(event: { preventDefault: () => void; }) {
     event.preventDefault();
     var persona: PersonaModelo = new PersonaModelo();
     var buscador: FuncionarioModelo = new FuncionarioModelo();
@@ -308,28 +455,30 @@ export class UsuarioComponent implements OnInit {
     persona.nombres = this.buscadorFuncionariosForm.get('nombres').value;
     persona.apellidos = this.buscadorFuncionariosForm.get('apellidos').value;
     buscador.personas = persona;
-    buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
+    buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;  
+    
+    this.loadBuscadorFuncionarios = true;
     this.funcionariosService.buscarFuncionariosFiltros(buscador)
     .subscribe( resp => {
+      this.loadBuscadorFuncionarios = false;
       this.funcionarios = resp;
-      this.cargando = false;
     }, e => {
+      this.loadBuscadorFuncionarios = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        title: 'Algo salió mal',
+        text: this.comunes.obtenerError(e)
       })
-      this.cargando = false;
     });
   }
 
-  limpiarModalPersonas(event) {
+  limpiarModalPersonas(event: { preventDefault: () => void; }) {
     event.preventDefault();
     this.buscadorPersonasForm.reset();
     this.personas = [];
   }
 
-  limpiarModalFuncionarios(event) {
+  limpiarModalFuncionarios(event: { preventDefault: () => void; }) {
     event.preventDefault();
     this.buscadorFuncionariosForm.reset();
     this.funcionarios = [];
@@ -393,7 +542,7 @@ export class UsuarioComponent implements OnInit {
     };
   }
 
-  openModalPersonas(targetModal) {
+  openModalPersonas(targetModal: any) {
     this.modalService.open(targetModal, {
      centered: true,
      backdrop: 'static',
@@ -410,7 +559,7 @@ export class UsuarioComponent implements OnInit {
     this.alert=false;
   }
 
-  openModalFuncionarios(targetModal) {
+  openModalFuncionarios(targetModal: any) {
     this.modalService.open(targetModal, {
      centered: true,
      backdrop: 'static',
@@ -427,7 +576,7 @@ export class UsuarioComponent implements OnInit {
     this.alert=false;
   }
 
-  selectPersona(event, persona: PersonaModelo){
+  /*selectPersona(event, persona: PersonaModelo){
     this.modalService.dismissAll();
     if(persona.personaId){
       this.usuarioForm.get('personas').get('personaId').setValue(persona.personaId);
@@ -443,9 +592,9 @@ export class UsuarioComponent implements OnInit {
           this.usuarioForm.get('personas').get('personaId').setValue(null);
         }
       );
-  }
+  }*/
 
-  selectFuncionario(event, funcionario: FuncionarioModelo){
+  selectFuncionario(event: any, funcionario: FuncionarioModelo){
     this.modalService.dismissAll();
     if(funcionario.funcionarioId){
       this.usuarioForm.get('funcionarios').get('funcionarioId').setValue(funcionario.funcionarioId);
@@ -453,10 +602,14 @@ export class UsuarioComponent implements OnInit {
     this.funcionariosService.getFuncionario( funcionario.funcionarioId )
       .subscribe( (resp: FuncionarioModelo) => {         
         this.usuarioForm.get('funcionarios').patchValue(resp);
+        var personaId = this.usuarioForm.get('funcionarios').get("personas").get("personaId").value;
+        var funcionarioId = this.usuarioForm.get('funcionarios').get("funcionarioId").value;
+        this.buscarFuncionarioUsuario(funcionarioId);
+        this.generarNombreUsuario(personaId);
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
           this.usuarioForm.get('funcionarios').get('funcionarioId').setValue(null);
         }

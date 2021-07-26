@@ -8,6 +8,7 @@ import { CarreraModelo } from '../../../modelos/carrera.modelo';
 import { CarrerasService } from '../../../servicios/carreras.service';
 
 import Swal from 'sweetalert2';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-carrera',
@@ -20,7 +21,8 @@ export class CarreraComponent implements OnInit {
   alertGuardar:boolean=false;
   carrera: CarreraModelo = new CarreraModelo();
 
-  constructor( private carrerasService: CarrerasService,
+  constructor( private tokenService: TokenService,
+               private carrerasService: CarrerasService,
                private route: ActivatedRoute,
                private comunes: ComunesService,
                private router: Router,
@@ -71,11 +73,11 @@ export class CarreraComponent implements OnInit {
 
     if ( this.carrera.carreraId ) {
       //Modificar
-      this.carrera.usuarioModificacion = 'admin';
+      this.carrera.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.carrerasService.actualizarCarrera( this.carrera );
     } else {
       //Agregar
-      this.carrera.usuarioCreacion = 'admin';
+      this.carrera.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.carrerasService.crearCarrera( this.carrera );
     }
 
@@ -98,7 +100,7 @@ export class CarreraComponent implements OnInit {
       });
     }, e => {Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }

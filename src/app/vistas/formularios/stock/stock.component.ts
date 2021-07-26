@@ -13,6 +13,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InsumoMedicoModelo } from 'src/app/modelos/insumoMedico.modelo';
 import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
 import { MedicamentosService } from 'src/app/servicios/medicamentos.service';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-stock',
@@ -35,8 +36,11 @@ export class StockComponent implements OnInit {
   buscadorMedicamentoForm: FormGroup;
   stock: StockModelo = new StockModelo();
   alertMedicamento:boolean=false;
+  loadBuscadorInsumo = false;
+  loadBuscadorMedicamento = false;
 
-  constructor( private stocksService: StocksService,
+  constructor( private tokenService: TokenService,
+               private stocksService: StocksService,
                private medicamentosService: MedicamentosService,
                private insumosMedicosService: InsumosMedicosService,
                private comunes: ComunesService,
@@ -186,11 +190,11 @@ export class StockComponent implements OnInit {
 
     if ( this.stock.stockId ) {
       //Modificar
-      this.stock.usuarioModificacion = 'admin';
+      this.stock.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.stocksService.actualizarStock( this.stock );
     } else {
       //Agregar
-      this.stock.usuarioCreacion = 'admin';
+      this.stock.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.stocksService.crearStock( this.stock );
     }
 
@@ -213,7 +217,7 @@ export class StockComponent implements OnInit {
       });
     }, e => {Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: this.comunes.obtenerError(e),
             })
        }
@@ -315,13 +319,17 @@ export class StockComponent implements OnInit {
       this.alert=true;
       return;
     }
+
+    this.loadBuscadorInsumo = true;
     this.insumosMedicosService.buscarInsumosMedicosFiltrosTabla(buscador)
     .subscribe( ( resp : InsumoMedicoModelo[] ) => {
+      this.loadBuscadorInsumo = false;
       this.insumos = resp;
     }, e => {
+      this.loadBuscadorInsumo = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -336,13 +344,17 @@ export class StockComponent implements OnInit {
       this.alertMedicamento=true;
       return;
     }
+
+    this.loadBuscadorMedicamento = true;
     this.medicamentosService.buscarMedicamentosFiltrosTabla(buscador)
     .subscribe( ( resp : MedicamentoModelo[] ) => {
+      this.loadBuscadorMedicamento = false;
       this.medicamentos = resp;
     }, e => {
+      this.loadBuscadorMedicamento = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });

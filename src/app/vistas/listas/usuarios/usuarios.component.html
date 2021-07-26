@@ -17,7 +17,7 @@
               <mat-form-field appearance="fill">
                 <mat-label>Usuario id</mat-label>
                 <input matInput matInput type="number" placeholder="Usuario id" 
-                  formControlName="usuarioId" name="usuarioId" id="usuarioId">
+                  formControlName="id" name="id" id="id">
               </mat-form-field>
             </p>
 
@@ -54,9 +54,9 @@
           <div>            
             <p>
               <mat-form-field appearance="fill">
-                <mat-label>C&oacute;digo usuario</mat-label>
-                <input matInput matInput type="text" placeholder="C&oacute;digo usuario" 
-                  formControlName="codigoUsuario" name="codigoUsuario" id="codigoUsuario">
+                <mat-label>Nombre usuario</mat-label>
+                <input matInput matInput type="text" placeholder="Nombre usuario" 
+                  formControlName="nombreUsuario" name="nombreUsuario" id="nombreUsuario">
               </mat-form-field>
             </p>  
     
@@ -96,7 +96,7 @@
           <tr class="table-primary">
             <th scope="col">#</th>
             <th scope="col">Id</th>
-            <th scope="col">C&oacute;digo usuario</th>
+            <th scope="col">Nombre usuario</th>
             <th scope="col">Persona id</th>
             <th scope="col">Funcionario id</th>
             <th scope="col">C&eacute;dula</th>
@@ -110,16 +110,16 @@
         <tbody>
           <tr *ngFor="let usuario of usuarios; let i = index">
             <th scope="row">{{ i + 1 }}</th>
-            <td>{{ usuario.usuarioId }}</td>
-            <td>{{ usuario.codigoUsuario }}</td>
-            <td>{{ usuario.personas.personaId }}</td>
+            <td>{{ usuario.id }}</td>
+            <td>{{ usuario.nombreUsuario }}</td>
+            <td>{{ usuario.funcionarios.personas.personaId }}</td>
             <td>{{ usuario.funcionarios.funcionarioId }}</td>      
-            <td>{{ usuario.personas.cedula }}</td>
-            <td>{{ usuario.personas.nombres }}</td>
-            <td>{{ usuario.personas.apellidos }}</td>      
+            <td>{{ usuario.funcionarios.personas.cedula }}</td>
+            <td>{{ usuario.funcionarios.personas.nombres }}</td>
+            <td>{{ usuario.funcionarios.personas.apellidos }}</td>      
             <td>{{ usuario.estado }}</td>   
 
-            <td (click)="editar($event, usuario.usuarioId )">
+            <td (click)="editar($event, usuario.id )">
               <a class="btn btn-info">
                 <i class="fa fa-edit"></i>
               </a>

@@ -38,7 +38,9 @@
             <!--Modal buscador de insumos-->
             <ng-template #editProfileModal let-modal>
               <div class="modal-header">
-                    <h3 class="modal-title" id="editProfileLabel">Buscador Insumos M&eacute;dicos</h3>
+                    <h3 class="modal-title" id="editProfileLabel">Buscador Insumos M&eacute;dicos
+                      <img *ngIf="loadBuscadorInsumo" src="../assets/images/loading2.gif">
+                    </h3>
                     <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
                     <span aria-hidden="true">&times;</span> 
                     </button>
@@ -165,7 +167,9 @@
             <!--Modal buscador de medicamentos-->
             <ng-template #editProfileModalMedicamento let-modal>
               <div class="modal-header">
-                    <h3 class="modal-title" id="editProfileLabel">Buscador Medicamentos</h3>
+                    <h3 class="modal-title" id="editProfileLabel">Buscador Medicamentos
+                      <img *ngIf="loadBuscadorMedicamento" src="../assets/images/loading2.gif">
+                    </h3>
                     <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
                     <span aria-hidden="true">&times;</span> 
                     </button>

@@ -14,7 +14,8 @@
             <form [formGroup]="reporteForm" (ngSubmit)="guardar( )">
               
               <!-- Datos Reporte-->
-              
+              <div class="row justify-content-center">
+                <div class="col-lg-5">
                   <div class="form-group">
                     <label><b>Mes</b></label>
                     <select class="custom-select"
@@ -35,8 +36,11 @@
                     </select> 
                             
                     </div>
+                  </div>
+                </div>
              
-  
+                <div class="row justify-content-center">
+                  <div class="col-lg-5">
                     <div class="form-group">
                         <label><b>Año</b></label>
                         <select class="custom-select"
@@ -54,9 +58,10 @@
                           <option value="2029">2029</option>
                           <option value="2030">2030</option>
                          
-                        </select> 
-                                
+                        </select>                                
                         </div>
+                      </div>
+                    </div>
               <hr>
               <br>
               <div *ngIf="alertGuardar" class="alert alert-danger alert-dismissible fade show text-center" role="alert">
@@ -71,10 +76,8 @@
                   <i class="fa fa-save"></i>
                   Generar Reporte
                 </button>
-                &nbsp;&nbsp;
-               
-              </div>
-  
+                &nbsp;&nbsp;               
+              </div>  
             </form>
           </div>
         </div>

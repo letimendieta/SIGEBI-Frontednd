@@ -47,7 +47,23 @@ import { EnfermedadCie10Component } from 'src/app/vistas/formularios/enfermedadC
 import { ConsultorioComponent } from 'src/app/vistas/formularios/consultorio/consultorio.component';
 import { EnfermeriaComponent } from 'src/app/vistas/formularios/enfermeria/enfermeria.component';
 import { ReportesComponent } from 'src/app/vistas/formularios/reportes/reportes.component';
-import { PersonasGuardService as guard } from 'src/app/guards/personas-guard.service';
+import { PersonasGuardService as personasguard } from 'src/app/guards/personas-guard.service';
+import { PacientesGuardService as pacientesguard } from 'src/app/guards/pacientes-guard.service';
+import { SignosVitalesGuardService as signosvitalesguard } from 'src/app/guards/signosVitales-guard.service';
+import { FuncionariosGuardService as funcinariosguard } from 'src/app/guards/funcionarios-guard.service';
+import { ProcedimientosGuardService as procedimientosguard } from 'src/app/guards/procedimientos-guard.service';
+import { UsuariosGuardService as usuariosguard } from 'src/app/guards/usuarios-guard.service';
+import { CarrerasGuardService as carrerasguard } from 'src/app/guards/carreras-guard.service';
+import { AreasGuardService as areasguard } from 'src/app/guards/areas-guard.service';
+import { DepartamentosGuardService as departamentosguard } from 'src/app/guards/departamentos-guard.service';
+import { DependenciasGuardService as dependenciasguard } from 'src/app/guards/dependencias-guard.service';
+import { EstamentosGuardService as estamentosguard } from 'src/app/guards/estamentos-guard.service';
+import { MotivosConsultaGuardService as motivosConsultaguard } from 'src/app/guards/motivosConsulta-guard.service';
+import { EnfermedadesCie10GuardService as enfermedadescie10guard } from 'src/app/guards/enfermedadesCie10-guard.service';
+import { ParametrosGuardService as parametrosguard } from 'src/app/guards/parametros-guard.service';
+import { StockGuardService as stockguard } from 'src/app/guards/stock-guard.service';
+import { ConsultorioGuardService as consultorioguard } from 'src/app/guards/consultorio-guard.service';
+import { ReportesGuardService as reportesguard } from 'src/app/guards/reportes-guard.service';
 
 
 const routes: Routes = [
@@ -58,161 +74,161 @@ const routes: Routes = [
   component: DefaultComponent,
   children: [
   {
-    path: 'personas',canActivate: [guard], data: { expectedRol: ['admin', 'user'] },
+    path: 'personas',canActivate: [personasguard], data: { expectedRol: ['admin', 'personas'] },
     component: PersonasComponent
   },{
-    path: 'persona/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'persona/:id',canActivate: [personasguard], data: { expectedRol: ['admin', 'persona'] },
     component: PersonaComponent
   },
   {
-    path: 'pacientes',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'pacientes',canActivate: [pacientesguard], data: { expectedRol: ['admin', 'pacientes'] },
     component: PacientesComponent
   },{
-    path: 'paciente/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'paciente/:id',canActivate: [pacientesguard], data: { expectedRol: ['admin', 'paciente'] },
     component: PacienteComponent
   },
   {
-    path: 'funcionarios',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'signosVitales',canActivate: [signosvitalesguard], data: { expectedRol: ['admin', 'pacientes'] },
+    component: SignosVitalesComponent
+  },{
+    path: 'signoVital/:id',canActivate: [signosvitalesguard], data: { expectedRol: ['admin', 'paciente'] },
+    component: SignoVitalComponent
+  }, 
+  {
+    path: 'citas',canActivate: [pacientesguard], data: { expectedRol: ['admin', 'pacientes'] },
+    component: CitasComponent
+  },{
+    path: 'cita/:id',canActivate: [pacientesguard], data: { expectedRol: ['admin', 'paciente'] },
+    component: CitaComponent
+  },  
+  {
+    path: 'funcionarios',canActivate: [funcinariosguard], data: { expectedRol: ['admin', 'funcionarios'] },
     component: FuncionariosComponent
   },{
-    path: 'funcionario/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'funcionario/:id',canActivate: [funcinariosguard], data: { expectedRol: ['admin', 'funcionario'] },
     component: FuncionarioComponent
   },
   {
-    path: 'parametros',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: ParametrosComponent
+    path: 'horarios',canActivate: [funcinariosguard], data: { expectedRol: ['admin', 'funcionarios'] },
+    component: HorariosComponent
   },{
-    path: 'parametro/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: ParametroComponent
-  },
+    path: 'horario/:id',canActivate: [funcinariosguard], data: { expectedRol: ['admin', 'funcionarios'] },
+    component: HorarioComponent
+  },  
   {
-    path: 'procedimientos',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'procedimientos',canActivate: [procedimientosguard], data: { expectedRol: ['admin', 'procedimientos'] },
     component: ProcedimientosComponent
   },{
-    path: 'procedimiento/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'procedimiento/:id',canActivate: [procedimientosguard], data: { expectedRol: ['admin', 'procedimiento'] },
     component: ProcedimientoComponent
   },
   {
-    path: 'usuarios',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'usuarios',canActivate: [usuariosguard], data: { expectedRol: ['admin', 'usuarios'] },
     component: UsuariosComponent
   },{
-    path: 'usuario/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'usuario/:id',canActivate: [usuariosguard], data: { expectedRol: ['admin', 'usuario'] },
     component: UsuarioComponent
   },
   {
-    path: 'areas',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'areas',canActivate: [areasguard], data: { expectedRol: ['admin', 'configuraciones'] },
     component: AreasComponent
   },{
-    path: 'area/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'area/:id',canActivate: [areasguard], data: { expectedRol: ['admin', 'configuracion'] },
     component: AreaComponent
   },
   {
-    path: 'carreras',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'carreras',canActivate: [carrerasguard], data: { expectedRol: ['admin', 'configuraciones'] },
     component: CarrerasComponent
   },{
-    path: 'carrera/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'carrera/:id',canActivate: [carrerasguard], data: { expectedRol: ['admin', 'configuracion'] },
     component: CarreraComponent
   },
   {
-    path: 'departamentos',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'departamentos',canActivate: [departamentosguard], data: { expectedRol: ['admin', 'configuraciones'] },
     component: DepartamentosComponent
   },{
-    path: 'departamento/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'departamento/:id',canActivate: [departamentosguard], data: { expectedRol: ['admin', 'configuracion'] },
     component: DepartamentoComponent
   },
   {
-    path: 'dependencias',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'dependencias',canActivate: [dependenciasguard], data: { expectedRol: ['admin', 'configuraciones'] },
     component: DependenciasComponent
   },{
-    path: 'dependencia/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'dependencia/:id',canActivate: [dependenciasguard], data: { expectedRol: ['admin', 'configuracion'] },
     component: DependenciaComponent
   },
   {
-    path: 'estamentos',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'estamentos',canActivate: [estamentosguard], data: { expectedRol: ['admin', 'configuraciones'] },
     component: EstamentosComponent
   },{
-    path: 'estamento/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'estamento/:id',canActivate: [estamentosguard], data: { expectedRol: ['admin', 'configuracion'] },
     component: EstamentoComponent
   },
   {
-    path: 'citas',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: CitasComponent
+    path: 'motivosConsulta',canActivate: [motivosConsultaguard], data: { expectedRol: ['admin', 'configuraciones'] },
+    component: MotivosConsultaComponent
   },{
-    path: 'cita/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: CitaComponent
+    path: 'motivoConsulta/:id',canActivate: [motivosConsultaguard], data: { expectedRol: ['admin', 'configuracion'] },
+    component: MotivoConsultaComponent
   },
   {
-    path: 'horarios',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: HorariosComponent
+    path: 'enfermedadesCie10',canActivate: [enfermedadescie10guard], data: { expectedRol: ['admin', 'configuraciones'] },
+    component: EnfermedadesCie10Component
   },{
-    path: 'horario/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: HorarioComponent
+    path: 'enfermedadCie10/:id',canActivate: [enfermedadescie10guard], data: { expectedRol: ['admin', 'configuracion'] },
+    component: EnfermedadCie10Component
   },
   {
-    path: 'stocks',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'parametros',canActivate: [parametrosguard], data: { expectedRol: ['admin', 'configuraciones'] },
+    component: ParametrosComponent
+  },{
+    path: 'parametro/:id',canActivate: [parametrosguard], data: { expectedRol: ['admin', 'configuracion'] },
+    component: ParametroComponent
+  },  
+  {
+    path: 'stocks',canActivate: [stockguard], data: { expectedRol: ['admin', 'stocks'] },
     component: StocksComponent
   },{
-    path: 'stock/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'stock/:id',canActivate: [stockguard], data: { expectedRol: ['admin', 'stock'] },
     component: StockComponent
   },
   {
-    path: 'insumos',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'insumos',canActivate: [stockguard], data: { expectedRol: ['admin', 'stocks'] },
     component: InsumosComponent
   },{
-    path: 'insumo/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'insumo/:id',canActivate: [stockguard], data: { expectedRol: ['admin', 'stocks'] },
     component: InsumoComponent
   },
   {
-    path: 'medicamentos',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'medicamentos',canActivate: [stockguard], data: { expectedRol: ['admin', 'stocks'] },
     component: MedicamentosComponent
   },{
-    path: 'medicamento/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'medicamento/:id',canActivate: [stockguard], data: { expectedRol: ['admin', 'stocks'] },
     component: MedicamentoComponent
   },
-  {
+  /*{
     path: 'fichaClinica',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: FichaClinicaComponent
-  },
-  {
+  },*/
+  /*{
     path: 'historialesClinicos',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: HistorialesClinicosComponent
   },{
     path: 'historialClinico/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
     component: HistorialClinicoComponent
-  },
+  },*/
   {
-    path: 'consultorio',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'consultorio',canActivate: [consultorioguard], data: { expectedRol: ['admin', 'consultorio'] },
     component: ConsultorioComponent
   },
-  {
-    path: 'enfermeria',canActivate: [guard], data: { expectedRol: ['admin'] },
+  /*{
+    path: 'enfermeria',canActivate: [guard], data: { expectedRol: ['admin', 'consultorio'] },
     component: EnfermeriaComponent
-  },
+  },  */ 
   {
-    path: 'motivosConsulta',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: MotivosConsultaComponent
-  },{
-    path: 'motivoConsulta/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: MotivoConsultaComponent
-  },
-  {
-    path: 'signosVitales',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: SignosVitalesComponent
-  },{
-    path: 'signoVital/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: SignoVitalComponent
-  },
-  {
-    path: 'enfermedadesCie10',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: EnfermedadesCie10Component
-  },{
-    path: 'enfermedadCie10/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: EnfermedadCie10Component
-  },
-  {
-    path: 'reporteGeneral',canActivate: [guard], data: { expectedRol: ['admin'] },
+    path: 'reporteGeneral',canActivate: [reportesguard], data: { expectedRol: ['admin', 'reportes'] },
     component: ReportesComponent
-  },
+  }
   ]
 }];
 

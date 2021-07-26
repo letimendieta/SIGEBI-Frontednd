@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
 import { PacienteModelo } from 'src/app/modelos/paciente.modelo';
 import { ParametroModelo } from 'src/app/modelos/parametro.modelo';
 import { ParametrosService } from 'src/app/servicios/parametros.service';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-cita',
@@ -43,8 +44,11 @@ export class CitaComponent implements OnInit {
   cargando = false;
   historialClinicoForm: FormGroup;
   buscadorFuncionariosForm: FormGroup;
+  loadBuscadorPacientes = false;
+  loadBuscadorFuncionarios = false;
 
-  constructor( private citasService: CitasService,
+  constructor( private tokenService: TokenService,
+               private citasService: CitasService,
                private pacientesService: PacientesService,
                private parametrosService: ParametrosService,
                private funcionariosService: FuncionariosService,
@@ -117,7 +121,7 @@ export class CitaComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            //title: 'Algo salio mal',
+            //title: 'Algo salió mal',
             text: this.comunes.obtenerError(e)
           })
         }
@@ -162,10 +166,10 @@ export class CitaComponent implements OnInit {
     this.cita = this.citaForm.getRawValue();
 
     if ( this.cita.citaId ) {
-      this.cita.usuarioModificacion = 'admin';
+      this.cita.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.citasService.actualizarCita( this.cita );
     } else {
-      this.cita.usuarioCreacion = 'admin';
+      this.cita.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.citasService.crearCita( this.cita );
     }
 
@@ -188,7 +192,7 @@ export class CitaComponent implements OnInit {
     }, e => {
             Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: this.comunes.obtenerError(e)
             })          
        }
@@ -318,18 +322,20 @@ export class CitaComponent implements OnInit {
       this.alert=true;
       return;
     }
-    this.cargando = true;
+
+    this.loadBuscadorPacientes = true;
     this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
     .subscribe( resp => {
+      this.loadBuscadorPacientes = false;
       this.pacientes = resp;
-      this.cargando = false;
     }, e => {
+      this.loadBuscadorPacientes = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
-      this.cargando = false;
+      //this.cargando = false;
     });
   }
 
@@ -343,17 +349,20 @@ export class CitaComponent implements OnInit {
     persona.apellidos = this.buscadorFuncionariosForm.get('apellidos').value;
     buscador.personas = persona;
     buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
+
+    this.loadBuscadorFuncionarios = true;
     this.funcionariosService.buscarFuncionariosFiltros(buscador)
     .subscribe( resp => {
+      this.loadBuscadorFuncionarios = false;
       this.funcionarios = resp;
-      this.cargando = false;
     }, e => {
+      this.loadBuscadorFuncionarios = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
-      this.cargando = false;
+      //this.cargando = false;
     });
   }
 

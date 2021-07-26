@@ -42,6 +42,8 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
   buscador: SignoVitalModelo = new SignoVitalModelo();
   cargando = false;
   alert:boolean=false;
+  loadBuscadorPacientes = false;
+  loadBuscadorFuncionarios = false;
 
   constructor( private signosVitalesService: SignosVitalesService,
               private pacientesService: PacientesService,
@@ -204,7 +206,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
@@ -248,7 +250,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
         }, e => {            
             Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: e.status +'. '+ this.comunes.obtenerError(e),
             })
           }
@@ -324,18 +326,18 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
       this.alert=true;
       return;
     }
-    this.cargando = true;
+    this.loadBuscadorPacientes = true;
     this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
     .subscribe( resp => {
+      this.loadBuscadorPacientes = false;
       this.pacientes = resp;
-      this.cargando = false;
     }, e => {
+      this.loadBuscadorPacientes = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
-      this.cargando = false;
     });
   }
 
@@ -348,18 +350,20 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
     persona.nombres = this.buscadorFuncionariosForm.get('nombres').value;
     persona.apellidos = this.buscadorFuncionariosForm.get('apellidos').value;
     buscador.personas = persona;
-    buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
+    buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value; 
+    
+    this.loadBuscadorFuncionarios = true;
     this.funcionariosService.buscarFuncionariosFiltros(buscador)
     .subscribe( resp => {
+      this.loadBuscadorFuncionarios = false;
       this.funcionarios = resp;
-      this.cargando = false;
     }, e => {
+      this.loadBuscadorFuncionarios = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
-      this.cargando = false;
     });
   }
 

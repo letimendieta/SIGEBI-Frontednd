@@ -42,6 +42,7 @@ import { PreguntaModelo } from 'src/app/modelos/pregunta.modelo';
 import { PreguntasService } from 'src/app/servicios/preguntas.service';
 import { PreguntasHistorialService } from 'src/app/servicios/preguntasHistorial.service';
 import { PreguntaHistorialModelo } from 'src/app/modelos/preguntaHistorial.modelo';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-paciente',
@@ -97,7 +98,8 @@ export class PacienteComponent implements OnInit {
   size:any=0;
   nombre:any = "";
 
-  constructor( private pacientesService: PacientesService,
+  constructor( private tokenService: TokenService,
+               private pacientesService: PacientesService,
                private parametrosService: ParametrosService,
                private carrerasService: CarrerasService,
                private departamentosService: DepartamentosService,
@@ -204,7 +206,7 @@ export class PacienteComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -226,7 +228,7 @@ export class PacienteComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
@@ -249,7 +251,7 @@ export class PacienteComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -270,7 +272,7 @@ export class PacienteComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -294,7 +296,7 @@ export class PacienteComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -358,7 +360,7 @@ export class PacienteComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -378,7 +380,7 @@ export class PacienteComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -399,7 +401,7 @@ export class PacienteComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -418,7 +420,7 @@ export class PacienteComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -437,7 +439,7 @@ export class PacienteComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
     });
@@ -711,7 +713,7 @@ export class PacienteComponent implements OnInit {
       historialClinico = this.historialClinicoForm.getRawValue();
 
       historialClinico.pacienteId = paciente.pacienteId;
-      historialClinico.usuarioCreacion = 'admin';
+      historialClinico.usuarioCreacion = this.tokenService.getUserName().toString();
       historialClinico.areas = null;
 
       procesoPacienteHistorialClinico.paciente = paciente;
@@ -723,14 +725,14 @@ export class PacienteComponent implements OnInit {
       procesoPacienteHistorialClinico.preguntasList = this.preguntasSeleccionadas;
       
       if ( paciente.pacienteId ) {
-        paciente.personas.usuarioModificacion = 'admin';
-        paciente.usuarioModificacion = 'admin';
+        paciente.personas.usuarioModificacion = this.tokenService.getUserName().toString();
+        paciente.usuarioModificacion = this.tokenService.getUserName().toString();
         peticion = this.pacientesService.actualizarPacienteHistorialClinico( procesoPacienteHistorialClinico );
       } else {
         if(!paciente.personas.personaId){
-          paciente.personas.usuarioCreacion = 'admin';
+          paciente.personas.usuarioCreacion = this.tokenService.getUserName().toString();
         }
-        paciente.usuarioCreacion = 'admin';    
+        paciente.usuarioCreacion = this.tokenService.getUserName().toString();
         peticion = this.pacientesService.crearPacienteHistorialClinico( procesoPacienteHistorialClinico );
       }
 
@@ -780,7 +782,7 @@ export class PacienteComponent implements OnInit {
       }, e => {
             Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: this.comunes.obtenerError(e)
             })          
         }
@@ -789,7 +791,7 @@ export class PacienteComponent implements OnInit {
       Swal.close();
       Swal.fire({
         icon: 'error',
-        title: 'Algo salio mal'
+        title: 'Algo salió mal'
       })  
     }
   }
@@ -976,7 +978,7 @@ export class PacienteComponent implements OnInit {
     }, e => {
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
       this.cargando = false;

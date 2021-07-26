@@ -9,6 +9,7 @@ import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DataTableDirective } from 'angular-datatables';
 import { Router } from '@angular/router';
+import { FuncionarioModelo } from 'src/app/modelos/funcionario.modelo';
 
 @Component({
   selector: 'app-usuarios',
@@ -23,8 +24,8 @@ export class UsuariosComponent implements OnDestroy, OnInit {
   dtTrigger : Subject<any> = new Subject<any>();
 
   usuarios: Usuario2Modelo[] = [];
-  persona: PersonaModelo = new PersonaModelo();
-  buscador: Usuario2Modelo = new Usuario2Modelo();
+  //persona: PersonaModelo = new PersonaModelo();
+  //buscador: Usuario2Modelo = new Usuario2Modelo();
   buscadorForm: FormGroup;
   cargando = false;
 
@@ -63,9 +64,9 @@ export class UsuariosComponent implements OnDestroy, OnInit {
       processing: true,
       columns: [
         {data:'#'},
-        {data:'usuarioId'}, {data:'codigoUsuario'}, {data:'personas.personaId'},
-        {data:'funcionarios.funcionarioId'}, {data:'personas.cedula'}, {data:'personas.nombres'},
-        {data:'personas.apellido'}, {data:'estado'},
+        {data:'id'}, {data:'nombreUsuario'}, {data:'funcionarios.personas.personaId'},
+        {data:'funcionarios.funcionarioId'}, {data:'funcionarios.personas.cedula'}, {data:'funcionarios.personas.nombres'},
+        {data:'funcionarios.personas.apellido'}, {data:'estado'},
         {data:'Editar'}//,
         //{data:'Borrar'}
       ],
@@ -136,13 +137,23 @@ export class UsuariosComponent implements OnDestroy, OnInit {
     this.cargando = true;
     this.usuarios = [];
     this.rerender();
-    this.persona.cedula = this.buscadorForm.get('cedula').value;
-    this.persona.nombres = this.buscadorForm.get('nombres').value;
-    this.persona.apellidos = this.buscadorForm.get('apellidos').value;
-    this.buscador.personas = this.persona;
-    this.buscador.id = this.buscadorForm.get('usuarioId').value;
-    this.buscador.nombreUsuario = this.buscadorForm.get('codigoUsuario').value;
-    this.usuariosService.buscarUsuariosFiltros(this.buscador)
+    var persona: PersonaModelo = new PersonaModelo();
+    var buscador: Usuario2Modelo = new Usuario2Modelo();
+    var funcionario: FuncionarioModelo = new FuncionarioModelo();
+    persona.cedula = this.buscadorForm.get('cedula').value;
+    persona.nombres = this.buscadorForm.get('nombres').value;
+    persona.apellidos = this.buscadorForm.get('apellidos').value;
+
+    funcionario.personas = persona;
+    if( !persona.cedula && ! persona.nombres && !persona.apellidos ){
+      buscador.funcionarios = null;
+    }else{
+      buscador.funcionarios = funcionario;
+    }
+    
+    buscador.id = this.buscadorForm.get('id').value;
+    buscador.nombreUsuario = this.buscadorForm.get('nombreUsuario').value;
+    this.usuariosService.buscarUsuariosFiltros(buscador)
     .subscribe( resp => {      
       this.usuarios = resp;
       this.dtTrigger.next();
@@ -150,7 +161,7 @@ export class UsuariosComponent implements OnDestroy, OnInit {
     }, e => {
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
@@ -161,8 +172,8 @@ export class UsuariosComponent implements OnDestroy, OnInit {
   limpiar(event) {
     event.preventDefault();
     this.buscadorForm.reset();
-    this.buscador = new Usuario2Modelo();
-    this.persona = new PersonaModelo();   
+    //this.buscador = new Usuario2Modelo();
+    //this.persona = new PersonaModelo();   
     this.usuarios = [];
     this.rerender();
     this.dtTrigger.next();
@@ -200,7 +211,7 @@ export class UsuariosComponent implements OnDestroy, OnInit {
         }, e => {            
             Swal.fire({
               icon: 'info',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: e.status +'. '+ this.comunes.obtenerError(e)
             })
           }
@@ -229,8 +240,8 @@ export class UsuariosComponent implements OnDestroy, OnInit {
   crearFormulario() {
 
     this.buscadorForm = this.fb.group({
-      usuarioId  : ['', [] ],
-      codigoUsuario  : ['', [] ],
+      id  : ['', [] ],
+      nombreUsuario  : ['', [] ],
       cedula  : ['', [] ],
       nombres  : ['', [] ],
       apellidos: ['', [] ],

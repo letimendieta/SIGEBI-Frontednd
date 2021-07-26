@@ -11,20 +11,27 @@ export class GlobalConstants {
 
 	public static ACTIVO : string = "A";
 
-	public static ROLE_ADMIN : string = "ROLE_ADMIN";
-	public static ROLE_ENFERMERIA : string = "ROLE_ENFERMERIA";
-	public static ROLE_CLINICA_MEDICA : string = "ROLE_CLINICA_MEDICA";
-	public static ROLE_ODONTOLOGIA : string = "ROLE_ODONTOLOGIA";
-	//public static ROLE_PARAMETRIZACION : string = "ROLE_PARAMETRIZACION";
+	public static ROL_ADMIN : string = "ROL_ADMIN";
+	public static ROL_ENFERMERIA : string = "ROL_ENFERMERIA";
+	public static ROL_CLINICA_MEDICA : string = "ROL_CLINICA_MEDICA";
+	public static ROL_ODONTOLOGIA : string = "ROL_ODONTOLOGIA";
 
-	public static ROLE_CONSULTORIO : string = "ROLE_CONSULTORIO";
-	public static ROLE_PERSONAS : string = "ROLE_PERSONAS";
-	public static ROLE_PACIENTES : string = "ROLE_PACIENTES";
-	public static ROLE_CONFIGURACIONES : string = "ROLE_CONFIGURACIONES";
-	public static ROLE_FUNCIONARIOS : string = "ROLE_FUNCIONARIOS";
-	public static ROLE_PROCEDIMIENTOS : string = "ROLE_PROCEDIMIENTOS";
-	public static ROLE_STOCK : string = "ROLE_PROCEDIMIENTOS";
-	public static ROLE_USUARIOS : string = "ROLE_PROCEDIMIENTOS";
-	public static ROLE_REPORTES : string = "ROLE_REPORTES";
+	public static ROL_CONSULTORIO : string = "ROL_CONSULTORIO";
+	public static ROL_PERSONAS : string = "ROL_PERSONAS";
+	public static ROL_ABM_PERSONA : string = "ROL_ABM_PERSONA";
+	public static ROL_PACIENTES : string = "ROL_PACIENTES";
+	public static ROL_ABM_PACIENTE : string = "ROL_ABM_PACIENTE";
+	public static ROL_CONFIGURACIONES : string = "ROL_CONFIGURACIONES";
+	public static ROL_ABM_CONFIGURACION : string = "ROL_ABM_CONFIGURACION";
+	public static ROL_FUNCIONARIOS : string = "ROL_FUNCIONARIOS";
+	public static ROL_ABM_FUNCIONARIO : string = "ROL_ABM_FUNCIONARIO";
+	public static ROL_PROCEDIMIENTOS : string = "ROL_PROCEDIMIENTOS";
+	public static ROL_ABM_PROCEDIMIENTO : string = "ROL_ABM_PROCEDIMIENTO";
+	public static ROL_STOCK : string = "ROL_STOCK";
+	public static ROL_ABM_STOCK : string = "ROL_ABM_STOCK";
+	public static ROL_USUARIOS : string = "ROL_USUARIOS";
+	public static ROL_ABM_USUARIO : string = "ROL_ABM_USUARIO";
+	public static ROL_REPORTES : string = "ROL_REPORTES";
+	
 	
 }

@@ -7,6 +7,9 @@ import { AreaModelo } from '../../../modelos/area.modelo';
 import { AreasService } from '../../../servicios/areas.service';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import Swal from 'sweetalert2';
+import { ParametroModelo } from 'src/app/modelos/parametro.modelo';
+import { ParametrosService } from 'src/app/servicios/parametros.service';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-area',
@@ -17,8 +20,11 @@ export class AreaComponent implements OnInit {
   crear = false;
   areaForm: FormGroup;
   alertGuardar:boolean=false;
+  listaTipos: ParametroModelo;
 
-  constructor( private areasService: AreasService,
+  constructor( private tokenService: TokenService,
+               private areasService: AreasService,
+               private parametrosService: ParametrosService,
                private route: ActivatedRoute,
                private comunes: ComunesService,
                private router: Router,
@@ -29,6 +35,7 @@ export class AreaComponent implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     this.areaForm.get('estado').setValue('A');
+    this.obtenerParametros();
     if ( id !== 'nuevo' ) {
       
       this.areasService.getArea( Number(id) )
@@ -39,6 +46,19 @@ export class AreaComponent implements OnInit {
       this.crear = true;
     }
   }  
+
+  obtenerParametros() {
+    var tipoAreaParam = new ParametroModelo();
+    tipoAreaParam.codigoParametro = "TIPO_AREA";
+    tipoAreaParam.estado = "A";
+    var orderBy = "descripcionValor";
+    var orderDir = "asc";
+
+    this.parametrosService.buscarParametrosFiltros( tipoAreaParam, orderBy, orderDir )
+      .subscribe( (resp: ParametroModelo) => {
+        this.listaTipos = resp;
+    });
+  }
 
   guardar( ) {
 
@@ -70,11 +90,11 @@ export class AreaComponent implements OnInit {
 
     if ( area.areaId ) {
       //Modificar
-      area.usuarioModificacion = 'admin';
+      area.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.areasService.actualizarArea( area );
     } else {
       //Agregar
-      area.usuarioCreacion = 'admin';
+      area.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.areasService.crearArea( area );
     }
 
@@ -96,7 +116,7 @@ export class AreaComponent implements OnInit {
       });
     }, e => {Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: this.comunes.obtenerError(e)
             })
        }
@@ -138,12 +158,17 @@ export class AreaComponent implements OnInit {
     return this.areaForm.get('descripcion').invalid && this.areaForm.get('descripcion').touched
   }
 
+  get tipoNoValido() {
+    return this.areaForm.get('tipo').invalid && this.areaForm.get('tipo').touched
+  }
+
   crearFormulario() {
 
     this.areaForm = this.fb.group({
       areaId  : [null, [] ],
       codigo  : [null, [ Validators.required ]  ],
       descripcion  : [null, [ Validators.required]  ],
+      tipo  : [null, [ Validators.required]  ],
       estado: [null, [] ],
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],

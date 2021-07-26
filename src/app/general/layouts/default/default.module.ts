@@ -61,6 +61,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { UiSwitchModule } from 'ngx-ui-switch';
 import {FileUploadModule} from 'primeng/fileupload';
+import { AngularDualListBoxModule } from 'angular-dual-listbox';
 
 
 @NgModule({
@@ -127,7 +128,8 @@ import {FileUploadModule} from 'primeng/fileupload';
     MatIconModule,
     MatAutocompleteModule,
     UiSwitchModule,
-    FileUploadModule
+    FileUploadModule,
+    AngularDualListBoxModule 
   ],
   providers: [
     DashboardService

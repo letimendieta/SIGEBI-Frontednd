@@ -156,7 +156,7 @@ export class MotivosConsultaComponent implements OnDestroy, OnInit {
       }, e => {      
         Swal.fire({
           icon: 'info',
-          title: 'Algo salio mal',
+          title: 'Algo salió mal',
           text: e.status +'. '+ this.comunes.obtenerError(e)
         })
         this.cargando = false;
@@ -205,7 +205,7 @@ export class MotivosConsultaComponent implements OnDestroy, OnInit {
         }, e => {            
             Swal.fire({
               icon: 'info',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: e.status +'. '+ this.comunes.obtenerError(e)
             })
           }

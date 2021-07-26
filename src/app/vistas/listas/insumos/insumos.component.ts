@@ -142,7 +142,7 @@ export class InsumosComponent implements OnInit {
     }, e => {
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
@@ -190,7 +190,7 @@ export class InsumosComponent implements OnInit {
         }, e => {            
             Swal.fire({
               icon: 'info',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: this.comunes.obtenerError(e),
             })
           }

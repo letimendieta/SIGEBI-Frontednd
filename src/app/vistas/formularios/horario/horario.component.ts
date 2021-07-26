@@ -12,6 +12,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 
 import Swal from 'sweetalert2';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-horario',
@@ -28,8 +29,10 @@ export class HorarioComponent implements OnInit {
   alert:boolean=false;
   alertGuardar:boolean=false;
   dtOptions: any = {};
+  loadBuscadorFuncionarios = false;
 
-  constructor( private horariosService: HorariosService,
+  constructor( private tokenService: TokenService,
+               private horariosService: HorariosService,
                private funcionariosService: FuncionariosService,
                private route: ActivatedRoute,
                private comunes: ComunesService,
@@ -66,7 +69,7 @@ export class HorarioComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            //title: 'Algo salio mal',
+            //title: 'Algo salió mal',
             text: e.status +'. '+ this.comunes.obtenerError(e),
           })
         }
@@ -102,11 +105,11 @@ export class HorarioComponent implements OnInit {
 
     if ( this.horario.horarioDisponibleId ) {
       //Modificar
-      this.horario.usuarioModificacion = 'admin';
+      this.horario.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.horariosService.actualizarHorario( this.horario );
     } else {
       //Agregar
-      this.horario.usuarioCreacion = 'admin';
+      this.horario.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.horariosService.crearHorario( this.horario );
     }
 
@@ -129,7 +132,7 @@ export class HorarioComponent implements OnInit {
       });
     }, e => {Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }
@@ -223,18 +226,20 @@ export class HorarioComponent implements OnInit {
     persona.nombres = this.buscadorFuncionariosForm.get('nombres').value;
     persona.apellidos = this.buscadorFuncionariosForm.get('apellidos').value;
     buscador.personas = persona;
-    buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
+    buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;   
+
+    this.loadBuscadorFuncionarios = true; 
     this.funcionariosService.buscarFuncionariosFiltros(buscador)
     .subscribe( resp => {
+      this.loadBuscadorFuncionarios = false;
       this.funcionarios = resp;
-      this.cargando = false;
     }, e => {
+      this.loadBuscadorFuncionarios = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
-      this.cargando = false;
     });
   }
 

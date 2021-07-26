@@ -135,7 +135,7 @@ export class HistorialClinicoComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            //title: 'Algo salio mal',
+            //title: 'Algo salió mal',
             text: e.status +'. '+ this.comunes.obtenerError(e),
           })
         }
@@ -238,7 +238,7 @@ export class HistorialClinicoComponent implements OnInit {
     }, e => {
             Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: e.status +'. '+ this.comunes.obtenerError(e)
             })          
        }
@@ -346,7 +346,7 @@ export class HistorialClinicoComponent implements OnInit {
     }, e => {
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;

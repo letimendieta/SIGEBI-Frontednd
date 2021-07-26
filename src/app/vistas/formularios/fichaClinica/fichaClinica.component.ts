@@ -67,7 +67,7 @@ export class FichaClinicaComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
     });
@@ -87,7 +87,7 @@ export class FichaClinicaComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
     });
@@ -108,7 +108,7 @@ export class FichaClinicaComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
     });
@@ -127,7 +127,7 @@ export class FichaClinicaComponent implements OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
     });
@@ -251,7 +251,7 @@ export class FichaClinicaComponent implements OnInit {
       });
     }, e => {Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }

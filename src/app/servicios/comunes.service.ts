@@ -8,7 +8,7 @@ export class ComunesService {
   constructor( ) { }
 
   obtenerError(e : any){
-    var mensaje = "Error indefinido ";
+    var mensaje = "Ocurrió un error en el servidor";
       if(e.error){
         if(e.error.mensaje){
           mensaje = e.error.mensaje;

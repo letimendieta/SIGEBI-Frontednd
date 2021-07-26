@@ -66,13 +66,29 @@
                 </div>
 
                 <div class="form-group">
+                  <label><b>Tipo</b><span class="requerido"> *</span></label>
+                  <select class="form-control input-sm" name="tipo"
+                        formControlName="tipo" [class.is-invalid]="tipoNoValido">
+                        <option value=null >Seleccionar</option>
+                        <option *ngFor="let item of listaTipos; let i = index"
+                              value="{{item.valor}}">
+                              {{item.descripcionValor}}
+                        </option>
+                  </select>
+                  <small *ngIf="tipoNoValido" class="text-danger">
+                        Seleccione el tipo de &aacute;rea
+                  </small>
+                </div>
+
+                <div class="form-group">
                   <label><b>Estado</b></label>
                   <select class="custom-select"
                         formControlName="estado" name = "estado">
                     <option value="A" [selected]="true">ACTIVO</option>
                     <option value="I">INACTIVO</option>
                   </select> 
-                </div>            
+                </div>  
+                         
               </div>
             </div>
 

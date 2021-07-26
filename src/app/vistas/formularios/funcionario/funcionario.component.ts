@@ -13,6 +13,7 @@ import { PacientesService } from '../../../servicios/pacientes.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import Swal from 'sweetalert2';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-funcionario',
@@ -32,7 +33,8 @@ export class FuncionarioComponent implements OnInit {
   dtOptions: any = {};
   loadBuscadorPersonas = false;
 
-  constructor( private funcionariosService: FuncionariosService,
+  constructor( private tokenService: TokenService,
+               private funcionariosService: FuncionariosService,
                private areasService: AreasService,
                private personasService: PersonasService,
                private pacientesService: PacientesService,
@@ -96,22 +98,16 @@ export class FuncionarioComponent implements OnInit {
   buscadorFuncionarios() {
     var persona: PersonaModelo = new PersonaModelo();
     var buscador = new FuncionarioModelo();
-    //persona.cedula = this.funcionarioForm.get('personas').get('cedula').value;
-    //persona.nombres = this.funcionarioForm.get('personas').get('cedula').value;
-    //persona.apellidos = this.funcionarioForm.get('personas').get('cedula').value;
+   
     persona.personaId = this.funcionarioForm.get('personas').get('personaId').value;
-    /*if( !persona.cedula && !persona.nombres && !persona.apellidos ){
-      buscador.personas = null;
-    }else{
-      buscador.personas = persona;
-    }  */  
+   
     buscador.personas = persona;
     this.funcionariosService.buscarFuncionariosFiltros(buscador)
     .subscribe( ( resp : FuncionarioModelo[] ) => {   
       if(resp.length > 0){
         Swal.fire({
           icon: 'info',
-          //title: 'Algo salio mal',
+          //title: 'Algo salió mal',
           text: 'La persona ya existe como funcionario'
         })
       }   
@@ -143,14 +139,14 @@ export class FuncionarioComponent implements OnInit {
     this.funcionario = this.funcionarioForm.getRawValue();
 
     if ( this.funcionario.funcionarioId ) {
-      this.funcionario.personas.usuarioModificacion = 'admin';
-      this.funcionario.usuarioModificacion = 'admin';
+      this.funcionario.personas.usuarioModificacion = this.tokenService.getUserName().toString();
+      this.funcionario.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.funcionariosService.actualizarFuncionario( this.funcionario );
     } else {
       if(!this.funcionario.personas.personaId){
-        this.funcionario.personas.usuarioCreacion = 'admin';
+        this.funcionario.personas.usuarioCreacion = this.tokenService.getUserName().toString();
       }
-      this.funcionario.usuarioCreacion = 'admin';
+      this.funcionario.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.funcionariosService.crearFuncionario( this.funcionario );
     }
 
@@ -173,7 +169,7 @@ export class FuncionarioComponent implements OnInit {
     }, e => {
         Swal.fire({
           icon: 'error',
-          title: 'Algo salio mal',
+          title: 'Algo salió mal',
           text: this.comunes.obtenerError(e),
         })          
        }
@@ -230,6 +226,7 @@ export class FuncionarioComponent implements OnInit {
       areas  : this.fb.group({
         areaId: [null, [ Validators.required] ]
       }),
+      regProf: [null, [] ],
       estado  : [null, [] ],
       fechaIngreso  : [null, [Validators.required] ],
       fechaEgreso  : [null, [] ],
@@ -280,7 +277,7 @@ export class FuncionarioComponent implements OnInit {
       this.loadBuscadorPersonas = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
       this.cargando = false;

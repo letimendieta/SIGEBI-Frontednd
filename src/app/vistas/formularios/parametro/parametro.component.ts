@@ -7,6 +7,7 @@ import { ParametroModelo } from '../../../modelos/parametro.modelo';
 import { ParametrosService } from '../../../servicios/parametros.service';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import Swal from 'sweetalert2';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-parametro',
@@ -19,7 +20,8 @@ export class ParametroComponent implements OnInit {
   parametro: ParametroModelo = new ParametroModelo();
   alertGuardar:boolean=false;
 
-  constructor( private parametrosService: ParametrosService,
+  constructor( private tokenService: TokenService,
+               private parametrosService: ParametrosService,
                private route: ActivatedRoute,
                private comunes: ComunesService,
                private router: Router,
@@ -69,11 +71,11 @@ export class ParametroComponent implements OnInit {
 
     if ( this.parametro.parametroId ) {
       //Modificar
-      this.parametro.usuarioModificacion = 'admin';
+      this.parametro.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.parametrosService.actualizarParametro( this.parametro );
     } else {
       //Agregar
-      this.parametro.usuarioCreacion = 'admin';
+      this.parametro.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.parametrosService.crearParametro( this.parametro );
     }
 
@@ -95,7 +97,7 @@ export class ParametroComponent implements OnInit {
       });
     }, e => {Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }

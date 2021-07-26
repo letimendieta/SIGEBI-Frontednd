@@ -208,7 +208,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
     }, e => {      
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
@@ -252,7 +252,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
         }, e => {            
             Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: this.comunes.obtenerError(e),
             })
           }
@@ -339,7 +339,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
       this.loadBuscadorPacientes = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
@@ -366,7 +366,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
       this.loadBuscadorFuncionarios = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
       this.cargando = false;

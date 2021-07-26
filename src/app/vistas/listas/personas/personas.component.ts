@@ -22,7 +22,7 @@ export class PersonasComponent implements OnDestroy, OnInit {
   dtTrigger : Subject<any> = new Subject<any>();
 
   personas: PersonaModelo[] = [];
-  buscador: PersonaModelo = new PersonaModelo();
+  //buscador: PersonaModelo = new PersonaModelo();
   buscadorForm: FormGroup;
   cargando = false;  
 
@@ -135,8 +135,9 @@ export class PersonasComponent implements OnDestroy, OnInit {
     this.cargando = true;
     this.personas = [];
     this.rerender();
-    this.buscador = this.buscadorForm.getRawValue();
-    this.personasService.buscarPersonasFiltros(this.buscador)
+    var buscador = this.buscadorForm.getRawValue();
+    
+    this.personasService.buscarPersonasFiltros(buscador)
     .subscribe( resp => {      
       this.personas = resp;
       this.dtTrigger.next();
@@ -144,7 +145,7 @@ export class PersonasComponent implements OnDestroy, OnInit {
     }, e => {
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
       this.cargando = false;
@@ -155,7 +156,6 @@ export class PersonasComponent implements OnDestroy, OnInit {
   limpiar(event) {
     event.preventDefault();
     this.buscadorForm.reset();
-    this.buscador = new PersonaModelo();
     this.personas = [];
     this.rerender();
     this.dtTrigger.next();
@@ -192,7 +192,7 @@ export class PersonasComponent implements OnDestroy, OnInit {
         }, e => {
                 Swal.fire({
                   icon: 'error',
-                  title: 'Algo salio mal',
+                  title: 'Algo salió mal',
                   text: e.status +'. '+ this.comunes.obtenerError(e)
                 })
             }

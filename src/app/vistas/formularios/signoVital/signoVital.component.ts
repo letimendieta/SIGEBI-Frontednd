@@ -16,6 +16,7 @@ import { PacienteModelo } from 'src/app/modelos/paciente.modelo';
 import { StockModelo } from 'src/app/modelos/stock.modelo';
 import { ParametroModelo } from 'src/app/modelos/parametro.modelo';
 import { ParametrosService } from 'src/app/servicios/parametros.service';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-signoVital',
@@ -43,8 +44,11 @@ export class SignoVitalComponent implements OnInit {
   dtOptions: any = {};
   modificar: boolean = false;
   cargando = false;
+  loadBuscadorPacientes = false;
+  loadBuscadorFuncionarios = false;
 
-  constructor( private signoVitalService: SignosVitalesService,
+  constructor( private tokenService: TokenService,
+               private signoVitalService: SignosVitalesService,
                private pacientesService: PacientesService,
                private funcionariosService: FuncionariosService,
                private router: Router,
@@ -137,10 +141,10 @@ export class SignoVitalComponent implements OnInit {
     signoVital = this.signoVitalForm.getRawValue();
   
     if ( signoVital.signoVitalId ) {
-      signoVital.usuarioModificacion = 'admin';
+      signoVital.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.signoVitalService.actualizarSignoVital( signoVital );
     } else {
-      signoVital.usuarioCreacion = 'admin';
+      signoVital.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.signoVitalService.crearSignoVital( signoVital );
     }
 
@@ -163,7 +167,7 @@ export class SignoVitalComponent implements OnInit {
     }, e => {          
         Swal.fire({
           icon: 'error',
-          title: 'Algo salio mal',
+          title: 'Algo salió mal',
           text: e.status +'. '+ this.comunes.obtenerError(e),
         })          
       }
@@ -292,18 +296,18 @@ export class SignoVitalComponent implements OnInit {
       this.alert=true;
       return;
     }
-    this.cargando = true;
+    this.loadBuscadorPacientes = true;
     this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
     .subscribe( resp => {
+      this.loadBuscadorPacientes = false;
       this.pacientes = resp;
-      this.cargando = false;
     }, e => {
+      this.loadBuscadorPacientes = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
-      this.cargando = false;
     });
   }
 
@@ -316,18 +320,20 @@ export class SignoVitalComponent implements OnInit {
     persona.nombres = this.buscadorFuncionariosForm.get('nombres').value;
     persona.apellidos = this.buscadorFuncionariosForm.get('apellidos').value;
     buscador.personas = persona;
-    buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
+    buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value; 
+    
+    this.loadBuscadorFuncionarios = true;
     this.funcionariosService.buscarFuncionariosFiltros(buscador)
     .subscribe( resp => {
+      this.loadBuscadorFuncionarios = false;
       this.funcionarios = resp;
-      this.cargando = false;
     }, e => {
+      this.loadBuscadorFuncionarios = false;
       Swal.fire({
         icon: 'info',
-        title: 'Algo salio mal',
+        title: 'Algo salió mal',
         text: e.status +'. '+ this.comunes.obtenerError(e)
       })
-      this.cargando = false;
     });
   }
 

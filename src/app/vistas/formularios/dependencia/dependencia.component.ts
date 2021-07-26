@@ -8,6 +8,7 @@ import { DependenciaModelo } from '../../../modelos/dependencia.modelo';
 import { DependenciasService } from '../../../servicios/dependencias.service';
 
 import Swal from 'sweetalert2';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-dependencia',
@@ -20,7 +21,8 @@ export class DependenciaComponent implements OnInit {
   alertGuardar:boolean=false;
   dependencia: DependenciaModelo = new DependenciaModelo();
 
-  constructor( private dependenciasService: DependenciasService,
+  constructor( private tokenService: TokenService,
+               private dependenciasService: DependenciasService,
                private route: ActivatedRoute,
                private comunes: ComunesService,
                private router: Router,
@@ -71,11 +73,11 @@ export class DependenciaComponent implements OnInit {
 
     if ( this.dependencia.dependenciaId ) {
       //Modificar
-      this.dependencia.usuarioModificacion = 'admin';
+      this.dependencia.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.dependenciasService.actualizarDependencia( this.dependencia );
     } else {
       //Agregar
-      this.dependencia.usuarioCreacion = 'admin';
+      this.dependencia.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.dependenciasService.crearDependencia( this.dependencia );
     }
 
@@ -98,7 +100,7 @@ export class DependenciaComponent implements OnInit {
       });
     }, e => {Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }

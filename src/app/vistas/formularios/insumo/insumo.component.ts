@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { ParametroModelo } from 'src/app/modelos/parametro.modelo';
 import { ParametrosService } from 'src/app/servicios/parametros.service';
 import { InsumoMedicoModelo } from 'src/app/modelos/insumoMedico.modelo';
+import { TokenService } from 'src/app/servicios/token.service';
 
 
 @Component({
@@ -23,7 +24,8 @@ export class InsumoComponent implements OnInit {
   alertGuardar:boolean=false;
   listaUnidadMedida: ParametroModelo;
 
-  constructor( private insumosService: InsumosMedicosService,
+  constructor( private tokenService: TokenService,
+               private insumosService: InsumosMedicosService,
                private parametrosService: ParametrosService,
                private route: ActivatedRoute,
                private router: Router,
@@ -75,11 +77,11 @@ export class InsumoComponent implements OnInit {
 
     if ( insumoMedico.insumoMedicoId ) {
       //Modificar
-      insumoMedico.usuarioModificacion = 'admin';
+      insumoMedico.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.insumosService.actualizarInsumoMedico( insumoMedico );
     } else {
       //Agregar
-      insumoMedico.usuarioCreacion = 'admin';
+      insumoMedico.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.insumosService.crearInsumoMedico( insumoMedico);
     }
 
@@ -102,7 +104,7 @@ export class InsumoComponent implements OnInit {
       });
     }, e => {Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: this.comunes.obtenerError(e),
             })
        }

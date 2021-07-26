@@ -8,6 +8,7 @@ import { DepartamentoModelo } from '../../../modelos/departamento.modelo';
 import { DepartamentosService } from '../../../servicios/departamentos.service';
 
 import Swal from 'sweetalert2';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-departamento',
@@ -20,7 +21,8 @@ export class DepartamentoComponent implements OnInit {
   alertGuardar:boolean=false;
   departamento: DepartamentoModelo = new DepartamentoModelo();
 
-  constructor( private departamentosService: DepartamentosService,
+  constructor( private tokenService: TokenService,
+               private departamentosService: DepartamentosService,
                private route: ActivatedRoute,
                private comunes: ComunesService,
                private router: Router,
@@ -71,11 +73,11 @@ export class DepartamentoComponent implements OnInit {
 
     if ( this.departamento.departamentoId ) {
       //Modificar
-      this.departamento.usuarioModificacion = 'admin';
+      this.departamento.usuarioModificacion = this.tokenService.getUserName().toString();
       peticion = this.departamentosService.actualizarDepartamento( this.departamento );
     } else {
       //Agregar
-      this.departamento.usuarioCreacion = 'admin';
+      this.departamento.usuarioCreacion = this.tokenService.getUserName().toString();
       peticion = this.departamentosService.crearDepartamento( this.departamento );
     }
 
@@ -98,7 +100,7 @@ export class DepartamentoComponent implements OnInit {
       });
     }, e => {Swal.fire({
               icon: 'error',
-              title: 'Algo salio mal',
+              title: 'Algo salió mal',
               text: e.status +'. '+ this.comunes.obtenerError(e),
             })
        }
