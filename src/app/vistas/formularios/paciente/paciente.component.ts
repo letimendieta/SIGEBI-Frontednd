@@ -755,10 +755,11 @@ export class PacienteComponent implements OnInit {
 
           this.uploadService.upload2(renameFile, "HC").subscribe(
             event => {
-              mensajeUploadHistorialClinico
+              mensajeUploadHistorialClinico;
+              console.log("Archivo subido con exito");
             },
             err => {
-              mensajeUploadHistorialClinico = 'No se pudo subir el archivo!' + err.status +'. '+ this.comunes.obtenerError(err);
+              mensajeUploadHistorialClinico = 'No se pudo subir el archivo!' + this.comunes.obtenerError(err);
               console.log(mensajeUploadHistorialClinico);
           });
 

@@ -1,5 +1,8 @@
 export class GlobalConstants {
-    public static apiUrlBackend: string = "http://localhost:8080/auth";
+	//local
+    //public static apiUrlBackend: string = "http://localhost:8080/sigebi/auth";
+	//produccion
+	public static apiUrlBackend: string = "http://bienestar.pol.una.py:8080/sigebi/auth";
 
     public static imagenReporteListas: string = "http://datatables.net/media/images/logo-fade.png"
 
