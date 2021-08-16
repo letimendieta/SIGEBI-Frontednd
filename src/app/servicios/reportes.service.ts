@@ -17,14 +17,6 @@ export class ReportesService {
   constructor( private http: HttpClient ) { }
 
 
-  
-
- /* generarReporte( reporte: Reporte2Modelo ) {
-    
-  
-
-  return this.http.get(`${ this.url }/reportes/union-estamentos?anho=` + reporte.anho + `&mes=`+reporte.mes+`&formato=pdf`);
-  }*/
 
   generarReporte(reporte: Reporte2Modelo): Observable<Blob> {
     const httpHeaders = new HttpHeaders({

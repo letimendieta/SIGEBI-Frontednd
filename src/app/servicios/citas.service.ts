@@ -58,6 +58,21 @@ export class CitasService {
             );
   }
 
+  buscarCarrerasFiltros( carrera: CitaModelo, orderBy:string, orderDir:string ) {
+    let params = new HttpParams();
+    var filtros = carrera == null ? new CitaModelo() : carrera;
+    params = params.append('filtros', JSON.stringify(filtros));
+    params = params.append('orderBy', orderBy);
+    params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
+
+    return this.http.get(`${ this.url }/citas/buscar/`,{params:params})
+      .pipe(
+        map( this.crearArreglo ),
+        delay(0)
+      );
+  }
+
   buscarCitasFiltros( cita: CitaModelo ) {
     let params = new HttpParams();
     var filtros = cita == null ? new CitaModelo() : cita;

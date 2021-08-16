@@ -37,7 +37,6 @@ import { HistorialesClinicosComponent } from 'src/app/vistas/listas/historialesC
 import { HistorialClinicoComponent } from 'src/app/vistas/formularios/historialClinico/historialClinico.component';
 import { FichaClinicaComponent } from 'src/app/vistas/formularios/fichaClinica/fichaClinica.component';
 import { ConsultorioComponent } from 'src/app/vistas/formularios/consultorio/consultorio.component';
-import { EnfermeriaComponent } from 'src/app/vistas/formularios/enfermeria/enfermeria.component';
 import { MotivosConsultaComponent } from 'src/app/vistas/listas/motivosConsulta/motivosConsulta.component';
 import { MotivoConsultaComponent } from 'src/app/vistas/formularios/motivoConsulta/motivoConsulta.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -46,6 +45,7 @@ import { SignoVitalComponent } from 'src/app/vistas/formularios/signoVital/signo
 import { RouterModule } from '@angular/router';
 import { EnfermedadesCie10Component } from 'src/app/vistas/listas/enfermedadesCie10/enfermedadesCie10.component';
 import { EnfermedadCie10Component } from 'src/app/vistas/formularios/enfermedadCie10/enfermedadCie10.component';
+import { AyudaComponent } from 'src/app/vistas/formularios/ayuda/ayuda.component';
 import { MatSidenavModule} from '@angular/material/sidenav';
 import { MatDividerModule} from '@angular/material/divider';
 import { SharedModule } from 'src/app/general/shared.module';
@@ -105,11 +105,11 @@ import { AngularDualListBoxModule } from 'angular-dual-listbox';
     EnfermedadesCie10Component,
     EnfermedadCie10Component,
     ConsultorioComponent,
-    EnfermeriaComponent,
     MotivosConsultaComponent,
     MotivoConsultaComponent,
     SignosVitalesComponent,
-    SignoVitalComponent
+    SignoVitalComponent,
+    AyudaComponent
   ],
   imports: [
     CommonModule,

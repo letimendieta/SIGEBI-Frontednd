@@ -60,7 +60,22 @@ export class ProcedimientosService {
             );
   }
 
-  buscarProcedimientosFiltros( procedimiento: ProcedimientoModelo ) {
+  buscarProcedimientosFiltros( pregunta: ProcedimientoModelo, orderBy:string, orderDir:string ) {
+    let params = new HttpParams();
+    var filtros = pregunta == null ? new ProcedimientoModelo() : pregunta;
+    params = params.append('filtros', JSON.stringify(filtros));
+    params = params.append('orderBy', orderBy);
+    params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
+
+    return this.http.get(`${ this.url }/procedimientos/buscar/`,{params:params})
+    .pipe(
+      map( this.crearArreglo ),
+      delay(0)
+    );
+  }
+
+  buscarProcedimientosFiltrosTabla( procedimiento: ProcedimientoModelo ) {
     let params = new HttpParams();
     var filtros = procedimiento == null ? new ProcedimientoModelo() : procedimiento;
     params = params.append('filtros', JSON.stringify(filtros));

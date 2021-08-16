@@ -147,7 +147,7 @@ export class PacienteComponent implements OnInit {
         .subscribe( (resp: PacienteModelo) => {  
           this.pacienteForm.patchValue(resp);
           this.pacienteForm.get('personas').get('personaId').disable();
-          var cedula = this.pacienteForm.get('personas').get('cedula').value;
+          this.pacienteForm.get('personas').get('cedula').disable();
           this.ageCalculator();
 
           if( resp.personas.foto ){
@@ -341,7 +341,7 @@ export class PacienteComponent implements OnInit {
     var area = new AreaModelo();
     area.estado = "A";
 
-    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
+    this.areasService.buscarAreasFiltrosOrder(area, orderBy, orderDir )
       .subscribe( (resp: AreaModelo) => {
         this.listaAreas = resp;
     });
@@ -525,7 +525,7 @@ export class PacienteComponent implements OnInit {
     var orderBy = "descripcionValor";
     var orderDir = "asc";
 
-    this.parametrosService.buscarParametrosFiltros( estadoCivilParam, orderBy, orderDir )
+    this.parametrosService.buscarParametrosFiltrosOrder( estadoCivilParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaEstadoCivil = resp;
     });
@@ -534,7 +534,7 @@ export class PacienteComponent implements OnInit {
     sexoParam.codigoParametro = "SEXO";
     sexoParam.estado = "A";
 
-    this.parametrosService.buscarParametrosFiltros( sexoParam, orderBy, orderDir )
+    this.parametrosService.buscarParametrosFiltrosOrder( sexoParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaSexo = resp;
     });
@@ -543,7 +543,7 @@ export class PacienteComponent implements OnInit {
     nacionalidadParam.codigoParametro = "NACIONALIDAD";
     nacionalidadParam.estado = "A";
 
-    this.parametrosService.buscarParametrosFiltros( nacionalidadParam, orderBy, orderDir )
+    this.parametrosService.buscarParametrosFiltrosOrder( nacionalidadParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaNacionalidad = resp;
     });  
@@ -552,7 +552,7 @@ export class PacienteComponent implements OnInit {
     grupoSanguineoParam.codigoParametro = "GRUPO_SANGUINEO";
     grupoSanguineoParam.estado = "A";
 
-    this.parametrosService.buscarParametrosFiltros( grupoSanguineoParam, orderBy, orderDir )
+    this.parametrosService.buscarParametrosFiltrosOrder( grupoSanguineoParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaGrupoSanguineo = resp;
     });
@@ -587,11 +587,11 @@ export class PacienteComponent implements OnInit {
     }
     var persona: PersonaModelo = new PersonaModelo();
     persona.cedula = cedula;
-    this.personasService.buscarPersonasFiltros( persona )
+    this.personasService.buscarPersonasFiltrosTabla( persona )
       .subscribe( (resp : PersonaModelo[] ) => {
         if(resp.length > 0 ){
           this.pacienteForm.get('personas').patchValue(resp[0]);
-          this.pacienteForm.get('personas').disable();
+          this.pacienteForm.get('personas').get("cedula").disable();
           this.ageCalculator();
           this.validarPaciente();
         }
@@ -612,7 +612,7 @@ export class PacienteComponent implements OnInit {
     persona.cedula = this.pacienteForm.get('personas').get('cedula').value; 
     buscadorPaciente.personas = persona;
     
-    this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
+    this.pacientesService.buscarPacientesFiltrosTabla(buscadorPaciente)
     .subscribe( ( resp : PacienteModelo[] ) => {
       if(resp && resp.length > 0){
         Swal.fire({
@@ -628,7 +628,7 @@ export class PacienteComponent implements OnInit {
     var orderBy = "descripcion";
     var orderDir = "asc";
 
-    this.carrerasService.buscarCarrerasFiltros(null, orderBy, orderDir )
+    this.carrerasService.buscarCarrerasFiltrosOrder(null, orderBy, orderDir )
       .subscribe( (resp: CarreraModelo) => {
         this.listaCarreras = resp;
     });
@@ -638,7 +638,7 @@ export class PacienteComponent implements OnInit {
     var orderBy = "descripcion";
     var orderDir = "asc";
 
-    this.departamentosService.buscarDepartamentosFiltros(null, orderBy, orderDir )
+    this.departamentosService.buscarDepartamentosFiltrosOrder(null, orderBy, orderDir )
       .subscribe( (resp: DepartamentoModelo) => {
         this.listaDepartamentos = resp;
     });
@@ -648,7 +648,7 @@ export class PacienteComponent implements OnInit {
     var orderBy = "descripcion";
     var orderDir = "asc";
 
-    this.dependenciasService.buscarDependenciasFiltros(null, orderBy, orderDir )
+    this.dependenciasService.buscarDependenciasFiltrosOrder(null, orderBy, orderDir )
       .subscribe( (resp: DependenciaModelo) => {
         this.listaDependencias = resp;
     });
@@ -658,7 +658,7 @@ export class PacienteComponent implements OnInit {
     var orderBy = "descripcion";
     var orderDir = "asc";
 
-    this.estamentosService.buscarEstamentosFiltros(null, orderBy, orderDir )
+    this.estamentosService.buscarEstamentosFiltrosOrder(null, orderBy, orderDir )
       .subscribe( (resp: EstamentoModelo) => {
         this.listaEstamentos = resp;
     });
@@ -693,16 +693,20 @@ export class PacienteComponent implements OnInit {
       var paciente: PacienteModelo = new PacienteModelo();
       paciente = this.pacienteForm.getRawValue();
 
-      if ( paciente.personas.carreras != null && paciente.personas.carreras.carreraId == null ){
+      if ( paciente.personas.carreras != null 
+        && paciente.personas.carreras.carreraId == null || isNaN( paciente.personas.carreras.carreraId) ){
         paciente.personas.carreras = null;
       }
-      if ( paciente.personas.departamentos != null && paciente.personas.departamentos.departamentoId == null ){
+      if ( paciente.personas.departamentos != null 
+        && (paciente.personas.departamentos.departamentoId == null || isNaN( paciente.personas.departamentos.departamentoId) ) ){
         paciente.personas.departamentos = null;
       }
-      if ( paciente.personas.dependencias != null && paciente.personas.dependencias.dependenciaId == null ){
+      if ( paciente.personas.dependencias != null 
+        && paciente.personas.dependencias.dependenciaId == null || isNaN( paciente.personas.dependencias.dependenciaId) ){
         paciente.personas.dependencias = null;
       }
-      if ( paciente.personas.estamentos != null && paciente.personas.estamentos.estamentoId == null ){
+      if ( paciente.personas.estamentos != null 
+        && paciente.personas.estamentos.estamentoId == null || isNaN( paciente.personas.estamentos.estamentoId) ){
         paciente.personas.estamentos = null;
       }
 
@@ -742,7 +746,6 @@ export class PacienteComponent implements OnInit {
         var mensajeUploadHistorialClinico = '';
         if(this.selectedFilesHistorialClinico){
           var cedula = resp.paciente.personas.cedula;
-          var areaId = this.historialClinicoForm.get('areas').get('areaId').value;
           this.currentFileHistorialClinico = this.selectedFilesHistorialClinico.item(0);
 
           var archivo = this.currentFileHistorialClinico.name.split(".")[0];
@@ -811,28 +814,6 @@ export class PacienteComponent implements OnInit {
     event.preventDefault();
     this.pacienteForm.reset();
     this.pacienteForm.get('personas').enable();
-  }
-
-  obtenerError(e : any){
-    var mensaje = "Error indefinido ";
-    if(e.error){
-      if(e.error.mensaje){
-        mensaje = e.error.mensaje;
-      }
-      if(e.error.message){
-        mensaje = e.error.message;
-      }
-      if(e.error.errors){
-        mensaje = mensaje + ' ' + e.error.errors[0];
-      }
-      if(e.error.error){
-        mensaje = mensaje + ' ' + e.error.error;
-      }
-    }
-    if(e.message){
-      mensaje = mensaje + ' ' + e.message;
-    }
-    return mensaje;  
   }
 
   get personaIdNoValido() {
@@ -972,7 +953,7 @@ export class PacienteComponent implements OnInit {
       return;
     }
     this.cargando = true;
-    this.personasService.buscarPersonasFiltros(buscador)
+    this.personasService.buscarPersonasFiltrosTabla(buscador)
     .subscribe( ( resp : PersonaModelo[] ) => {
       this.personas = resp;
       this.cargando = false;

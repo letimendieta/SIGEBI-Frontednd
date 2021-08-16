@@ -69,8 +69,23 @@ export class DepartamentosService {
     params = params.append('filtros', JSON.stringify(filtros));
     params = params.append('orderBy', orderBy);
     params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
 
+    return this.http.get(`${ this.url }/departamentos/buscar/`,{params:params})
+    .pipe(
+      map( this.crearArreglo ),
+      delay(0)
+    );
+  }
+
+  buscarDepartamentosFiltrosOrder( departamento: DepartamentoModelo, orderBy:string, orderDir:string ) {
+    let params = new HttpParams();
+    var filtros = departamento == null ? new DepartamentoModelo() : departamento;
     params = params.append('filtros', JSON.stringify(filtros));
+    params = params.append('orderBy', orderBy);
+    params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
+
     return this.http.get(`${ this.url }/departamentos/buscar/`,{params:params});
   }
 

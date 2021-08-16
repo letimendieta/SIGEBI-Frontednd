@@ -137,9 +137,11 @@ export class CarrerasComponent implements OnDestroy, OnInit {
     this.cargando = true;
     this.carreras = [];
     this.rerender();
-    this.buscador = this.buscadorForm.getRawValue();
-
-    this.carrerasService.buscarCarrerasFiltrosTabla(this.buscador)
+    var buscador = new CarreraModelo();
+    buscador = this.buscadorForm.getRawValue();
+    var orderBy = "carreraId";
+    var orderDir = "desc";
+    this.carrerasService.buscarCarrerasFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.carreras = resp;
       this.dtTrigger.next();

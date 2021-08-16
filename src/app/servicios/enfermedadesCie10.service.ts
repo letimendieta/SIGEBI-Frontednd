@@ -70,8 +70,11 @@ export class EnfermedadesCie10Service {
     params = params.append('orderDir', orderDir);
     params = params.append('size', '-1');
 
-    params = params.append('filtros', JSON.stringify(filtros));
-    return this.http.get(`${ this.url }/enfermedades-cie10/buscar/`,{params:params});
+    return this.http.get(`${ this.url }/enfermedades-cie10/buscar/`,{params:params})
+      .pipe(
+        map( this.crearArreglo ),
+        delay(0)
+      );
   }
 
   buscarEnfermedadesCie10FiltrosTabla( enfermedadCie10: EnfermedadCie10Modelo ) {

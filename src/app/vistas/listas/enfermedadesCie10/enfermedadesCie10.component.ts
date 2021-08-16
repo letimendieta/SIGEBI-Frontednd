@@ -146,8 +146,15 @@ export class EnfermedadesCie10Component implements OnDestroy, OnInit {
     this.enfermedadesCie10 = [];
     this.rerender();
     var buscador = new EnfermedadCie10Modelo();
-    buscador = this.buscadorForm.getRawValue(); 
-    this.enfermedadesCie10Service.buscarEnfermedadesCie10FiltrosTabla(buscador)
+    buscador = this.buscadorForm.getRawValue();
+    var orderBy = "enfermedadCie10Id";
+    var orderDir = "desc";
+    if( !buscador.codigo && !buscador.descripcion && !buscador.enfermedadCie10Id
+      && !buscador.estado){
+        buscador = null;
+    }
+    //this.enfermedadesCie10Service.buscarEnfermedadesCie10FiltrosTabla(buscador)
+    this.enfermedadesCie10Service.buscarEnfermedadesCie10Filtros(buscador, orderBy, orderDir)
     .subscribe( resp => {        
         this.enfermedadesCie10 = resp;        
         this.dtTrigger.next();
@@ -238,9 +245,9 @@ export class EnfermedadesCie10Component implements OnDestroy, OnInit {
   crearFormulario() {
 
     this.buscadorForm = this.fb.group({
-      enfermedadCie10Id  : ['', [] ],
-      codigo  : ['', [] ],
-      descripcion  : ['', [] ],
+      enfermedadCie10Id  : [null, [] ],
+      codigo  : [null, [] ],
+      descripcion  : [null, [] ],
       estado: [null, [] ]
     });
   }

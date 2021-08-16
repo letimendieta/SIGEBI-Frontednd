@@ -121,7 +121,7 @@ export class InsumoComponent implements OnInit {
     var orderBy = "descripcionValor";
     var orderDir = "asc";
 
-    this.parametrosService.buscarParametrosFiltros( unidadMedidaParam, orderBy, orderDir )
+    this.parametrosService.buscarParametrosFiltrosOrder( unidadMedidaParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaUnidadMedida = resp;
     });

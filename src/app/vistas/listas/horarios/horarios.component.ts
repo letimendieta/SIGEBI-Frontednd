@@ -184,8 +184,9 @@ export class HorariosComponent implements OnDestroy, OnInit {
     buscador.estado =  this.buscadorForm.get('estado').value;
 
     buscador.funcionarios = this.funcionario;
-    
-    this.horariosService.buscarHorariosFiltrosTabla(buscador)
+    var orderBy = "horarioDisponibleId";
+    var orderDir = "desc";
+    this.horariosService.buscarHorariosFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.horarios = resp;
       this.dtTrigger.next();
@@ -207,7 +208,7 @@ export class HorariosComponent implements OnDestroy, OnInit {
     var area = new AreaModelo();
     area.estado = "A";
 
-    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
+    this.areasService.buscarAreasFiltrosOrder(area, orderBy, orderDir )
       .subscribe( (resp: AreaModelo) => {
         this.listaAreas = resp;
     });

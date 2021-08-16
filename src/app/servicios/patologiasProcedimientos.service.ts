@@ -61,19 +61,7 @@ export class PatologiasProcedimientosService {
               delay(0)
             );
   }
-
-  buscarPatologiasProcedimientosFiltros( patologiaProcedimiento: PatologiaProcedimientoModelo, orderBy:string, orderDir:string ) {
-    let params = new HttpParams();
-    var filtros = patologiaProcedimiento == null ? new PatologiaProcedimientoModelo() : patologiaProcedimiento;
-    params = params.append('filtros', JSON.stringify(filtros));
-    params = params.append('orderBy', orderBy);
-    params = params.append('orderDir', orderDir);
-    params = params.append('size', '-1');
-
-    params = params.append('filtros', JSON.stringify(filtros));
-    return this.http.get(`${ this.url }/patologias-procedimientos/buscar/`,{params:params});
-  }
-
+  
   buscarPatologiasProcedimientosFiltrosTablaOrder( patologiaProcedimiento: PatologiaProcedimientoModelo, orderBy:string, orderDir:string ) {
     let params = new HttpParams();
     var filtros = patologiaProcedimiento == null ? new PatologiaProcedimientoModelo() : patologiaProcedimiento;
@@ -82,7 +70,7 @@ export class PatologiasProcedimientosService {
     params = params.append('orderBy', orderBy);
     params = params.append('orderDir', orderDir);
     params = params.append('size', '-1');
-    params = params.append('filtros', JSON.stringify(filtros));
+
     return this.http.get(`${ this.url }/patologias-procedimientos/buscar/`,{params:params})
       .pipe(
         map( this.crearArreglo ),

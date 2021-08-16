@@ -135,7 +135,9 @@ export class MedicamentosComponent implements OnInit {
     this.rerender();
     var buscador: MedicamentoModelo = new MedicamentoModelo();
     buscador = this.buscadorMedicamentosForm.getRawValue();
-    this.medicamentosService.buscarMedicamentosFiltrosTabla(buscador)
+    var orderBy = "medicamentoId";
+    var orderDir = "desc";
+    this.medicamentosService.buscarMedicamentosFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.medicamentos = resp;
       this.dtTriggerMedicamentos.next();

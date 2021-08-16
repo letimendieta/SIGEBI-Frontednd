@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ConsultaModelo } from '../modelos/consulta.modelo';
 import { ReporteModelo } from '../modelos/reporte.modelo';
 import { map, delay } from 'rxjs/operators';
 import { HttpParams } from "@angular/common/http";
 import { GlobalConstants } from '../common/global-constants';
+import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -72,8 +73,11 @@ export class ConsultasService {
     params = params.append('orderDir', orderDir);
     params = params.append('size', '-1');
 
-    params = params.append('filtros', JSON.stringify(filtros));
-    return this.http.get(`${ this.url }/consultas/buscar/`,{params:params});
+    return this.http.get(`${ this.url }/consultas/buscar/`,{params:params})
+      .pipe(
+        map( this.crearArreglo ),
+        delay(0)
+      );
   }
 
   buscarConsultasFiltrosTabla( consulta: ConsultaModelo ) {
@@ -106,5 +110,21 @@ export class ConsultasService {
 
     return this.http.post(`${ this.url }/consultas/reportes`, reporte);
 
+  }
+
+  generarReceta(reporte: ReporteModelo): Observable<Blob> {
+    const httpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    const options = {
+      headers: httpHeaders,
+      responseType: 'blob' as 'json'
+    };
+    const body = reporte;
+    return this.http.post<any>(
+      this.url + '/consultas/receta',
+      body,
+      options
+    );
   }
 }

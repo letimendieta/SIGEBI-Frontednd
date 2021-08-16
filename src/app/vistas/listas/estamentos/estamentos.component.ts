@@ -21,8 +21,7 @@ export class EstamentosComponent implements OnDestroy, OnInit {
   dtOptions: any = {};
   dtTrigger : Subject<any> = new Subject<any>();
 
-  estamentos: EstamentoModelo[] = [];
-  buscador: EstamentoModelo = new EstamentoModelo();
+  estamentos: EstamentoModelo[] = [];  
   buscadorForm: FormGroup;
   cargando = false;  
 
@@ -42,9 +41,11 @@ export class EstamentosComponent implements OnDestroy, OnInit {
     this.cargando = true;
     this.estamentos = [];
     this.rerender();
-    this.buscador = this.buscadorForm.getRawValue();
-
-    this.estamentosService.buscarEstamentosFiltrosTabla(this.buscador)
+    var buscador = new EstamentoModelo();
+    buscador = this.buscadorForm.getRawValue();
+    var orderBy = "estamentoId";
+    var orderDir = "desc";
+    this.estamentosService.buscarEstamentosFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.estamentos = resp;
       this.dtTrigger.next();
@@ -154,8 +155,7 @@ export class EstamentosComponent implements OnDestroy, OnInit {
 
   limpiar(event) {
     event.preventDefault();
-    this.buscadorForm.reset();
-    this.buscador = new EstamentoModelo();
+    this.buscadorForm.reset();    
     this.estamentos = [];
     this.rerender();
     this.dtTrigger.next();

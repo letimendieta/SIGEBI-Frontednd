@@ -68,8 +68,23 @@ export class DependenciasService {
     params = params.append('filtros', JSON.stringify(filtros));
     params = params.append('orderBy', orderBy);
     params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
 
+    return this.http.get(`${ this.url }/dependencias/buscar/`,{params:params})
+    .pipe(
+      map( this.crearArreglo ),
+      delay(0)
+    );
+  }
+
+  buscarDependenciasFiltrosOrder( dependencia: DependenciaModelo, orderBy:string, orderDir:string ) {
+    let params = new HttpParams();
+    var filtros = dependencia == null ? new DependenciaModelo() : dependencia;
     params = params.append('filtros', JSON.stringify(filtros));
+    params = params.append('orderBy', orderBy);
+    params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
+
     return this.http.get(`${ this.url }/dependencias/buscar/`,{params:params});
   }
 

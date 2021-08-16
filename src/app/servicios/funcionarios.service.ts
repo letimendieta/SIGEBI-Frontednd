@@ -58,7 +58,22 @@ export class FuncionariosService {
             );
   }
 
-  buscarFuncionariosFiltros( funcionario: FuncionarioModelo ) {
+  buscarFuncionariosFiltros( fichaClinica: FuncionarioModelo, orderBy:string, orderDir:string ) {
+    let params = new HttpParams();
+    var filtros = fichaClinica == null ? new FuncionarioModelo() : fichaClinica;
+    params = params.append('filtros', JSON.stringify(filtros));
+    params = params.append('orderBy', orderBy);
+    params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
+
+    return this.http.get(`${ this.url }/funcionarios/buscar/`,{params:params})
+    .pipe(
+      map( this.crearArreglo ),
+      delay(0)
+    );
+  }
+
+  buscarFuncionariosFiltrosTabla( funcionario: FuncionarioModelo ) {
     let params = new HttpParams();
     var filtros = funcionario == null ? new FuncionarioModelo() : funcionario;
     params = params.append('filtros', JSON.stringify(filtros));

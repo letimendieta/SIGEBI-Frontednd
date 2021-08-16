@@ -100,7 +100,7 @@ export class UsuarioComponent implements OnInit {
     var area = new AreaModelo();
     area.estado = "A";
 
-    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
+    this.areasService.buscarAreasFiltrosOrder(area, orderBy, orderDir )
       .subscribe( (resp: AreaModelo) => {
         this.listaAreas = resp;
     });
@@ -193,7 +193,7 @@ export class UsuarioComponent implements OnInit {
     var buscador: Usuario2Modelo = new Usuario2Modelo();
     
     buscador.nombreUsuario = nombreUsurio;
-    this.usuariosService.buscarUsuariosFiltros(buscador)
+    this.usuariosService.buscarUsuariosFiltrosTabla(buscador)
     .subscribe( resp => {      
       if ( resp.length > 0){
         Swal.fire({
@@ -223,7 +223,7 @@ export class UsuarioComponent implements OnInit {
     funcionario.funcionarioId = funcionarioId;
     buscador.funcionarios = funcionario;
     
-    this.usuariosService.buscarUsuariosFiltros(buscador)
+    this.usuariosService.buscarUsuariosFiltrosTabla(buscador)
     .subscribe( resp => {       
       if ( resp.length > 0){
         Swal.fire({
@@ -308,11 +308,12 @@ export class UsuarioComponent implements OnInit {
   }
 
   cambiarContrasenha(event) {
-    //var switchPass = ((document.getElementById("switchPass") as HTMLInputElement).value);
     if( event == true ){
       this.usuarioForm.get('password').enable();
+      this.esCambioContrasenha = true;
     }else{
       this.usuarioForm.get('password').disable();
+      this.esCambioContrasenha = false;
     }
   }
 
@@ -432,7 +433,7 @@ export class UsuarioComponent implements OnInit {
       return;
     }
     this.cargando = true;
-    this.personasService.buscarPersonasFiltros(persona)
+    this.personasService.buscarPersonasFiltrosTabla(persona)
     .subscribe( resp => {
       this.personas = resp;
       this.cargando = false;
@@ -458,7 +459,7 @@ export class UsuarioComponent implements OnInit {
     buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;  
     
     this.loadBuscadorFuncionarios = true;
-    this.funcionariosService.buscarFuncionariosFiltros(buscador)
+    this.funcionariosService.buscarFuncionariosFiltrosTabla(buscador)
     .subscribe( resp => {
       this.loadBuscadorFuncionarios = false;
       this.funcionarios = resp;

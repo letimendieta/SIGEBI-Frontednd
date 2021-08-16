@@ -134,7 +134,9 @@ export class InsumosComponent implements OnInit {
     this.rerender();
     var buscador: InsumoMedicoModelo = new InsumoMedicoModelo();
     buscador = this.buscadorForm.getRawValue();
-    this.insumosMedicosService.buscarInsumosMedicosFiltrosTabla(buscador)
+    var orderBy = "insumoMedicoId";
+    var orderDir = "desc";
+    this.insumosMedicosService.buscarInsumosMedicosFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.insumos = resp;
       this.dtTriggerInsumos.next();

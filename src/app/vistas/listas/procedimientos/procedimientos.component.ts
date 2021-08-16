@@ -200,7 +200,9 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
 
     this.buscador.procedimientoId = this.buscadorForm.get('procedimientoId').value;
     this.buscador.fecha =  this.buscadorForm.get('fecha').value;
-    this.procedimientosService.buscarProcedimientosFiltros(this.buscador)
+    var orderBy = "procedimientoId";
+    var orderDir = "desc";
+    this.procedimientosService.buscarProcedimientosFiltros(this.buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.procedimientos = resp;
       this.dtTrigger.next();
@@ -330,7 +332,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
     }
     this.cargando = true;
     this.loadBuscadorPacientes = true;
-    this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
+    this.pacientesService.buscarPacientesFiltrosTabla(buscadorPaciente)
     .subscribe( resp => {
       this.loadBuscadorPacientes = false;
       this.pacientes = resp;
@@ -357,7 +359,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
     buscador.personas = persona;
     buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
     this.loadBuscadorFuncionarios = true;
-    this.funcionariosService.buscarFuncionariosFiltros(buscador)
+    this.funcionariosService.buscarFuncionariosFiltrosTabla(buscador)
     .subscribe( resp => {
       this.loadBuscadorFuncionarios = false;
       this.funcionarios = resp;

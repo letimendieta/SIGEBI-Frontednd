@@ -148,7 +148,9 @@ export class AreasComponent implements OnDestroy, OnInit {
     this.rerender();
     var buscador = new AreaModelo();
     buscador = this.buscadorForm.getRawValue(); 
-    this.areasService.buscarAreasFiltrosTabla(buscador)
+    var orderBy = "areaId";
+    var orderDir = "desc";
+    this.areasService.buscarAreasFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {        
         this.areas = resp;        
         this.dtTrigger.next();

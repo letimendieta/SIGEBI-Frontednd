@@ -70,8 +70,11 @@ export class PreguntasService {
     params = params.append('orderDir', orderDir);
     params = params.append('size', '-1');
 
-    params = params.append('filtros', JSON.stringify(filtros));
-    return this.http.get(`${ this.url }/preguntas/buscar/`,{params:params});
+    return this.http.get(`${ this.url }/preguntas/buscar/`,{params:params})
+    .pipe(
+      map( this.crearArreglo ),
+      delay(0)
+    );
   }
 
   buscarPreguntasFiltrosTabla( pregunta: PreguntaModelo ) {

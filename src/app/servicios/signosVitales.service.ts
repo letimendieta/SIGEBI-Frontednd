@@ -58,7 +58,22 @@ export class SignosVitalesService {
             );
   }
 
-  buscarSignosVitalesFiltros( signoVital: SignoVitalModelo ) {
+  buscarSignosVitalesFiltros( pregunta: SignoVitalModelo, orderBy:string, orderDir:string ) {
+    let params = new HttpParams();
+    var filtros = pregunta == null ? new SignoVitalModelo() : pregunta;
+    params = params.append('filtros', JSON.stringify(filtros));
+    params = params.append('orderBy', orderBy);
+    params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
+
+    return this.http.get(`${ this.url }/signos-vitales/buscar/`,{params:params})
+    .pipe(
+      map( this.crearArreglo ),
+      delay(0)
+    );
+  }
+
+  buscarSignosVitalesFiltrosTabla( signoVital: SignoVitalModelo ) {
     let params = new HttpParams();
     var filtros = signoVital == null ? new SignoVitalModelo() : signoVital;
     params = params.append('filtros', JSON.stringify(filtros));

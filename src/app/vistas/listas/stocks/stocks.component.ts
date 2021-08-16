@@ -182,7 +182,9 @@ export class StocksComponent implements OnDestroy, OnInit {
     if(!buscador.medicamentos.medicamentoId && !buscador.medicamentos.medicamento){
       buscador.medicamentos = null;
     } 
-    this.stocksService.buscarStocksFiltrosTabla(buscador)
+    var orderBy = "stockId";
+    var orderDir = "desc";
+    this.stocksService.buscarStocksFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.stocks = resp;
       this.dtTrigger.next();

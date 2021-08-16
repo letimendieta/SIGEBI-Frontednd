@@ -21,8 +21,7 @@ export class DependenciasComponent implements OnDestroy, OnInit {
   dtOptions: any = {};
   dtTrigger : Subject<any> = new Subject<any>();
 
-  dependencias: DependenciaModelo[] = [];
-  buscador: DependenciaModelo = new DependenciaModelo();
+  dependencias: DependenciaModelo[] = [];  
   buscadorForm: FormGroup;
   cargando = false;  
 
@@ -42,9 +41,11 @@ export class DependenciasComponent implements OnDestroy, OnInit {
     this.cargando = true;
     this.dependencias = [];
     this.rerender();
-    this.buscador = this.buscadorForm.getRawValue();
-
-    this.dependenciasService.buscarDependenciasFiltrosTabla(this.buscador)
+    var buscador = new DependenciaModelo();
+    buscador = this.buscadorForm.getRawValue();
+    var orderBy = "dependenciaId";
+    var orderDir = "desc";
+    this.dependenciasService.buscarDependenciasFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.dependencias = resp;
       this.dtTrigger.next();
@@ -155,7 +156,6 @@ export class DependenciasComponent implements OnDestroy, OnInit {
   limpiar(event) {
     event.preventDefault();
     this.buscadorForm.reset();
-    this.buscador = new DependenciaModelo();
     this.dependencias = [];
     this.rerender();
     this.dtTrigger.next();

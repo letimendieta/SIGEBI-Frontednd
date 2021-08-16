@@ -1,0 +1,73 @@
+<head>
+    <link rel="stylesheet" href="ayuda.component.css">
+  </head>
+  
+  <body>
+    <h1>Ayuda </h1>
+    <hr>
+  
+    <div class="row animated fadeIn faster">
+      <div class="col">
+        <div class="card">
+          <h3 class="card-header">Ayuda</h3>
+          <div class="card-body">
+            <form [formGroup]="ayudaForm" (ngSubmit)="guardar( )">
+              
+              <div justify-content-center>
+
+                <div class="input-group mb-3" [hidden]="ocultarSubirArchivo"> 
+                  <div class="form-group">
+                    <label><b>Tipo</b></label>
+                    <select class="custom-select"
+                          formControlName="tipo" name = "tipo">
+                      <option value="publico">P&uacute;blico</option>
+                      <option value="privado">Privado</option>
+                    </select> 
+                  </div>
+                </div>
+
+                <div class="input-group mb-3" [hidden]="ocultarSubirArchivo">    
+                      <div class="form-group">
+                            <label for="inputGroupFile02"><b>Adjuntar Archivo</b></label>
+                            <input type="file" class="form-control-file" 
+                                  (change)="selectFileAyuda($event)" id="inputGroupFile02" >                                    
+                      </div>                                                                                           
+                </div>
+
+                <div class="form-group text-center" [hidden]="ocultarSubirArchivo">
+                  <button type="submit"
+                          class="btn btn-primary ">
+                    <i class="fa fa-save"></i>
+                    Guardar
+                  </button>
+                  
+                </div>
+              </div>
+
+              <div class="card">
+                <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <i class="fas fa-exclamation-triangle"></i> {{message}}
+                  <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+              </div>              
+
+              <div justify-content-center>
+                <div class="card">
+                      <div class="card-header">Lista de archivos</div>
+                      <ul class="list-group list-group-flush"
+                            *ngFor="let file of fileInfosAyuda | async">
+                            <li class="list-group-item">
+                              <a href="{{ file.url }}">{{ file.name }}</a>
+                        </li>
+                      </ul>
+                </div> 
+              </div>                
+                             
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>

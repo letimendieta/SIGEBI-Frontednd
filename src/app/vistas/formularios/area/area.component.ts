@@ -54,7 +54,7 @@ export class AreaComponent implements OnInit {
     var orderBy = "descripcionValor";
     var orderDir = "asc";
 
-    this.parametrosService.buscarParametrosFiltros( tipoAreaParam, orderBy, orderDir )
+    this.parametrosService.buscarParametrosFiltrosOrder( tipoAreaParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaTipos = resp;
     });

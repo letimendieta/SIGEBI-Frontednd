@@ -23,7 +23,6 @@ export class PacientesComponent implements OnDestroy, OnInit {
   dtTrigger : Subject<any> = new Subject<any>();
 
   pacientes: PacienteModelo[] = [];
-  buscador: PacienteModelo = new PacienteModelo();
   buscadorForm: FormGroup;
   cargando = false;
 
@@ -142,9 +141,12 @@ export class PacientesComponent implements OnDestroy, OnInit {
     if(!persona.cedula && !persona.nombres && !persona.apellidos){
       persona = null;
     }
-    this.buscador.personas = persona;
-    this.buscador.pacienteId = this.buscadorForm.get('pacienteId').value;
-    this.pacientesService.buscarPacientesFiltros(this.buscador)
+    var buscador = new PacienteModelo();
+    buscador.personas = persona;
+    buscador.pacienteId = this.buscadorForm.get('pacienteId').value;
+    var orderBy = "pacienteId";
+    var orderDir = "desc";
+    this.pacientesService.buscarPacientesFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.pacientes = resp;
       this.dtTrigger.next();
@@ -162,7 +164,6 @@ export class PacientesComponent implements OnDestroy, OnInit {
   limpiar(event) {
     event.preventDefault();
     this.buscadorForm.reset();
-    this.buscador = new PacienteModelo();
     this.pacientes = [];
     this.rerender();
     this.dtTrigger.next();

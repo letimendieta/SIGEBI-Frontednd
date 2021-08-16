@@ -62,7 +62,22 @@ export class PersonasService {
             );
   }
 
-  buscarPersonasFiltros( persona: PersonaModelo ) {
+  buscarPersonasFiltros( patologiaProcedimiento: PersonaModelo, orderBy:string, orderDir:string ) {
+    let params = new HttpParams();
+    var filtros = patologiaProcedimiento == null ? new PersonaModelo() : patologiaProcedimiento;
+    params = params.append('filtros', JSON.stringify(filtros));
+    params = params.append('orderBy', orderBy);
+    params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
+
+    return this.http.get(`${ this.url }/personas/buscar/`,{params:params})
+    .pipe(
+      map( this.crearArreglo ),
+      delay(0)
+    );
+  }
+
+  buscarPersonasFiltrosTabla( persona: PersonaModelo ) {
     let params = new HttpParams();
     var filtros = persona == null ? new PersonaModelo() : persona;
 

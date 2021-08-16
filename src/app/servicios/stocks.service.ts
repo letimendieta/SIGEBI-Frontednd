@@ -68,9 +68,13 @@ export class StocksService {
     params = params.append('filtros', JSON.stringify(filtros));
     params = params.append('orderBy', orderBy);
     params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
 
-    params = params.append('filtros', JSON.stringify(filtros));
-    return this.http.get(`${ this.url }/stock/buscar/`,{params:params});
+    return this.http.get(`${ this.url }/stock/buscar/`,{params:params})
+    .pipe(
+      map( this.crearArreglo ),
+      delay(0)
+    );
   }
 
   buscarStocksFiltrosTabla( stock: StockModelo ) {

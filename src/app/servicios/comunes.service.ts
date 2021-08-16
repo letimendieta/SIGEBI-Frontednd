@@ -20,9 +20,7 @@ export class ComunesService {
           mensaje = mensaje + ' ' + e.error.error;
         }
       }
-      /*if(e.message){
-        mensaje = mensaje + ' ' + e.message;
-      }*/
+      console.log(mensaje);
     return mensaje;  
   }
 }

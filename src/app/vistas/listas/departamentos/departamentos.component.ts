@@ -22,7 +22,6 @@ export class DepartamentosComponent implements OnDestroy, OnInit {
   dtTrigger : Subject<any> = new Subject<any>();
 
   departamentos: DepartamentoModelo[] = [];
-  buscador: DepartamentoModelo = new DepartamentoModelo();
   buscadorForm: FormGroup;
   cargando = false;  
 
@@ -42,9 +41,11 @@ export class DepartamentosComponent implements OnDestroy, OnInit {
     this.cargando = true;
     this.departamentos = [];
     this.rerender();
-    this.buscador = this.buscadorForm.getRawValue();
-
-    this.departamentosService.buscarDepartamentosFiltrosTabla(this.buscador)
+    var buscador = new DepartamentoModelo();
+    buscador = this.buscadorForm.getRawValue();
+    var orderBy = "departamentoId";
+    var orderDir = "desc";
+    this.departamentosService.buscarDepartamentosFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.departamentos = resp;
       this.dtTrigger.next();
@@ -143,7 +144,6 @@ export class DepartamentosComponent implements OnDestroy, OnInit {
   limpiar(event) {
     event.preventDefault();
     this.buscadorForm.reset();
-    this.buscador = new DepartamentoModelo();
     this.departamentos = [];
     this.rerender();
     this.dtTrigger.next();

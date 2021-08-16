@@ -163,7 +163,7 @@ export class CitasComponent implements OnDestroy, OnInit {
     }
     
     this.loadBuscadorPacientes = true;
-    this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
+    this.pacientesService.buscarPacientesFiltrosTabla(buscadorPaciente)
     .subscribe( resp => {
       this.loadBuscadorPacientes = false;
       this.pacientes = resp;
@@ -190,7 +190,7 @@ export class CitasComponent implements OnDestroy, OnInit {
     buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
 
     this.loadBuscadorFuncionarios = true;
-    this.funcionariosService.buscarFuncionariosFiltros(buscador)
+    this.funcionariosService.buscarFuncionariosFiltrosTabla(buscador)
     .subscribe( resp => {
       this.loadBuscadorFuncionarios = false;
       this.funcionarios = resp;
@@ -211,7 +211,7 @@ export class CitasComponent implements OnDestroy, OnInit {
     var orderBy = "descripcionValor";
     var orderDir = "asc";
 
-    this.parametrosService.buscarParametrosFiltros( estadoCivilParam, orderBy, orderDir )
+    this.parametrosService.buscarParametrosFiltrosOrder( estadoCivilParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaEstados = resp;
     });

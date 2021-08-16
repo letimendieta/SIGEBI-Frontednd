@@ -1,8 +1,9 @@
 export class GlobalConstants {
 	//local
-    //public static apiUrlBackend: string = "http://localhost:8080/sigebi/auth";
+	//public static apiUrlBackend: string = "http://localhost:8080/auth";
+    public static apiUrlBackend: string = "http://localhost:8080/sigebi/auth";
 	//produccion
-	public static apiUrlBackend: string = "http://bienestar.pol.una.py:8080/sigebi/auth";
+	//public static apiUrlBackend: string = "http://bienestar.pol.una.py:8080/sigebi/auth";
 
     public static imagenReporteListas: string = "http://datatables.net/media/images/logo-fade.png"
 
@@ -35,6 +36,7 @@ export class GlobalConstants {
 	public static ROL_USUARIOS : string = "ROL_USUARIOS";
 	public static ROL_ABM_USUARIO : string = "ROL_ABM_USUARIO";
 	public static ROL_REPORTES : string = "ROL_REPORTES";
-	
+	public static ROL_AYUDA : string = "ROL_AYUDA";
+	public static ROL_ABM_AYUDA : string = "ROL_ABM_AYUDA";
 	
 }

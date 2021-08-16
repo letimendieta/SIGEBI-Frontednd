@@ -140,7 +140,7 @@ export class FuncionariosComponent implements OnDestroy, OnInit {
     var area = new AreaModelo();
     area.estado = "A";
 
-    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
+    this.areasService.buscarAreasFiltrosOrder(area, orderBy, orderDir )
       .subscribe( (resp: AreaModelo) => {
         this.listaAreas = resp;
     });
@@ -164,7 +164,9 @@ export class FuncionariosComponent implements OnDestroy, OnInit {
     buscador.estado = this.buscadorForm.get('estado').value;    
     buscador.funcionarioId = this.buscadorForm.get('funcionarioId').value; 
     buscador.areas.areaId = this.buscadorForm.get('areas').get('areaId').value;
-    this.funcionariosService.buscarFuncionariosFiltros(buscador)
+    var orderBy = "funcionarioId";
+    var orderDir = "desc";
+    this.funcionariosService.buscarFuncionariosFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.funcionarios = resp;
       this.dtTrigger.next();

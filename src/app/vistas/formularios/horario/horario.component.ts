@@ -229,7 +229,7 @@ export class HorarioComponent implements OnInit {
     buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;   
 
     this.loadBuscadorFuncionarios = true; 
-    this.funcionariosService.buscarFuncionariosFiltros(buscador)
+    this.funcionariosService.buscarFuncionariosFiltrosTabla(buscador)
     .subscribe( resp => {
       this.loadBuscadorFuncionarios = false;
       this.funcionarios = resp;

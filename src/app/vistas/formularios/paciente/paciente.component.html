@@ -54,29 +54,7 @@
                                                       <div formGroupName="personas" class="row justify-content-center">
                                                             <div class="col-lg-5">
                                                                   <div class="form group">
-                                                                        <!--label><b>Persona id</b></label>
-                                                                        <div class="input-group mb-3">
-                                                                              <input type="number" class="form-control"
-                                                                                    placeholder="Persona id" formControlName="personaId"
-                                                                                    name="personaId"
-                                                                                    [class.is-invalid]="personaIdNoValido">
-                                                                              <div class="input-group-append" [hidden]="!crear">
-                                                                                    <button class="btn btn-outline-info" id="btnPersonaId"
-                                                                                          (click)="obtenerPersona($event)">
-                                                                                          Buscar
-                                                                                    </button>
-                                                                              </div>
-                                                                              <small *ngIf="personaIdNoValido" class="text-danger">
-                                                                                    Ingrese persona id
-                                                                              </small>
-                  
-                                                                              <span class="glyphicon glyphicon-search"
-                                                                                    aria-hidden="true"></span>
-                                                                              <button type="button" class="btn btn-primary"
-                                                                                    [hidden]="!crear"
-                                                                                    (click)="openModal(editProfileModal)"><i
-                                                                                          class="fas fa-search"></i></button>
-                                                                        </div-->
+                                                                        
                                                                         <!--Modal buscador de personas-->
                                                                         <ng-template #editProfileModal let-modal>
                                                                               <div class="modal-header">
@@ -550,24 +528,7 @@
                                                     </div>
                                                   </div>
                                                 </div>
-                                                <br>
-                                                <!--div class="col-lg-5">
-                                                      <div formGroupName="areas" class="form-group">
-                                                            <label><b>&Aacute;rea</b><span class="requerido"> *</span></label>
-                                                            <select class="form-control input-sm" name="areaId"
-                                                                  formControlName="areaId" 
-                                                                  [class.is-invalid]="areaNoValido">
-                                                                  <option value=null>Seleccionar</option>
-                                                                  <option *ngFor="let item of listaAreas; let i = index"
-                                                                        value="{{item.areaId}}">
-                                                                        {{item.areaId}} - {{item.codigo}} - {{item.descripcion}}
-                                                                  </option>
-                                                            </select>
-                                                            <small *ngIf="areaNoValido" class="text-danger">
-                                                                  Seleccione el &aacute;rea
-                                                            </small>
-                                                      </div>                                           
-                                                </div--> 
+                                                
                                                 <br>
                                                 <div class="card border-dark">
                                                   <div class="card-header">Citar Patolog&iacute;as y tratamientos que padece y realiza: </div>
@@ -694,7 +655,6 @@
                                                                   *ngFor="let file of fileInfosHistorialClinico | async">
                                                                   <li class="list-group-item">
                                                                         <a href="{{ file.url }}">{{ file.name }}</a>
-                                                                        {{ file.name }} <button (click)="descargar(file.url, $event)"> <i class="fas fa-plus-circle"></i> </button>
                                                                   </li>
                                                             </ul>
                                                       </div> 

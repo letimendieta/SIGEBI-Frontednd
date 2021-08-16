@@ -71,7 +71,33 @@ export class PacientesService {
             );
   }
 
-  buscarPacientesFiltros( paciente: PacienteModelo ) {
+  buscarPacientesFiltros( motivoConsulta: PacienteModelo, orderBy:string, orderDir:string ) {
+    let params = new HttpParams();
+    var filtros = motivoConsulta == null ? new PacienteModelo() : motivoConsulta;
+    params = params.append('filtros', JSON.stringify(filtros));
+    params = params.append('orderBy', orderBy);
+    params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
+
+    return this.http.get(`${ this.url }/pacientes/buscar/`,{params:params})
+    .pipe(
+      map( this.crearArreglo ),
+      delay(0)
+    );
+  }
+
+  buscarPacientesFiltrosOrder( motivoConsulta: PacienteModelo, orderBy:string, orderDir:string ) {
+    let params = new HttpParams();
+    var filtros = motivoConsulta == null ? new PacienteModelo() : motivoConsulta;
+    params = params.append('filtros', JSON.stringify(filtros));
+    params = params.append('orderBy', orderBy);
+    params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
+
+    return this.http.get(`${ this.url }/pacientes/buscar/`,{params:params});
+  }
+
+  buscarPacientesFiltrosTabla( paciente: PacienteModelo ) {
     let params = new HttpParams();
     var filtros = paciente == null ? new PacienteModelo() : paciente;
     params = params.append('filtros', JSON.stringify(filtros));

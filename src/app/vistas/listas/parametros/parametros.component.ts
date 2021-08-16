@@ -22,7 +22,6 @@ export class ParametrosComponent implements OnDestroy, OnInit {
   dtTrigger : Subject<any> = new Subject<any>();
 
   parametros: ParametroModelo[] = [];
-  buscador: ParametroModelo = new ParametroModelo();
   buscadorForm: FormGroup;
   cargando = false;  
 
@@ -42,8 +41,11 @@ export class ParametrosComponent implements OnDestroy, OnInit {
     this.cargando = true;
     this.parametros = [];
     this.rerender();
-    this.buscador = this.buscadorForm.getRawValue();
-    this.parametrosService.buscarParametrosFiltrosTabla(this.buscador)
+    var buscador = new ParametroModelo();
+    buscador = this.buscadorForm.getRawValue();
+    var orderBy = "parametroId";
+    var orderDir = "desc";
+    this.parametrosService.buscarParametrosFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.parametros = resp;
       this.dtTrigger.next();
@@ -154,8 +156,7 @@ export class ParametrosComponent implements OnDestroy, OnInit {
 
   limpiar(event) {
     event.preventDefault();
-    this.buscadorForm.reset();
-    this.buscador = new ParametroModelo();
+    this.buscadorForm.reset();    
     this.parametros = [];
     this.rerender();
     this.dtTrigger.next();

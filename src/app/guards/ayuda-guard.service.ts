@@ -5,7 +5,7 @@ import { TokenService } from '../servicios/token.service';
 @Injectable({
   providedIn: 'root'
 })
-export class EnfermeriaGuardService implements CanActivate {
+export class AyudaGuardService implements CanActivate {
 
   realRol = [];
   autorized : boolean = false;
@@ -24,7 +24,13 @@ export class EnfermeriaGuardService implements CanActivate {
     roles.forEach(rol => {
       if( rol === 'ROL_ADMIN' ) {
         this.realRol.push('admin');
-      }    
+      }
+      if( rol === 'ROL_AYUDA' ){
+        this.realRol.push('ayuda');
+      }
+      if( rol === 'ROL_ABM_AYUDA' ){
+        this.realRol.push('ayuda');
+      }
     });
     
     this.realRol.forEach( real => {

@@ -153,7 +153,7 @@ export class HistorialesClinicosComponent implements OnInit {
     var area = new AreaModelo();
     area.estado = "A";
 
-    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
+    this.areasService.buscarAreasFiltrosOrder(area, orderBy, orderDir )
       .subscribe( (resp: AreaModelo) => {
         this.listaAreas = resp;
     });
@@ -295,7 +295,7 @@ export class HistorialesClinicosComponent implements OnInit {
       return;
     }
     this.cargando = true;
-    this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
+    this.pacientesService.buscarPacientesFiltrosTabla(buscadorPaciente)
     .subscribe( resp => {
       this.pacientes = resp;
       this.cargando = false;

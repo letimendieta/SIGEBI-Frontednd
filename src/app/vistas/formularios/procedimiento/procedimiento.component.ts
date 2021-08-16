@@ -212,7 +212,7 @@ export class ProcedimientoComponent implements OnInit {
     sexoParam.codigoParametro = "EST_ENTREGA_INSUMO";
     sexoParam.estado = "A";
 
-    this.parametrosService.buscarParametrosFiltros( sexoParam, orderBy, orderDir )
+    this.parametrosService.buscarParametrosFiltrosOrder( sexoParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaEstadosEntrega = resp;
     });
@@ -237,7 +237,7 @@ export class ProcedimientoComponent implements OnInit {
     area.estado = "A";
     area.tipo = "SERVICIO"
 
-    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
+    this.areasService.buscarAreasFiltrosOrder(area, orderBy, orderDir )
       .subscribe( (resp: AreaModelo) => {
         this.listaAreas = resp;
     });
@@ -531,7 +531,7 @@ export class ProcedimientoComponent implements OnInit {
     }
     this.cargando = true;
     this.loadBuscadorPacientes = true;
-    this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
+    this.pacientesService.buscarPacientesFiltrosTabla(buscadorPaciente)
     .subscribe( ( resp : PacienteModelo[] )=> {
       this.loadBuscadorPacientes = false;
       this.pacientes = resp;
@@ -559,7 +559,7 @@ export class ProcedimientoComponent implements OnInit {
     buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
 
     this.loadBuscadorFuncionarios = true;
-    this.funcionariosService.buscarFuncionariosFiltros(buscador)
+    this.funcionariosService.buscarFuncionariosFiltrosTabla(buscador)
     .subscribe( ( resp : FuncionarioModelo[] )=> {
       this.loadBuscadorFuncionarios = false;
       this.funcionarios = resp;

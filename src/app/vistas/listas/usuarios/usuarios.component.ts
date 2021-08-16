@@ -153,7 +153,9 @@ export class UsuariosComponent implements OnDestroy, OnInit {
     
     buscador.id = this.buscadorForm.get('id').value;
     buscador.nombreUsuario = this.buscadorForm.get('nombreUsuario').value;
-    this.usuariosService.buscarUsuariosFiltros(buscador)
+    var orderBy = "id";
+    var orderDir = "desc";
+    this.usuariosService.buscarUsuariosFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.usuarios = resp;
       this.dtTrigger.next();

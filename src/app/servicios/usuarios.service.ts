@@ -67,7 +67,33 @@ export class UsuariosService {
             );
   }
 
-  buscarUsuariosFiltros( usuario: Usuario2Modelo ) {
+  buscarUsuariosFiltros( tratamientoInsumo: Usuario2Modelo, orderBy:string, orderDir:string ) {
+    let params = new HttpParams();
+    var filtros = tratamientoInsumo == null ? new Usuario2Modelo() : tratamientoInsumo;
+    params = params.append('filtros', JSON.stringify(filtros));
+    params = params.append('orderBy', orderBy);
+    params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
+
+    return this.http.get(`${ this.url }/usuarios/buscar/`,{params:params})
+    .pipe(
+      map( this.crearArreglo ),
+      delay(0)
+    );
+  }
+
+  buscarUsuariosFiltrosOrder( tratamientoInsumo: Usuario2Modelo, orderBy:string, orderDir:string ) {
+    let params = new HttpParams();
+    var filtros = tratamientoInsumo == null ? new Usuario2Modelo() : tratamientoInsumo;
+    params = params.append('filtros', JSON.stringify(filtros));
+    params = params.append('orderBy', orderBy);
+    params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
+
+    return this.http.get(`${ this.url }/usuarios/buscar/`,{params:params});
+  }
+
+  buscarUsuariosFiltrosTabla( usuario: Usuario2Modelo ) {
     let params = new HttpParams();
     var filtros = usuario == null ? new Usuario2Modelo() : usuario;
     params = params.append('filtros', JSON.stringify(filtros));

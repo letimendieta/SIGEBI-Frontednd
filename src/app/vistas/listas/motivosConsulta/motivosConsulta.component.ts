@@ -148,7 +148,9 @@ export class MotivosConsultaComponent implements OnDestroy, OnInit {
     this.rerender();
     var buscador = new MotivoConsultaModelo();
     buscador = this.buscadorForm.getRawValue(); 
-    this.motivosConsultaService.buscarMotivosConsultaFiltrosTabla(buscador)
+    var orderBy = "motivoConsultaId";
+    var orderDir = "desc";
+    this.motivosConsultaService.buscarMotivosConsultaFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {        
         this.motivosConsulta = resp;        
         this.dtTrigger.next();

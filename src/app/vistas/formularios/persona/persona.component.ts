@@ -102,7 +102,7 @@ export class PersonaComponent implements OnInit {
     var orderBy = "descripcionValor";
     var orderDir = "asc";
 
-    this.parametrosService.buscarParametrosFiltros( estadoCivilParam, orderBy, orderDir )
+    this.parametrosService.buscarParametrosFiltrosOrder( estadoCivilParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaEstadoCivil = resp;
     });
@@ -111,7 +111,7 @@ export class PersonaComponent implements OnInit {
     sexoParam.codigoParametro = "SEXO";
     sexoParam.estado = "A";
 
-    this.parametrosService.buscarParametrosFiltros( sexoParam, orderBy, orderDir )
+    this.parametrosService.buscarParametrosFiltrosOrder( sexoParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaSexo = resp;
     });
@@ -120,7 +120,7 @@ export class PersonaComponent implements OnInit {
     nacionalidadParam.codigoParametro = "NACIONALIDAD";
     nacionalidadParam.estado = "A";
 
-    this.parametrosService.buscarParametrosFiltros( nacionalidadParam, orderBy, orderDir )
+    this.parametrosService.buscarParametrosFiltrosOrder( nacionalidadParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaNacionalidad = resp;
     });
@@ -131,7 +131,7 @@ export class PersonaComponent implements OnInit {
     var orderBy = "descripcion";
     var orderDir = "asc";
 
-    this.carrerasService.buscarCarrerasFiltros(null, orderBy, orderDir )
+    this.carrerasService.buscarCarrerasFiltrosOrder(null, orderBy, orderDir )
       .subscribe( (resp: CarreraModelo) => {
         this.listaCarreras = resp;
     });
@@ -141,7 +141,7 @@ export class PersonaComponent implements OnInit {
     var orderBy = "descripcion";
     var orderDir = "asc";
 
-    this.departamentosService.buscarDepartamentosFiltros(null, orderBy, orderDir )
+    this.departamentosService.buscarDepartamentosFiltrosOrder(null, orderBy, orderDir )
       .subscribe( (resp: DepartamentoModelo) => {
         this.listaDepartamentos = resp;
     });
@@ -151,7 +151,7 @@ export class PersonaComponent implements OnInit {
     var orderBy = "descripcion";
     var orderDir = "asc";
 
-    this.dependenciasService.buscarDependenciasFiltros(null, orderBy, orderDir )
+    this.dependenciasService.buscarDependenciasFiltrosOrder(null, orderBy, orderDir )
       .subscribe( (resp: DependenciaModelo) => {
         this.listaDependencias = resp;
     });
@@ -161,7 +161,7 @@ export class PersonaComponent implements OnInit {
     var orderBy = "descripcion";
     var orderDir = "asc";
 
-    this.estamentosService.buscarEstamentosFiltros(null, orderBy, orderDir )
+    this.estamentosService.buscarEstamentosFiltrosOrder(null, orderBy, orderDir )
       .subscribe( (resp: EstamentoModelo) => {
         this.listaEstamentos = resp;
     });
@@ -193,16 +193,20 @@ export class PersonaComponent implements OnInit {
     var persona: PersonaModelo = new PersonaModelo();
     
     persona = this.personaForm.getRawValue();
-    if ( persona.carreras != null && persona.carreras.carreraId == null ){
+    if ( persona.carreras != null 
+      && persona.carreras.carreraId == null || isNaN( persona.carreras.carreraId ) ){
       persona.carreras = null;
     }
-    if ( persona.departamentos != null && persona.departamentos.departamentoId == null ){
+    if ( persona.departamentos != null 
+      && persona.departamentos.departamentoId == null || isNaN( persona.departamentos.departamentoId ) ){
       persona.departamentos = null;
     }
-    if ( persona.dependencias != null && persona.dependencias.dependenciaId == null ){
+    if ( persona.dependencias != null 
+      && persona.dependencias.dependenciaId == null || isNaN( persona.dependencias.dependenciaId ) ){
       persona.dependencias = null;
     }
-    if ( persona.estamentos != null && persona.estamentos.estamentoId == null ){
+    if ( persona.estamentos != null 
+      && persona.estamentos.estamentoId == null || isNaN( persona.estamentos.estamentoId ) ){
       persona.estamentos = null;
     }
 

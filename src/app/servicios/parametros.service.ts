@@ -69,8 +69,25 @@ export class ParametrosService {
     params = params.append('filtros', JSON.stringify(filtros));
     params = params.append('orderBy', orderBy);
     params = params.append('orderDir', orderDir);
-    return this.http.get(`${ this.url }/parametros/buscar/`,{params:params});
+    params = params.append('size', '-1');
+    
+    return this.http.get(`${ this.url }/parametros/buscar/`,{params:params})
+    .pipe(
+      map( this.crearArreglo ),
+      delay(0)
+    );
+  }
 
+  buscarParametrosFiltrosOrder( parametro: ParametroModelo, orderBy:string, orderDir:string ) {
+    let params = new HttpParams();
+    var filtros = parametro == null ? new ParametroModelo() : parametro;
+    
+    params = params.append('filtros', JSON.stringify(filtros));
+    params = params.append('orderBy', orderBy);
+    params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
+    
+    return this.http.get(`${ this.url }/parametros/buscar/`,{params:params});
   }
 
   buscarParametrosFiltrosTabla( parametro: ParametroModelo ) {

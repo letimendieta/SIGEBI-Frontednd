@@ -69,7 +69,7 @@ export class FuncionarioComponent implements OnInit {
     var area = new AreaModelo();
     area.estado = "A";
     
-    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
+    this.areasService.buscarAreasFiltrosOrder(area, orderBy, orderDir )
       .subscribe( (resp: AreaModelo) => {
         this.listaAreas = resp;
     });
@@ -102,7 +102,7 @@ export class FuncionarioComponent implements OnInit {
     persona.personaId = this.funcionarioForm.get('personas').get('personaId').value;
    
     buscador.personas = persona;
-    this.funcionariosService.buscarFuncionariosFiltros(buscador)
+    this.funcionariosService.buscarFuncionariosFiltrosTabla(buscador)
     .subscribe( ( resp : FuncionarioModelo[] ) => {   
       if(resp.length > 0){
         Swal.fire({
@@ -268,7 +268,7 @@ export class FuncionarioComponent implements OnInit {
     }
     this.cargando = true;
     this.loadBuscadorPersonas = true;
-    this.personasService.buscarPersonasFiltros(buscador)
+    this.personasService.buscarPersonasFiltrosTabla(buscador)
     .subscribe( resp => {
       this.loadBuscadorPersonas = false;
       this.personas = resp;

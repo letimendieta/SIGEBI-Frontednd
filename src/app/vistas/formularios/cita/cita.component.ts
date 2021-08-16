@@ -85,7 +85,7 @@ export class CitaComponent implements OnInit {
     var orderBy = "descripcionValor";
     var orderDir = "asc";
 
-    this.parametrosService.buscarParametrosFiltros( estadoCivilParam, orderBy, orderDir )
+    this.parametrosService.buscarParametrosFiltrosOrder( estadoCivilParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaEstados = resp;
     });
@@ -134,7 +134,7 @@ export class CitaComponent implements OnInit {
     var area = new AreaModelo();
     area.estado = "A";
 
-    this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
+    this.areasService.buscarAreasFiltrosOrder(area, orderBy, orderDir )
       .subscribe( (resp: AreaModelo) => {
         this.listaAreas = resp;
     });
@@ -324,7 +324,7 @@ export class CitaComponent implements OnInit {
     }
 
     this.loadBuscadorPacientes = true;
-    this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
+    this.pacientesService.buscarPacientesFiltrosTabla(buscadorPaciente)
     .subscribe( resp => {
       this.loadBuscadorPacientes = false;
       this.pacientes = resp;
@@ -351,7 +351,7 @@ export class CitaComponent implements OnInit {
     buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value;    
 
     this.loadBuscadorFuncionarios = true;
-    this.funcionariosService.buscarFuncionariosFiltros(buscador)
+    this.funcionariosService.buscarFuncionariosFiltrosTabla(buscador)
     .subscribe( resp => {
       this.loadBuscadorFuncionarios = false;
       this.funcionarios = resp;

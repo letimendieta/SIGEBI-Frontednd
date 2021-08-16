@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit {
     var usuarioModel = new Usuario2Modelo();
     usuarioModel.nombreUsuario = usuario;
     usuarioModel.estado = GlobalConstants.ACTIVO;
-    this.usuariosService.buscarUsuariosFiltros(usuarioModel).subscribe( (resp: Usuario2Modelo[]) => {
+    this.usuariosService.buscarUsuariosFiltrosTabla(usuarioModel).subscribe( (resp: Usuario2Modelo[]) => {
       if(resp.length > 0 ){
         this.usuarioActual = resp[0];  
         this.nombre = this.usuarioActual.funcionarios.personas.nombres;

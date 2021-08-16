@@ -5,6 +5,7 @@ import { UsuarioModelo } from 'src/app/modelos/usuario.modelo';
 import { TokenService } from 'src/app/servicios/token.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { ComunesService } from 'src/app/servicios/comunes.service';
 
 @Component({
   selector: 'app-login',
@@ -27,6 +28,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private frmbuilder: FormBuilder,
     private tokenService: TokenService,
+    private comunes: ComunesService,
     private authService: AuthService,
     private router: Router,
     private toastr: ToastrService
@@ -46,6 +48,7 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(): void {
+    this.cerrarAlert();
     this.load = true;
     console.log(this.forma.get('nombreUsuario').value)
     this.loginUsuario = new UsuarioModelo(this.forma.get('nombreUsuario').value, this.forma.get('password').value);
@@ -66,7 +69,7 @@ export class LoginComponent implements OnInit {
       err => {
         this.load = false;
         this.isLogged = false;
-        this.errMsj = "Error al autenticarse: " + err.error.message;
+        this.errMsj = "Error al autenticarse: " +this.comunes.obtenerError(err);
         this.toastr.error(this.errMsj, 'Fail', {
           timeOut: 3000,  positionClass: 'toast-top-center',
         });

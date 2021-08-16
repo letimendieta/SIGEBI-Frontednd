@@ -39,7 +39,6 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
   buscadorPacientesForm: FormGroup;
   buscadorFuncionariosForm: FormGroup;
   buscadorForm: FormGroup;
-  buscador: SignoVitalModelo = new SignoVitalModelo();
   cargando = false;
   alert:boolean=false;
   loadBuscadorPacientes = false;
@@ -192,13 +191,15 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
     if(this.funcionario.personas == null && !this.funcionario.funcionarioId){
       this.funcionario = null;
     } 
+    var buscador = new SignoVitalModelo(); 
+    buscador.pacientes = this.paciente;
+    buscador.funcionarios = this.funcionario;
 
-    this.buscador.pacientes = this.paciente;
-    this.buscador.funcionarios = this.funcionario;
-
-    this.buscador.signoVitalId = this.buscadorForm.get('signoVitalId').value;
-    this.buscador.fecha =  this.buscadorForm.get('fecha').value;
-    this.signosVitalesService.buscarSignosVitalesFiltros(this.buscador)
+    buscador.signoVitalId = this.buscadorForm.get('signoVitalId').value;
+    buscador.fecha =  this.buscadorForm.get('fecha').value;
+    var orderBy = "signoVitalId";
+    var orderDir = "desc";
+    this.signosVitalesService.buscarSignosVitalesFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.signosVitales = resp;
       this.dtTrigger.next();
@@ -216,8 +217,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
 
   limpiar(event) {
     event.preventDefault();
-    this.buscadorForm.reset();
-    this.buscador = new SignoVitalModelo();  
+    this.buscadorForm.reset();     
     this.signosVitales = [];
     this.rerender();
     this.dtTrigger.next();
@@ -327,7 +327,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
       return;
     }
     this.loadBuscadorPacientes = true;
-    this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
+    this.pacientesService.buscarPacientesFiltrosTabla(buscadorPaciente)
     .subscribe( resp => {
       this.loadBuscadorPacientes = false;
       this.pacientes = resp;
@@ -353,7 +353,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
     buscador.funcionarioId = this.buscadorFuncionariosForm.get('funcionarioId').value; 
     
     this.loadBuscadorFuncionarios = true;
-    this.funcionariosService.buscarFuncionariosFiltros(buscador)
+    this.funcionariosService.buscarFuncionariosFiltrosTabla(buscador)
     .subscribe( resp => {
       this.loadBuscadorFuncionarios = false;
       this.funcionarios = resp;

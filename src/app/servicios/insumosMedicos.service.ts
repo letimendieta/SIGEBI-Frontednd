@@ -62,6 +62,21 @@ export class InsumosMedicosService {
             );
   }
 
+  buscarInsumosMedicosFiltros( horario: InsumoMedicoModelo, orderBy:string, orderDir:string ) {
+    let params = new HttpParams();
+    var filtros = horario == null ? new InsumoMedicoModelo() : horario;
+    params = params.append('filtros', JSON.stringify(filtros));
+    params = params.append('orderBy', orderBy);
+    params = params.append('orderDir', orderDir);
+    params = params.append('size', '-1');
+
+    return this.http.get(`${ this.url }/insumos-medicos/buscar/`,{params:params})
+    .pipe(
+      map( this.crearArreglo ),
+      delay(0)
+    );
+  }
+
   buscarInsumosMedicosFiltrosTabla( insumo: InsumoMedicoModelo ) {
     let params = new HttpParams();
     var filtros = insumo == null ? new InsumoMedicoModelo() : insumo;

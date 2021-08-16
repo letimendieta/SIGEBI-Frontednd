@@ -45,7 +45,6 @@ import { SignoVitalComponent } from 'src/app/vistas/formularios/signoVital/signo
 import { EnfermedadesCie10Component } from 'src/app/vistas/listas/enfermedadesCie10/enfermedadesCie10.component';
 import { EnfermedadCie10Component } from 'src/app/vistas/formularios/enfermedadCie10/enfermedadCie10.component';
 import { ConsultorioComponent } from 'src/app/vistas/formularios/consultorio/consultorio.component';
-import { EnfermeriaComponent } from 'src/app/vistas/formularios/enfermeria/enfermeria.component';
 import { ReportesComponent } from 'src/app/vistas/formularios/reportes/reportes.component';
 import { PersonasGuardService as personasguard } from 'src/app/guards/personas-guard.service';
 import { PacientesGuardService as pacientesguard } from 'src/app/guards/pacientes-guard.service';
@@ -64,6 +63,8 @@ import { ParametrosGuardService as parametrosguard } from 'src/app/guards/parame
 import { StockGuardService as stockguard } from 'src/app/guards/stock-guard.service';
 import { ConsultorioGuardService as consultorioguard } from 'src/app/guards/consultorio-guard.service';
 import { ReportesGuardService as reportesguard } from 'src/app/guards/reportes-guard.service';
+import { AyudaGuardService as ayudaguard } from 'src/app/guards/ayuda-guard.service';
+import { AyudaComponent } from './vistas/formularios/ayuda/ayuda.component';
 
 
 const routes: Routes = [
@@ -73,6 +74,10 @@ const routes: Routes = [
   path: '',
   component: DefaultComponent,
   children: [
+  {
+    path: 'ayuda',canActivate: [ayudaguard], data: { expectedRol: ['admin', 'ayuda'] },
+    component: AyudaComponent
+  },
   {
     path: 'personas',canActivate: [personasguard], data: { expectedRol: ['admin', 'personas'] },
     component: PersonasComponent
@@ -205,26 +210,11 @@ const routes: Routes = [
   },{
     path: 'medicamento/:id',canActivate: [stockguard], data: { expectedRol: ['admin', 'stocks'] },
     component: MedicamentoComponent
-  },
-  /*{
-    path: 'fichaClinica',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: FichaClinicaComponent
-  },*/
-  /*{
-    path: 'historialesClinicos',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: HistorialesClinicosComponent
-  },{
-    path: 'historialClinico/:id',canActivate: [guard], data: { expectedRol: ['admin'] },
-    component: HistorialClinicoComponent
-  },*/
+  },  
   {
     path: 'consultorio',canActivate: [consultorioguard], data: { expectedRol: ['admin', 'consultorio'] },
     component: ConsultorioComponent
   },
-  /*{
-    path: 'enfermeria',canActivate: [guard], data: { expectedRol: ['admin', 'consultorio'] },
-    component: EnfermeriaComponent
-  },  */ 
   {
     path: 'reporteGeneral',canActivate: [reportesguard], data: { expectedRol: ['admin', 'reportes'] },
     component: ReportesComponent

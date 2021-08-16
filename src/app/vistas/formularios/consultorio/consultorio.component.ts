@@ -254,7 +254,7 @@ export class ConsultorioComponent implements OnInit {
     var orderBy = "descripcionValor";
     var orderDir = "asc";
 
-    this.parametrosService.buscarParametrosFiltros( unidadMedidaParam, orderBy, orderDir )
+    this.parametrosService.buscarParametrosFiltrosOrder( unidadMedidaParam, orderBy, orderDir )
       .subscribe( (resp: ParametroModelo) => {
         this.listaMedidasMedicamentos = resp;
     });
@@ -276,7 +276,7 @@ export class ConsultorioComponent implements OnInit {
     var usuarioModel = new Usuario2Modelo();
     usuarioModel.nombreUsuario = usuario;
     usuarioModel.estado = GlobalConstants.ACTIVO;
-    this.usuariosService.buscarUsuariosFiltros(usuarioModel).subscribe( (resp: Usuario2Modelo[]) => {
+    this.usuariosService.buscarUsuariosFiltrosTabla(usuarioModel).subscribe( (resp: Usuario2Modelo[]) => {
       if(resp.length > 0 ){
         this.usuarioActual = resp[0];
         if( !this.usuarioActual.funcionarios || !this.usuarioActual.funcionarios.funcionarioId ){
@@ -348,7 +348,7 @@ export class ConsultorioComponent implements OnInit {
     });
     Swal.showLoading();
 
-    this.pacientesService.buscarPacientesFiltros(paciente)
+    this.pacientesService.buscarPacientesFiltrosTabla(paciente)
     .subscribe( resp => { 
       if(resp.length <= 0){
         Swal.fire({
@@ -440,7 +440,6 @@ export class ConsultorioComponent implements OnInit {
         if ( resp[0].historialClinicoId != null ){
           this.hcid = this.historialClinicoForm.get('historialClinicoId').value;
           var cedula = this.pacienteForm.get('personas').get('cedula').value;
-          //var areaId = this.historialClinicoForm.get('areas').get('areaId').value;
           this.fileInfos = this.uploadService.getFilesName(cedula + '_' + this.hcid + '_', "HC");
 
           this.obtenerPreguntasSeleccionadas();
@@ -660,7 +659,7 @@ export class ConsultorioComponent implements OnInit {
     this.signosVitales = [];
     $('#tableSignosVitales').DataTable().destroy();
 
-    this.signosVitalesService.buscarSignosVitalesFiltros(signoVital)
+    this.signosVitalesService.buscarSignosVitalesFiltrosTabla(signoVital)
     .subscribe( (resp : SignoVitalModelo[] )=> {     
 
       this.signosVitales = resp;
@@ -1287,7 +1286,7 @@ export class ConsultorioComponent implements OnInit {
     }
     //this.cargando = true;
     this.loadBuscadorPacientes = true;
-    this.pacientesService.buscarPacientesFiltros(buscadorPaciente)
+    this.pacientesService.buscarPacientesFiltrosTabla(buscadorPaciente)
     .subscribe( ( resp : PacienteModelo[] ) => {
       this.loadBuscadorPacientes = false;
       this.pacientes = resp;
@@ -1889,8 +1888,29 @@ export class ConsultorioComponent implements OnInit {
     });
     Swal.showLoading();
 
-    this.consultasService.imprimirReceta(reporteModelo)
-    .subscribe( resp => {
+    this.consultasService.generarReceta(reporteModelo)
+    .subscribe( 
+      data => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Reporte ',
+          text: 'Receta generada'
+        }).then( resp => {
+          const file = new Blob([data], { type: 'application/pdf' });
+          const fileURL = URL.createObjectURL(file);
+          window.open(fileURL);
+        if ( resp.value ) {     
+            //this.limpiar();
+        }
+      });  
+      }, e => {      
+        Swal.fire({
+          icon: 'info',
+          title: 'Algo salió mal',
+          text: this.comunes.obtenerError(e)
+        })
+      });
+      /*resp => {
       Swal.fire({
         icon: 'success',
         showConfirmButton: true,
@@ -1905,7 +1925,7 @@ export class ConsultorioComponent implements OnInit {
         title: 'Algo salió mal',
         text: this.comunes.obtenerError(e)
       })
-    });
+    });*/
   }
 
 }

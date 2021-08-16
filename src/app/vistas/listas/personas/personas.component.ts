@@ -22,7 +22,6 @@ export class PersonasComponent implements OnDestroy, OnInit {
   dtTrigger : Subject<any> = new Subject<any>();
 
   personas: PersonaModelo[] = [];
-  //buscador: PersonaModelo = new PersonaModelo();
   buscadorForm: FormGroup;
   cargando = false;  
 
@@ -136,8 +135,9 @@ export class PersonasComponent implements OnDestroy, OnInit {
     this.personas = [];
     this.rerender();
     var buscador = this.buscadorForm.getRawValue();
-    
-    this.personasService.buscarPersonasFiltros(buscador)
+    var orderBy = "personaId";
+    var orderDir = "desc";
+    this.personasService.buscarPersonasFiltros(buscador, orderBy, orderDir)
     .subscribe( resp => {      
       this.personas = resp;
       this.dtTrigger.next();
