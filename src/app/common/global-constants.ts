@@ -1,7 +1,7 @@
 export class GlobalConstants {
 	//local
-	//public static apiUrlBackend: string = "http://localhost:8080/auth";
-    public static apiUrlBackend: string = "http://localhost:8080/sigebi/auth";
+	public static apiUrlBackend: string = "http://localhost:8080/auth";
+    //public static apiUrlBackend: string = "http://localhost:8080/sigebi/auth";
 	//produccion
 	//public static apiUrlBackend: string = "http://bienestar.pol.una.py:8080/sigebi/auth";
 

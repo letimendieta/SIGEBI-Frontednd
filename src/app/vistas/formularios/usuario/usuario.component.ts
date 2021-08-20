@@ -235,7 +235,7 @@ export class UsuarioComponent implements OnInit {
   }
     
   guardar( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.usuarioForm.invalid ){
       this.alertGuardar = true;
       return Object.values( this.usuarioForm.controls ).forEach( control => {
@@ -245,6 +245,15 @@ export class UsuarioComponent implements OnInit {
           control.markAsTouched();
         }
       });
+    }
+
+    if( !this.crear ){
+      if(!this.usuarioForm.get('password').value || this.usuarioForm.get('password').value == "" ){
+        Swal.fire({
+          icon: 'info',
+          title: 'Ingrese la contraseña',
+        }) 
+      }
     }
 
     Swal.fire({
@@ -320,8 +329,6 @@ export class UsuarioComponent implements OnInit {
   limpiar(event: Event){
     event.preventDefault();
     this.usuarioForm.reset();
-    //this.usuarioForm.get('personas').get('personaId').enable();
-    //this.usuario = new Usuario2Modelo();
     this.usuarioForm.get('estado').setValue('A');
   }
 
@@ -342,21 +349,11 @@ export class UsuarioComponent implements OnInit {
     return mensaje;  
   }
 
-  /*get personaIdNoValido() {
-    return this.usuarioForm.get('personas').get('personaId').invalid 
-      && this.usuarioForm.get('personas').get('personaId').touched
-  }*/
-
   get usuarioNoValido() {
     return this.usuarioForm.get('nombreUsuario').invalid 
       && this.usuarioForm.get('nombreUsuario').touched
   }
-
-  get passNoValido() {
-    return this.usuarioForm.get('password').invalid 
-      && this.usuarioForm.get('password').touched
-  }
-
+  
   get estadoNoValido() {
     return this.usuarioForm.get('estado').invalid 
       && this.usuarioForm.get('estado').touched
@@ -576,24 +573,6 @@ export class UsuarioComponent implements OnInit {
     this.funcionarios = [];
     this.alert=false;
   }
-
-  /*selectPersona(event, persona: PersonaModelo){
-    this.modalService.dismissAll();
-    if(persona.personaId){
-      this.usuarioForm.get('personas').get('personaId').setValue(persona.personaId);
-    }
-    this.personasService.getPersona( persona.personaId )
-      .subscribe( (resp: PersonaModelo) => {         
-        this.usuarioForm.get('personas').patchValue(resp);
-      }, e => {
-          Swal.fire({
-            icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
-          })
-          this.usuarioForm.get('personas').get('personaId').setValue(null);
-        }
-      );
-  }*/
 
   selectFuncionario(event: any, funcionario: FuncionarioModelo){
     this.modalService.dismissAll();

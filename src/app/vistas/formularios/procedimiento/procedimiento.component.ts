@@ -256,6 +256,7 @@ export class ProcedimientoComponent implements OnInit {
   
   guardar( event ) {
     event.preventDefault();
+    this.cerrarAlertGuardar();
     if ( this.procedimientoForm.invalid ){
       this.alertGuardar = true;
       

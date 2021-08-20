@@ -211,7 +211,7 @@
                     <div class="col">{{pacienteForm.get('personas').get('apellidos').value}}</div>
                     <div class="w-100"></div>
                     <div class="col-lg-5"><b>Fecha nacimiento:</b></div>
-                    <div class="col">{{pacienteForm.get('personas').get('fechaNacimiento').value}}</div>
+                    <div class="col">{{pacienteForm.get('personas').get('fechaNacimiento').value | date : 'dd-MM-yyyy'}}</div>
                     <div class="w-100"></div>
                     <div class="col-lg-5"><b>Lugar nacimiento:</b></div>
                     <div class="col">{{pacienteForm.get('personas').get('lugarNacimiento').value}}</div>

@@ -45,7 +45,7 @@ export class CarreraComponent implements OnInit {
   }  
 
   guardar( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.carreraForm.invalid ) {
       this.alertGuardar = true;
       return Object.values( this.carreraForm.controls ).forEach( control => {
@@ -101,7 +101,7 @@ export class CarreraComponent implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salió mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e),
             })
        }
     );

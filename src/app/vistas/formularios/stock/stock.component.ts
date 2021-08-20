@@ -146,7 +146,7 @@ export class StockComponent implements OnInit {
   }
 
   guardar( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.stockForm.invalid ) {
       this.alertGuardar = true;
       return Object.values( this.stockForm.controls ).forEach( control => {

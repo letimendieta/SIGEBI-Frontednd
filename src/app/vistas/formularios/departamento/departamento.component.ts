@@ -45,7 +45,7 @@ export class DepartamentoComponent implements OnInit {
   }  
 
   guardar( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.departamentoForm.invalid ) {
       this.alertGuardar = true;
       return Object.values( this.departamentoForm.controls ).forEach( control => {
@@ -101,7 +101,7 @@ export class DepartamentoComponent implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salió mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e),
             })
        }
     );

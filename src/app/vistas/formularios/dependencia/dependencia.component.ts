@@ -45,7 +45,7 @@ export class DependenciaComponent implements OnInit {
   }  
 
   guardar( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.dependenciaForm.invalid ) {
       this.alertGuardar = true;
       return Object.values( this.dependenciaForm.controls ).forEach( control => {
@@ -101,7 +101,7 @@ export class DependenciaComponent implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salió mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e),
             })
        }
     );

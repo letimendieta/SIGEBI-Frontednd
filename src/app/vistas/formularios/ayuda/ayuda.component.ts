@@ -80,25 +80,22 @@ export class AyudaComponent implements OnInit {
         event => {
           Swal.fire({
             icon: 'success',
-            //title: 'Algo salió mal',
             text: 'Archivo subido con exito'
           })
-          //console.log("Archivo subido con exito");
           this.listarArchivos();
         },
         err => {
           Swal.fire({
-            icon: 'success',
+            icon: 'info',
             title: 'No se pudo subir el archivo!',
             text:  this.comunes.obtenerError(err)
           })
-          //console.log(mensajeUploadHistorialClinico);
       });
 
-      this.selectedFilesAyuda = undefined;
+      this.ngOnInit();
     }else{
       this.alert = true;
-      this.message = "No se ha seleccionado ningun archivo";
+      this.message = "No se ha seleccionado ningun archivo";      
     }
   }
 

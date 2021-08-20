@@ -1627,6 +1627,7 @@ export class ConsultorioComponent implements OnInit {
 
   guardarDiagnosticoTratamiento(event, targetModal){
     event.preventDefault();
+    this.cerrarAlertGuardar();
     if ( this.diagnosticoPrimarioForm.invalid ) {
       this.alertGuardar = true;
       return Object.values( this.diagnosticoPrimarioForm.controls ).forEach( control => {

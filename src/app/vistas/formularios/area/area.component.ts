@@ -61,7 +61,7 @@ export class AreaComponent implements OnInit {
   }
 
   guardar( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.areaForm.invalid ) {
       this.alertGuardar = true;
       return Object.values( this.areaForm.controls ).forEach( control => {

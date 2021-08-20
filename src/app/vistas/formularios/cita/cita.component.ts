@@ -141,7 +141,7 @@ export class CitaComponent implements OnInit {
   }
   
   guardar( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.citaForm.invalid ){
       this.alertGuardar = true;
       return Object.values( this.citaForm.controls ).forEach( control => {

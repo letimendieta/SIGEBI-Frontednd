@@ -32,7 +32,7 @@ export class ReportesComponent implements OnInit {
   }  
 
   guardar( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.reporteForm.invalid ) {
       this.alertGuardar = true;
       return Object.values( this.reporteForm.controls ).forEach( control => {

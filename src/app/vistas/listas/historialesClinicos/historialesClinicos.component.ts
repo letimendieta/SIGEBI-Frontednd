@@ -190,7 +190,7 @@ export class HistorialesClinicosComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salió mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -230,7 +230,7 @@ export class HistorialesClinicosComponent implements OnInit {
             Swal.fire({
               icon: 'error',
               title: 'Algo salió mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e),
             })
           }
         );
@@ -303,7 +303,7 @@ export class HistorialesClinicosComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salió mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
     });
@@ -372,7 +372,7 @@ export class HistorialesClinicosComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
           this.buscadorModalForm.get('pacientes').get('pacienteId').setValue(null);
         }

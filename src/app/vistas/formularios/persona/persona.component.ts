@@ -168,7 +168,7 @@ export class PersonaComponent implements OnInit {
   }
 
   guardar( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.personaForm.invalid ) {
       this.alertGuardar = true;
       return Object.values( this.personaForm.controls ).forEach( control => {

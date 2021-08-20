@@ -153,7 +153,6 @@ export class EnfermedadesCie10Component implements OnDestroy, OnInit {
       && !buscador.estado){
         buscador = null;
     }
-    //this.enfermedadesCie10Service.buscarEnfermedadesCie10FiltrosTabla(buscador)
     this.enfermedadesCie10Service.buscarEnfermedadesCie10Filtros(buscador, orderBy, orderDir)
     .subscribe( resp => {        
         this.enfermedadesCie10 = resp;        
@@ -163,7 +162,7 @@ export class EnfermedadesCie10Component implements OnDestroy, OnInit {
         Swal.fire({
           icon: 'info',
           title: 'Algo salió mal',
-          text: e.status +'. '+ this.comunes.obtenerError(e)
+          text: this.comunes.obtenerError(e)
         })
         this.cargando = false;
         this.dtTrigger.next();
@@ -212,7 +211,7 @@ export class EnfermedadesCie10Component implements OnDestroy, OnInit {
             Swal.fire({
               icon: 'info',
               title: 'Algo salió mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e)
+              text: this.comunes.obtenerError(e)
             })
           }
         );

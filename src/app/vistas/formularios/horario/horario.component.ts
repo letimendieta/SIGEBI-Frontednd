@@ -70,14 +70,14 @@ export class HorarioComponent implements OnInit {
           Swal.fire({
             icon: 'info',
             //title: 'Algo salió mal',
-            text: e.status +'. '+ this.comunes.obtenerError(e),
+            text: this.comunes.obtenerError(e),
           })
         }
       );
   }
 
   guardar( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.horarioForm.invalid ) {
       this.alertGuardar = true;
       return Object.values( this.horarioForm.controls ).forEach( control => {
@@ -133,7 +133,7 @@ export class HorarioComponent implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salió mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e),
             })
        }
     );
@@ -238,7 +238,7 @@ export class HorarioComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salió mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -308,7 +308,7 @@ export class HorarioComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
           this.horarioForm.get('funcionarios').get('funcionarioId').setValue(null);
         }

@@ -208,7 +208,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salió mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
       this.cargando = false;
       this.dtTrigger.next();
@@ -251,7 +251,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
             Swal.fire({
               icon: 'error',
               title: 'Algo salió mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e),
             })
           }
         );
@@ -336,7 +336,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salió mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -362,7 +362,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salió mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -477,17 +477,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
       this.buscadorForm.get('pacientes').get('pacienteId').setValue(paciente.pacienteId);
       this.buscadorForm.get('pacientes').get('pacienteCedula').setValue(paciente.personas.cedula);
     }
-    /*this.pacientesService.getPaciente( paciente.pacienteId )
-      .subscribe( (resp: PacienteModelo) => {         
-        this.signoVitalForm.get('pacientes').patchValue(resp);
-      }, e => {
-          Swal.fire({
-            icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
-          })
-          this.signoVitalForm.get('pacientes').get('pacienteId').setValue(null);
-        }
-      );*/
+    
   }
 
   selectFuncionario(event, funcionario: FuncionarioModelo){
@@ -495,18 +485,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
     if(funcionario.funcionarioId){
       this.buscadorForm.get('funcionarios').get('funcionarioId').setValue(funcionario.funcionarioId);
       this.buscadorForm.get('funcionarios').get('funcionarioCedula').setValue(funcionario.personas.cedula);
-    }
-    /*this.funcionariosService.getFuncionario( funcionario.funcionarioId )
-      .subscribe( (resp: FuncionarioModelo) => {         
-        this.signoVitalForm.get('funcionarios').patchValue(resp);
-      }, e => {
-          Swal.fire({
-            icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
-          })
-          this.signoVitalForm.get('funcionarios').get('funcionarioId').setValue(null);
-        }
-      );*/
+    }    
   }
 
   editar(event, id: number) {

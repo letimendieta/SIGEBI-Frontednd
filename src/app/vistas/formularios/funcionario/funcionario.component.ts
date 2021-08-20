@@ -115,7 +115,7 @@ export class FuncionarioComponent implements OnInit {
   }
   
   guardar( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.funcionarioForm.invalid ){
       this.alertGuardar = true;
       return Object.values( this.funcionarioForm.controls ).forEach( control => {

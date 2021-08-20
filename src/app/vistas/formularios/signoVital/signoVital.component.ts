@@ -89,7 +89,7 @@ export class SignoVitalComponent implements OnInit {
         }, e => {
             Swal.fire({
               icon: 'info',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e),
             })
           }
         );
@@ -107,7 +107,7 @@ export class SignoVitalComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e),
+            text: this.comunes.obtenerError(e),
           })
         }
       );
@@ -115,7 +115,7 @@ export class SignoVitalComponent implements OnInit {
  
   
   guardar( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.signoVitalForm.invalid ){
       this.alertGuardar = true;
       return Object.values( this.signoVitalForm.controls ).forEach( control => {
@@ -168,7 +168,7 @@ export class SignoVitalComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Algo salió mal',
-          text: e.status +'. '+ this.comunes.obtenerError(e),
+          text: this.comunes.obtenerError(e),
         })          
       }
     );
@@ -306,7 +306,7 @@ export class SignoVitalComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salió mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -332,7 +332,7 @@ export class SignoVitalComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Algo salió mal',
-        text: e.status +'. '+ this.comunes.obtenerError(e)
+        text: this.comunes.obtenerError(e)
       })
     });
   }
@@ -457,7 +457,7 @@ export class SignoVitalComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
           this.signoVitalForm.get('pacientes').get('pacienteId').setValue(null);
         }
@@ -475,7 +475,7 @@ export class SignoVitalComponent implements OnInit {
       }, e => {
           Swal.fire({
             icon: 'info',
-            text: e.status +'. '+ this.comunes.obtenerError(e)
+            text: this.comunes.obtenerError(e)
           })
           this.signoVitalForm.get('funcionarios').get('funcionarioId').setValue(null);
         }

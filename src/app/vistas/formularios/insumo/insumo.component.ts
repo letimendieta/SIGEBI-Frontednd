@@ -49,7 +49,7 @@ export class InsumoComponent implements OnInit {
   }  
 
   guardar( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.insumoForm.invalid ) {
       this.alertGuardar = true;
       return Object.values( this.insumoForm.controls ).forEach( control => {

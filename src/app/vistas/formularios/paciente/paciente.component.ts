@@ -665,6 +665,7 @@ export class PacienteComponent implements OnInit {
   }
 
   guardar(  ) {
+    this.cerrarAlertGuardar();
     try {
           
       if ( this.pacienteForm.invalid ){

@@ -44,7 +44,7 @@ export class EnfermedadCie10Component implements OnInit {
   }  
 
   guardar( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.enfermedadCie10Form.invalid ) {
       this.alertGuardar = true;
       return Object.values( this.enfermedadCie10Form.controls ).forEach( control => {
@@ -100,7 +100,7 @@ export class EnfermedadCie10Component implements OnInit {
     }, e => {Swal.fire({
               icon: 'error',
               title: 'Algo salió mal',
-              text: e.status +'. '+ this.comunes.obtenerError(e),
+              text: this.comunes.obtenerError(e),
             })
        }
     );

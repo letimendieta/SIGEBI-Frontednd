@@ -50,7 +50,7 @@ export class MedicamentoComponent implements OnInit {
   }  
 
   guardarMedicamento( ) {
-
+    this.cerrarAlertGuardar();
     if ( this.medicamentoForm.invalid ) {
       this.alertGuardar = true;
       return Object.values( this.medicamentoForm.controls ).forEach( control => {

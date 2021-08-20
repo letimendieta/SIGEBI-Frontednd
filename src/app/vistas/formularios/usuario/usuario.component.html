@@ -233,15 +233,12 @@
                                                       <label><b>Contrase&ntilde;a</b></label>
                                                       <input type="password"
                                                             class="form-control"
-                                                            placeholder="Contrase&ntilde;a"
+                                                            placeholder="********"
                                                             formControlName="password"
-                                                            name="password" 
-                                                            [class.is-invalid]="passNoValido">
-                                                      <small *ngIf="passNoValido" class="text-danger">
-                                                            Ingrese la contrase&ntilde;a
-                                                      </small>
+                                                            name="password">
+                                                      
 
-                                                      <div>
+                                                      <div [hidden]="crear">
                                                             <b>Cambiar Contrase&ntilde;a</b> &nbsp;&nbsp;                     
                                                             <ui-switch uncheckedLabel="no" id= "switchPass" (change)="cambiarContrasenha($event)"
                                                                   checkedLabel="si"></ui-switch>
