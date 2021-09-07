@@ -89,8 +89,8 @@ export class EnfermedadCie10Component implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.enfermedadCie10.enfermedadCie10Id ) {
-            this.router.navigate(['/enfermedadesCie10']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/enfermedadesCie10']);
           }else{
             this.limpiar();
           }

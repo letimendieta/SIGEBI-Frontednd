@@ -58,9 +58,9 @@ export class FuncionariosService {
             );
   }
 
-  buscarFuncionariosFiltros( fichaClinica: FuncionarioModelo, orderBy:string, orderDir:string ) {
+  buscarFuncionariosFiltros( funcionario: FuncionarioModelo, orderBy:string, orderDir:string ) {
     let params = new HttpParams();
-    var filtros = fichaClinica == null ? new FuncionarioModelo() : fichaClinica;
+    var filtros = funcionario == null ? new FuncionarioModelo() : funcionario;
     params = params.append('filtros', JSON.stringify(filtros));
     params = params.append('orderBy', orderBy);
     params = params.append('orderDir', orderDir);

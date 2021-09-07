@@ -95,8 +95,8 @@ export class MedicamentoComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( resp.value.medicamentoId ) {
-            this.router.navigate(['/medicamentos']);
+          if ( !this.crear) {
+            this.router.navigate(['/inicio/medicamentos']);
           }else{
             this.limpiar();
           }

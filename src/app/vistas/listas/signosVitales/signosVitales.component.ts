@@ -14,6 +14,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PacientesService } from 'src/app/servicios/pacientes.service';
 import { FuncionariosService } from 'src/app/servicios/funcionarios.service';
 import { Router } from '@angular/router';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-signosVitales',
@@ -25,6 +26,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
   dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  buttons: any = {};
   dtOptionsBuscadorPacientes: any = {};
   dtOptionsBuscadorFuncionarios: any = {};
   dtTrigger : Subject<any> = new Subject<any>();
@@ -44,7 +46,8 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
   loadBuscadorPacientes = false;
   loadBuscadorFuncionarios = false;
 
-  constructor( private signosVitalesService: SignosVitalesService,
+  constructor( private tokenService: TokenService,
+               private signosVitalesService: SignosVitalesService,
               private pacientesService: PacientesService,
               private funcionariosService: FuncionariosService,
               private comunes: ComunesService,
@@ -57,6 +60,13 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
 
   ngOnInit() {
     this.crearFormulario();
+    var rolesUsuario = this.comunes.obtenerRoles(); 
+    if(rolesUsuario.includes(GlobalConstants.ROL_REPORTE_LISTADOS)
+      || rolesUsuario.includes(GlobalConstants.ROL_ADMIN)){
+        this.initButtonsReports();
+    }else {
+      this.buttons = [];
+    }    
     this.crearTabla();
   }
 
@@ -86,71 +96,15 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
         {data:'#'},
         {data:'signoVitalId'},
         {data:'pacientes.personas.cedula'},
-        {data:'pacientes.personas.nombres'}, {data:'pacientes.personas.apellidos'}, 
-        {data:'funcionarios.personas.cedula'}, {data:'funcionarios.personas.nombres'},
-        {data:'funcionarios.personas.apellidos'},{data:'fecha'},
-        {data:'Editar'},
-        {data:'Borrar'}
+        {data:'pacientes.personas.nombres'}, 
+        {data:'funcionarios.personas.cedula'}, 
+        {data:'funcionarios.personas.nombres'},
+        {data:'fecha'},
+        {data:'Editar'}
+        //{data:'Borrar'}
       ],
       dom: 'lBfrtip',
-      buttons: [
-        {
-          extend:    'copy',
-          text:      '<i class="far fa-copy"></i>',
-          titleAttr: 'Copiar',
-          className: 'btn btn-light',
-          title:     'Listado de signosVitales',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-          },
-        },
-        {
-          extend:    'csv',
-          title:     'Listado de signosVitales',
-          text:      '<i class="fas fa-file-csv"></i>',
-          titleAttr: 'Exportar a CSV',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-          },
-        },
-        {
-          extend:    'excelHtml5',
-          title:     'Listado de signosVitales',
-          text:      '<i class="fas fa-file-excel"></i> ',
-          titleAttr: 'Exportar a Excel',
-          className: 'btn btn-light',
-          autoFilter: true,
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-          }
-        },          
-        {
-          extend:    'print',
-          title:     'Listado de signosVitales',
-          text:      '<i class="fa fa-print"></i> ',
-          titleAttr: 'Imprimir',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-          },
-          customize: function ( win ) {
-            $(win.document.body)
-                .css( 'font-size', '10pt' )
-                .prepend(
-                    '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
-                );
-
-            $(win.document.body).find( 'table' )
-                .addClass( 'compact' )
-                .css( 'font-size', 'inherit' );
-          }              
-        }
-      ]
+      buttons: this.buttons
     };
   }
 
@@ -244,7 +198,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {
-              this.ngOnInit();
+              this.buscadorSignosVitales(event);
             }
           });
         }, e => {            
@@ -490,7 +444,7 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
 
   editar(event, id: number) {
     event.preventDefault();
-    this.router.navigate(['signoVital', id]);
+    this.router.navigate(['inicio/signoVital', id]);
   }
 
   onSubmit() {
@@ -510,5 +464,66 @@ export class SignosVitalesComponent implements OnDestroy,  OnInit {
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
+}
+
+  initButtonsReports(){
+    this.buttons = [
+      {
+        extend:    'copy',
+        text:      '<i class="far fa-copy"></i>',
+        titleAttr: 'Copiar',
+        className: 'btn btn-light',
+        title:     'Listado de signosVitales',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6]
+        },
+      },
+      {
+        extend:    'csv',
+        title:     'Listado de signosVitales',
+        text:      '<i class="fas fa-file-csv"></i>',
+        titleAttr: 'Exportar a CSV',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6]
+        },
+      },
+      {
+        extend:    'excelHtml5',
+        title:     'Listado de signosVitales',
+        text:      '<i class="fas fa-file-excel"></i> ',
+        titleAttr: 'Exportar a Excel',
+        className: 'btn btn-light',
+        autoFilter: true,
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6]
+        }
+      },          
+      {
+        extend:    'print',
+        title:     'Listado de signosVitales',
+        text:      '<i class="fa fa-print"></i> ',
+        titleAttr: 'Imprimir',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6]
+        },
+        customize: function ( win ) {
+          $(win.document.body)
+              .css( 'font-size', '10pt' )
+              .prepend(
+                  '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
+              );
+
+          $(win.document.body).find( 'table' )
+              .addClass( 'compact' )
+              .css( 'font-size', 'inherit' );
+        }              
+      }
+    ]
   }
 }

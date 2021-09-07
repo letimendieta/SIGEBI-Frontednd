@@ -9,6 +9,7 @@ import { GlobalConstants } from '../../../common/global-constants';
 import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DataTableDirective } from 'angular-datatables';
 import { Router } from '@angular/router';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-pacientes',
@@ -20,13 +21,15 @@ export class PacientesComponent implements OnDestroy, OnInit {
   dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  buttons: any = {};
   dtTrigger : Subject<any> = new Subject<any>();
 
   pacientes: PacienteModelo[] = [];
   buscadorForm: FormGroup;
   cargando = false;
 
-  constructor( private pacientesService: PacientesService,
+  constructor( private tokenService: TokenService,
+               private pacientesService: PacientesService,
     private comunes: ComunesService,
     public router: Router,
     private fb: FormBuilder ) {    
@@ -34,6 +37,13 @@ export class PacientesComponent implements OnDestroy, OnInit {
 
   ngOnInit() {
     this.crearFormulario();
+    var rolesUsuario = this.comunes.obtenerRoles(); 
+    if(rolesUsuario.includes(GlobalConstants.ROL_REPORTE_LISTADOS)
+      || rolesUsuario.includes(GlobalConstants.ROL_ADMIN)){
+        this.initButtonsReports();
+    }else {
+      this.buttons = [];
+    }    
     this.crearTabla();
   }
 
@@ -67,64 +77,7 @@ export class PacientesComponent implements OnDestroy, OnInit {
         //{data:'Borrar'},
       ],
       dom: 'lBfrtip',
-      buttons: [
-        {
-          extend:    'copy',
-          text:      '<i class="far fa-copy"></i>',
-          titleAttr: 'Copiar',
-          className: 'btn btn-light',
-          title:     'Listado de pacientes',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5]
-          },
-        },
-        {
-          extend:    'csv',
-          title:     'Listado de pacientes',
-          text:      '<i class="fas fa-file-csv"></i>',
-          titleAttr: 'Exportar a CSV',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5 ]
-          },
-        },
-        {
-          extend:    'excelHtml5',
-          title:     'Listado de pacientes',
-          text:      '<i class="fas fa-file-excel"></i> ',
-          titleAttr: 'Exportar a Excel',
-          className: 'btn btn-light',
-          autoFilter: true,
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5]
-          }
-        },          
-        {
-          extend:    'print',
-          title:     'Listado de pacientes',
-          text:      '<i class="fa fa-print"></i> ',
-          titleAttr: 'Imprimir',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5 ]
-          },
-          customize: function ( win ) {
-            $(win.document.body)
-                .css( 'font-size', '10pt' )
-                .prepend(
-                    '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
-                );
-
-            $(win.document.body).find( 'table' )
-                .addClass( 'compact' )
-                .css( 'font-size', 'inherit' );
-          }              
-        }
-      ]
+      buttons: this.buttons
     };
   }
 
@@ -171,7 +124,7 @@ export class PacientesComponent implements OnDestroy, OnInit {
 
   editar(event, id: number) {
     event.preventDefault();
-    this.router.navigate(['paciente', id]);
+    this.router.navigate(['inicio/paciente', id]);
   }
 
   borrarPaciente(event, paciente: PacienteModelo ) {
@@ -250,5 +203,66 @@ export class PacientesComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
+}
+
+  initButtonsReports(){
+    this.buttons = [
+      {
+        extend:    'copy',
+        text:      '<i class="far fa-copy"></i>',
+        titleAttr: 'Copiar',
+        className: 'btn btn-light',
+        title:     'Listado de pacientes',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4]
+        },
+      },
+      {
+        extend:    'csv',
+        title:     'Listado de pacientes',
+        text:      '<i class="fas fa-file-csv"></i>',
+        titleAttr: 'Exportar a CSV',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4]
+        },
+      },
+      {
+        extend:    'excelHtml5',
+        title:     'Listado de pacientes',
+        text:      '<i class="fas fa-file-excel"></i> ',
+        titleAttr: 'Exportar a Excel',
+        className: 'btn btn-light',
+        autoFilter: true,
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4]
+        }
+      },          
+      {
+        extend:    'print',
+        title:     'Listado de pacientes',
+        text:      '<i class="fa fa-print"></i> ',
+        titleAttr: 'Imprimir',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4]
+        },
+        customize: function ( win ) {
+          $(win.document.body)
+              .css( 'font-size', '10pt' )
+              .prepend(
+                  '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
+              );
+
+          $(win.document.body).find( 'table' )
+              .addClass( 'compact' )
+              .css( 'font-size', 'inherit' );
+        }              
+      }
+    ]
   }
 }

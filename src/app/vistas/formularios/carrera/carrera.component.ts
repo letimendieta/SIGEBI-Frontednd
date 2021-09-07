@@ -90,8 +90,8 @@ export class CarreraComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.carrera.carreraId ) {
-            this.router.navigate(['/carreras']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/carreras']);
           }else{
             this.limpiar();
           }

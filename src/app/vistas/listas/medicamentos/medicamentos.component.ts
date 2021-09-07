@@ -8,6 +8,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
 import { MedicamentosService } from 'src/app/servicios/medicamentos.service';
 import { Router } from '@angular/router';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-medicamentos',
@@ -19,6 +20,7 @@ export class MedicamentosComponent implements OnInit {
   dtElement: DataTableDirective;
 
   dtOptionsMedicamentos: any = {};
+  buttons: any = {};
   dtTriggerMedicamentos : Subject<any> = new Subject<any>();
 
   medicamentos: MedicamentoModelo[] = [];
@@ -27,7 +29,8 @@ export class MedicamentosComponent implements OnInit {
   cargando = false;  
   opcion = "";
 
-  constructor( private medicamentosService: MedicamentosService,
+  constructor( private tokenService: TokenService,
+               private medicamentosService: MedicamentosService,
                private comunes: ComunesService,
                public router: Router,
                private fb: FormBuilder) {    
@@ -35,6 +38,13 @@ export class MedicamentosComponent implements OnInit {
 
   ngOnInit() {    
     this.crearFormulario();
+    var rolesUsuario = this.comunes.obtenerRoles(); 
+    if(rolesUsuario.includes(GlobalConstants.ROL_REPORTE_LISTADOS)
+      || rolesUsuario.includes(GlobalConstants.ROL_ADMIN)){
+        this.initButtonsReports();
+    }else {
+      this.buttons = [];
+    } 
     this.crearTablaMedicamentos();
   }
   
@@ -65,66 +75,10 @@ export class MedicamentosComponent implements OnInit {
         {data:'codigo'}, {data:'medicamento'}, {data:'concentracion'},
         {data:'forma'}, {data:'viaAdmin'}, {data:'presentacion'},
         {data:'Editar'},
+        {data:'Borrar'}
       ],
       dom: 'lBfrtip',
-      buttons: [
-        {
-          extend:    'copy',
-          text:      '<i class="far fa-copy"></i>',
-          titleAttr: 'Copiar',
-          className: 'btn btn-light',
-          title:     'Listado de medicamentos',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5]
-          },
-        },
-        {
-          extend:    'csv',
-          title:     'Listado de medicamentos',
-          text:      '<i class="fas fa-file-csv"></i>',
-          titleAttr: 'Exportar a CSV',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5]
-          },
-        },
-        {
-          extend:    'excelHtml5',
-          title:     'Listado de medicamentos',
-          text:      '<i class="fas fa-file-excel"></i> ',
-          titleAttr: 'Exportar a Excel',
-          className: 'btn btn-light',
-          autoFilter: true,
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5]
-          }
-        },          
-        {
-          extend:    'print',
-          title:     'Listado de medicamentos',
-          text:      '<i class="fa fa-print"></i> ',
-          titleAttr: 'Imprimir',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5]
-          },
-          customize: function ( win ) {
-            $(win.document.body)
-                .css( 'font-size', '10pt' )
-                .prepend(
-                    '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
-                );
-
-            $(win.document.body).find( 'table' )
-                .addClass( 'compact' )
-                .css( 'font-size', 'inherit' );
-          }              
-        }
-      ]
+      buttons: this.buttons
     };
   }
 
@@ -164,7 +118,7 @@ export class MedicamentosComponent implements OnInit {
 
   editar(event, id: number) {
     event.preventDefault();
-    this.router.navigate(['medicamento', id]);
+    this.router.navigate(['inicio/medicamento', id]);
   }
 
   borrarMedicamento(event, medicamento: MedicamentoModelo ) {
@@ -242,5 +196,66 @@ export class MedicamentosComponent implements OnInit {
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTriggerMedicamentos.unsubscribe();
+  }
+
+  initButtonsReports(){
+    this.buttons = [  
+      {
+        extend:    'copy',
+        text:      '<i class="far fa-copy"></i>',
+        titleAttr: 'Copiar',
+        className: 'btn btn-light',
+        title:     'Listado de medicamentos',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7]
+        },
+      },
+      {
+        extend:    'csv',
+        title:     'Listado de medicamentos',
+        text:      '<i class="fas fa-file-csv"></i>',
+        titleAttr: 'Exportar a CSV',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7]
+        },
+      },
+      {
+        extend:    'excelHtml5',
+        title:     'Listado de medicamentos',
+        text:      '<i class="fas fa-file-excel"></i> ',
+        titleAttr: 'Exportar a Excel',
+        className: 'btn btn-light',
+        autoFilter: true,
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7]
+        }
+      },          
+      {
+        extend:    'print',
+        title:     'Listado de medicamentos',
+        text:      '<i class="fa fa-print"></i> ',
+        titleAttr: 'Imprimir',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7]
+        },
+        customize: function ( win ) {
+          $(win.document.body)
+              .css( 'font-size', '10pt' )
+              .prepend(
+                  '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
+              );
+
+          $(win.document.body).find( 'table' )
+              .addClass( 'compact' )
+              .css( 'font-size', 'inherit' );
+        }              
+      }
+    ]
   }
 }

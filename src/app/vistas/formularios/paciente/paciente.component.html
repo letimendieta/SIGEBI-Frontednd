@@ -3,12 +3,15 @@
 </head>
 
 <body>
-      <h1>Paciente </h1>
-      <hr>
+      <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="/inicio/pacientes">Listado de pacientes</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Paciente </li>
+          </ol>
 
       <div class="row text-right">
             <div class="col">
-                  <button class="btn btn-danger" routerLink="/pacientes">
+                  <button class="btn btn-danger" routerLink="/inicio/pacientes">
                         <i class="fa fa-arrow-left"></i>
                         Regresar
                   </button>
@@ -183,7 +186,7 @@
                                                                   
                                                                   <div class="form-group">
                                                                         <label><b>C&eacute;dula</b><span class="requerido"> *</span></label>                                                      
-                                                                        <input type="text" class="form-control"
+                                                                        <input autofocus type="text" class="form-control"
                                                                               placeholder="C&eacute;dula" name="cedula"
                                                                               formControlName="cedula"
                                                                               [class.is-invalid]="cedulaNoValido"
@@ -417,18 +420,15 @@
                                                       <div class="form-row justify-content-center">
                                                             <div class="col-lg-5">
                                                                   <div class="form-group">
-                                                                        <label><b>Grupo Sangu&iacute;neo</b><span class="requerido"> *</span></label>
-                                                                        <select ui-select2 class="form-control input-sm" [class.is-invalid]="grupoSanguineoNoValido"
+                                                                        <label><b>Grupo Sangu&iacute;neo</b></label>
+                                                                        <select ui-select2 class="form-control input-sm"
                                                                               formControlName="grupoSanguineo" uppercase>
                                                                               <option value=null>Seleccione</option>
                                                                               <option *ngFor="let item of listaGrupoSanguineo; let i = index"
                                                                                     value="{{item.valor}}">
                                                                                     {{item.descripcionValor}}
                                                                               </option>
-                                                                        </select>
-                                                                        <small *ngIf="grupoSanguineoNoValido" class="text-danger">
-                                                                              Ingrese el grupo sangu&iacute;neo
-                                                                        </small>
+                                                                        </select>                                                                        
                                                                   </div>
                                                                   
                                                                   <div class="form-group">

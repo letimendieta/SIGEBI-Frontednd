@@ -4,8 +4,10 @@
 
 <body>
   <div>
-    <h1>Consultorio </h1>
-    <hr>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Consultorio </li>
+    </ol>
 
     <div class="card">
       <div *ngIf="alertGeneral" class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -34,16 +36,23 @@
                 <div>
                   <mat-form-field appearance="legacy">
                     <mat-label>C&eacute;dula</mat-label>
-                    <input matInput type="text" placeholder="C&eacute;dula" 
+                    <input autofocus matInput type="text" placeholder="C&eacute;dula" 
                           formControlName="cedulaBusqueda" id="cedulaBusqueda">
                   </mat-form-field> 
                 </div> 
               </div>
               &nbsp;
-              <div class="align-self-center">
-                <button type="submit" hidden="true" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+
+              <!--div class="align-self-center">
+                <button type="submit" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
               </div>
-              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+              <span class="glyphicon glyphicon-search" aria-hidden="true"></span-->
+
+              <div>
+                <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Buscar"
+                    ><i class="fas fa-search"></i></button>
+              </div>
+              &nbsp;
               <div>
                 <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Limpiar"
                     (click)="limpiar($event)"><i class="fas fa-backspace"></i></button>

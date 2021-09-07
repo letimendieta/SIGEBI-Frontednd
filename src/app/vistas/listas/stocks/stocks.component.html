@@ -3,12 +3,14 @@
 </head>
 
 <body>
-  <h1>Listado de stock</h1>
-  <hr>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Listado de stock </li>
+  </ol>  
 
   <div class="card">
     <h3 class="card-header" data-toggle="collapse" data-target="#collapseBuscador"
-        aria-expanded="true" aria-controls="collapseBuscador">Buscador</h3>
+        aria-expanded="true" aria-controls="collapseBuscador">Filtros de b&uacute;squeda</h3>
     <div class="card-body collapse show" id="collapseBuscador">
       <form [formGroup]="buscadorForm">
         <div class="form-row justify-content-center" >
@@ -297,7 +299,7 @@
   </div>
   <div class="row">
     <div class="col text-right">
-      <button routerLink="/stock/nuevo"
+      <button routerLink="/inicio/stock/nuevo"
               class="btn btn-primary">
         <i class="fa fa-plus"></i>
         Agregar

@@ -90,8 +90,8 @@ export class EstamentoComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.estamento.estamentoId ) {
-            this.router.navigate(['/estamentos']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/estamentos']);
           }else{
             this.limpiar();
           }

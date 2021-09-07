@@ -75,9 +75,7 @@ export class PersonaComponent implements OnInit {
       this.personasService.getPersona( Number(id) )
         .subscribe( (resp: PersonaModelo) => {
           this.personaForm.patchValue(resp);
-          var cedula = this.personaForm.get('cedula').value;
           this.ageCalculator();
-          //this.fileInfos = this.uploadService.getFilesName(cedula + '_', "I");
 
           if( resp.foto ){
             this.profile = resp.foto;
@@ -210,6 +208,10 @@ export class PersonaComponent implements OnInit {
       persona.estamentos = null;
     }
 
+    if(this.profile!="" && this.profile != "assets/images/profile.jpg"){
+        persona.foto = this.profile;
+      }
+
     if ( persona.personaId ) {
       //Modificar
       persona.usuarioModificacion = this.tokenService.getUserName().toString();
@@ -249,8 +251,8 @@ export class PersonaComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( persona.personaId ) {
-            this.router.navigate(['/personas']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/personas']);
           }else{
             this.limpiar(event);
           }
@@ -263,6 +265,34 @@ export class PersonaComponent implements OnInit {
             })
        }
     );
+  }
+
+  buscarPersona(event){
+    if( this.crear ){
+    
+      event.preventDefault();
+      var cedula = this.personaForm.get('cedula').value;    
+      if(!cedula){
+        return null;
+      }
+      var persona: PersonaModelo = new PersonaModelo();
+      persona.cedula = cedula;
+      this.personasService.buscarPersonasFiltrosTabla( persona )
+        .subscribe( (resp : PersonaModelo[] ) => {
+          if(resp.length > 0 ){
+            Swal.fire({
+              icon: 'info',
+              text: 'Ya existe una persona con cédula: '+ cedula
+            })
+          }
+        }, e => {
+            Swal.fire({
+              icon: 'info',
+              text: this.comunes.obtenerError(e)
+            })
+          }
+        );
+    }
   }
 
   ageCalculator(){

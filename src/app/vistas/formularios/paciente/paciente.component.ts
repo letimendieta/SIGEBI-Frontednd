@@ -593,7 +593,10 @@ export class PacienteComponent implements OnInit {
           this.pacienteForm.get('personas').patchValue(resp[0]);
           this.pacienteForm.get('personas').get("cedula").disable();
           this.ageCalculator();
-          this.validarPaciente();
+          if( this.crear ){
+            this.validarPaciente();
+          }      
+          
         }
       }, e => {
           Swal.fire({
@@ -777,8 +780,8 @@ export class PacienteComponent implements OnInit {
                 }).then( resp => {
 
           if ( resp.value ) {
-            if ( paciente.pacienteId ) {
-              this.router.navigate(['/pacientes']);
+            if ( !this.crear ) {
+              this.router.navigate(['/inicio/pacientes']);
             }else{
               this.limpiar(event);
             }
@@ -847,11 +850,6 @@ export class PacienteComponent implements OnInit {
     && this.pacienteForm.get('personas').get('email').touched
   }
 
-  get grupoSanguineoNoValido() {
-    return this.pacienteForm.get('grupoSanguineo').invalid 
-    && this.pacienteForm.get('grupoSanguineo').touched
-  }
-
   crearFormulario() {
     this.pacienteForm = this.fb.group({
       pacienteId  : [null, [] ],
@@ -889,7 +887,7 @@ export class PacienteComponent implements OnInit {
         usuarioCreacion: [null, [] ],
         usuarioModificacion: [null, [] ]   
       }),      
-      grupoSanguineo  : [null, [Validators.required] ],
+      grupoSanguineo  : [null, [] ],
       seguroMedico  : [null, [] ],
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],

@@ -90,8 +90,8 @@ export class DependenciaComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.dependencia.dependenciaId ) {
-            this.router.navigate(['/dependencias']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/dependencias']);
           }else{
             this.limpiar();
           }

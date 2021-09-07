@@ -6,6 +6,8 @@ import { TokenService } from 'src/app/servicios/token.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { ComunesService } from 'src/app/servicios/comunes.service';
+import md5 from 'md5';
+import {Md5} from 'ts-md5/dist/md5';
 
 @Component({
   selector: 'app-login',
@@ -39,19 +41,21 @@ export class LoginComponent implements OnInit {
       nombreUsuario: [''],
       password: ['']
 
-  })
+    })
     if (this.tokenService.getToken()) {
+      this.router.navigate(['/inicio']);
       this.isLogged = true;
       this.isLoginFail = false;
-      this.roles = this.tokenService.getAuthorities();
+      this.roles = this.tokenService.getAuthorities();      
     }
   }
 
   onLogin(): void {
     this.cerrarAlert();
     this.load = true;
-    console.log(this.forma.get('nombreUsuario').value)
-    this.loginUsuario = new UsuarioModelo(this.forma.get('nombreUsuario').value, this.forma.get('password').value);
+
+    var password = this.forma.get('password').value;
+    this.loginUsuario = new UsuarioModelo(this.forma.get('nombreUsuario').value, password);
     this.authService.login(this.loginUsuario).subscribe(
       data => {
         
@@ -64,7 +68,7 @@ export class LoginComponent implements OnInit {
         this.toastr.success('Bienvenido ' + data.nombreUsuario, 'OK', {
           timeOut: 3000, positionClass: 'toast-top-center'
         });
-        this.router.navigate(['/']);
+        this.router.navigate(['/inicio']);
       },
       err => {
         this.load = false;
@@ -74,7 +78,6 @@ export class LoginComponent implements OnInit {
           timeOut: 3000,  positionClass: 'toast-top-center',
         });
         this.alert=true;
-        console.log(err.error.message);
       }
     );
   }

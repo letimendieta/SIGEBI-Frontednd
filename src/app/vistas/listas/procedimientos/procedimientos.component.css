@@ -1,1 +1,3 @@
 @import './../../listas/css/listas.css';
+
+th.dt-center, td.dt-center { text-align: center; }

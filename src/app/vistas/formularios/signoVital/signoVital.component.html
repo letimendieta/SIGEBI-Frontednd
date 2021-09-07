@@ -3,13 +3,16 @@
 </head>
 
       <body>
-      <h1>Signo Vital </h1>
-      <hr>
+            <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+                  <li class="breadcrumb-item"><a href="/inicio/signosVitales">Listado de signos vitales</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Signo vital </li>
+                </ol>
 
       <div class="row text-right">
             <div class="col">
                   <button class="btn btn-danger"
-                              routerLink="/signosVitales">
+                              routerLink="/inicio/signosVitales">
                         <i class="fa fa-arrow-left"></i>
                         Regresar
                   </button>
@@ -44,7 +47,7 @@
                                           <div class="col-lg-5">
                                                 <div class="form-group">
                                                       <label><b>Fecha</b><span class="requerido"> *</span></label>
-                                                      <input type="datetime-local"
+                                                      <input autofocus type="datetime-local"
                                                             class="form-control"
                                                             formControlName="fecha"
                                                             name="fecha" [class.is-invalid]="fechaNoValido"                                     
@@ -65,7 +68,9 @@
                                                                   class="form-control"
                                                                   placeholder="Paciente id"
                                                                   formControlName="pacienteId"
-                                                                  name="pacienteId" [class.is-invalid]="pacienteIdNoValido">
+                                                                  name="pacienteId" 
+                                                                  [class.is-invalid]="pacienteIdNoValido"
+                                                                  (keyup.enter)="obtenerPaciente($event)">
                                                             <div class="input-group-append">
                                                                   <button class="btn btn-outline-info" 
                                                                         (click)="obtenerPaciente($event)">
@@ -207,7 +212,9 @@
                                                                   class="form-control"
                                                                   placeholder="Funcionario id"
                                                                   formControlName="funcionarioId"
-                                                                  name="funcionarioId" [class.is-invalid]="funcionarioIdNoValido">
+                                                                  name="funcionarioId" 
+                                                                  [class.is-invalid]="funcionarioIdNoValido"
+                                                                  (keyup.enter)="obtenerFuncionario($event)">
                                                             <div class="input-group-append">
                                                                   <button class="btn btn-outline-info"
                                                                   (click)="obtenerFuncionario($event)">

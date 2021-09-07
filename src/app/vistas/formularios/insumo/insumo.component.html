@@ -3,13 +3,18 @@
 </head>
 
 <body>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+    <li class="breadcrumb-item"><a href="/inicio/insumos">Listado de insumos m&eacute;dicos</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Insumo m&eacute;dico </li>
+  </ol>
   <h1>Insumo M&eacute;dico</h1>
   <hr>
 
   <div class="row text-right">
     <div class="col">
       <button class="btn btn-danger"
-              routerLink="/insumos">
+              routerLink="/inicio/insumos">
         <i class="fa fa-arrow-left"></i>
         Regresar
       </button>
@@ -48,10 +53,10 @@
                   <div class="form-group">
 
                     <label><b>C&oacute;digo ECRI</b></label>
-                    <input type="text"
+                    <input autofocus type="text"
                           class="form-control"
                           placeholder="C&oacute;digo"                      
-                          name="codigo"
+                          name="codigo" 
                           formControlName="codigo">                      
                   </div>
                 </div>

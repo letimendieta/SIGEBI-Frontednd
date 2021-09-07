@@ -157,8 +157,8 @@ export class SignoVitalComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( signoVital.signoVitalId ) {
-            this.router.navigate(['/signosVitales']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/signosVitales']);
           }else{
             this.limpiar();
           }

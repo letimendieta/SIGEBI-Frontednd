@@ -111,18 +111,22 @@ export class ProcedimientoComponent implements OnInit {
     this.crearTablaModelPacientes();
     this.crearTablaModelStock();
     const id = this.route.snapshot.paramMap.get('id');
-    this.listarAreas();
+    this.listarAreas("");
     this.procedimientoForm.get('estado').disable();
     if ( id !== 'nuevo' ) {
       this.procedimientosService.getProcedimiento( Number(id) )
         .subscribe( (resp: ProcedimientoModelo) => {  
           this.consultaId = resp.consultaId;   
-          if( resp && resp.estado == GlobalConstants. PROC_PENDIENTE ){
+          if( resp && resp.estado == GlobalConstants.PROC_PENDIENTE ){
             this.procedimientoPendiente = true;
           }  
           if( resp && resp.estado == GlobalConstants.PROC_FINALIZADO ){
             this.finalizado = true;
-          }     
+          }  
+          if( resp && resp.areas && resp.areas.tipo != GlobalConstants.TIPO_AREA_SERVICIO ){
+            this.listarAreas("-1");
+          }
+          
           this.procedimientoForm.patchValue(resp);
           this.listarEstadosEntrega();
           this.obtenerProcedimientosInsumos();
@@ -166,6 +170,13 @@ export class ProcedimientoComponent implements OnInit {
       .subscribe( (resp: FuncionarioModelo) => {   
         this.loadFuncionario = false;       
         this.procedimientoForm.get('funcionarios').patchValue(resp);
+        if( GlobalConstants.INACTIVO == resp.estado ){
+          Swal.fire({
+            icon: 'info',
+            title: 'Atención',
+            text: 'El funcionario se encuentra inactivo'
+          })
+        }
       }, e => {
         this.loadFuncionario = false;       
           Swal.fire({
@@ -230,12 +241,17 @@ export class ProcedimientoComponent implements OnInit {
     });
   }
 
-  listarAreas() {
+  listarAreas(cantidad) {
     var orderBy = "descripcion";
     var orderDir = "asc";
     var area = new AreaModelo();
     area.estado = "A";
-    area.tipo = "SERVICIO"
+
+    if( cantidad == "-1" ){
+      area.tipo = GlobalConstants.TIPO_AREA_SERVICIO + ',' +GlobalConstants.TIPO_AREA_CONSULTORIO;
+    }else{
+      area.tipo = GlobalConstants.TIPO_AREA_SERVICIO;
+    }
 
     this.areasService.buscarAreasFiltrosOrder(area, orderBy, orderDir )
       .subscribe( (resp: AreaModelo) => {
@@ -315,8 +331,8 @@ export class ProcedimientoComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( procedimiento.procedimientoId ) {
-            this.router.navigate(['/procedimientos']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/procedimientos']);
           }else{
             this.limpiar();
           }
@@ -1059,6 +1075,13 @@ export class ProcedimientoComponent implements OnInit {
     this.funcionariosService.getFuncionario( funcionario.funcionarioId )
       .subscribe( (resp: FuncionarioModelo) => {         
         this.procedimientoForm.get('funcionarios').patchValue(resp);
+        if( GlobalConstants.INACTIVO == resp.estado ){
+          Swal.fire({
+            icon: 'info',
+            title: 'Atención',
+            text: 'El funcionario se encuentra inactivo'
+          })
+        }
       }, e => {
           Swal.fire({
             icon: 'info',

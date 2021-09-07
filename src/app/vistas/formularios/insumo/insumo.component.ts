@@ -44,7 +44,7 @@ export class InsumoComponent implements OnInit {
           this.insumoForm.patchValue(resp);
         });
     }else{
-      this.crear = true;
+      this.crear = true;     
     }
   }  
 
@@ -85,17 +85,17 @@ export class InsumoComponent implements OnInit {
       peticion = this.insumosService.crearInsumoMedico( insumoMedico);
     }
 
-    peticion.subscribe( resp => {
+    peticion.subscribe( response => {
 
       Swal.fire({
                 icon: 'success',
-                title: insumoMedico.nombre,
-                text: resp.mensaje,
+                title: response.insumoMedico.nombre,
+                text: response.mensaje,
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( insumoMedico.insumoMedicoId ) {
-            this.router.navigate(['/insumos']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/insumos']);            
           }else{
             this.limpiar();
           }

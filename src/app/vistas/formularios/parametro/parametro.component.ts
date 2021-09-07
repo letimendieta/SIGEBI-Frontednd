@@ -88,8 +88,8 @@ export class ParametroComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.parametro.parametroId ) {
-            this.router.navigate(['/parametros']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/parametros']);
           }else{
             this.limpiar();
           }

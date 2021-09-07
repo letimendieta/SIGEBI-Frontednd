@@ -3,13 +3,16 @@
 </head>
 
       <body>
-      <h1>Procedimiento </h1>
-      <hr>
+            <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+                  <li class="breadcrumb-item"><a href="/inicio/procedimientos">Listado de procedimientos</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Procedimiento </li>
+            </ol>
 
       <div class="row text-right">
             <div class="col">
                   <button class="btn btn-danger"
-                              routerLink="/procedimientos">
+                              routerLink="/inicio/procedimientos">
                         <i class="fa fa-arrow-left"></i>
                         Regresar
                   </button>
@@ -49,7 +52,7 @@
                                                             <img *ngIf="loadPaciente" src="../assets/images/loading2.gif">
                                                       </label>
                                                       <div class="input-group mb-3">
-                                                            <input type="number"
+                                                            <input autofocus type="number"
                                                                   class="form-control"
                                                                   placeholder="Paciente id"
                                                                   formControlName="pacienteId"

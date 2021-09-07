@@ -3,12 +3,14 @@
 </head>
 
 <body>
- <h1>Listado de medicamentos</h1>
-  <hr>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Listado de medicamentos </li>
+  </ol>  
 
   <div class="card">
     <h3 class="card-header" data-toggle="collapse" data-target="#collapseBuscador"
-        aria-expanded="true" aria-controls="collapseBuscador">Buscador</h3>
+        aria-expanded="true" aria-controls="collapseBuscador">Filtros de b&uacute;squeda</h3>
     <div class="card-body collapse show" id="collapseBuscador">
 
       <form [formGroup]="buscadorMedicamentosForm">      
@@ -54,7 +56,7 @@
 
   <div class="row">
     <div class="col text-right">
-      <button routerLink="/medicamento/nuevo"
+      <button routerLink="/inicio/medicamento/nuevo"
               class="btn btn-primary">
         <i class="fa fa-plus"></i>
         Agregar
@@ -78,6 +80,7 @@
             <th scope="col">Via administraci&oacute;n</th> 
             <th scope="col">Presentaci&oacute;n</th> 
             <th scope="col">Editar</th>
+            <th scope="col">Borrar</th>
           </tr>
         </thead>
         <tbody>
@@ -95,10 +98,10 @@
                 <i class="fa fa-edit"></i>
               </a>
             </td>
-            <!--td (click)="borrarInsumo($event, insumo)">  
+            <td (click)="borrarMedicamento($event, medicamento)">  
               <button class="btn btn-danger">
               <i class="fa fa-trash"></i></button>
-            </td-->
+            </td>
           </tr>
         </tbody>
         <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">

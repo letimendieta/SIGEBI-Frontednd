@@ -18,6 +18,7 @@ import { PacienteModelo } from 'src/app/modelos/paciente.modelo';
 import { ParametroModelo } from 'src/app/modelos/parametro.modelo';
 import { ParametrosService } from 'src/app/servicios/parametros.service';
 import { TokenService } from 'src/app/servicios/token.service';
+import { GlobalConstants } from 'src/app/common/global-constants';
 
 @Component({
   selector: 'app-cita',
@@ -75,6 +76,7 @@ export class CitaComponent implements OnInit {
         });
     }else{
       this.crear = true;
+      this.citaForm.get('estado').setValue('PENDIENTE');
     }
   }  
 
@@ -133,6 +135,7 @@ export class CitaComponent implements OnInit {
     var orderDir = "asc";
     var area = new AreaModelo();
     area.estado = "A";
+    area.tipo = "SERVICIO,CONSULTORIO";
 
     this.areasService.buscarAreasFiltrosOrder(area, orderBy, orderDir )
       .subscribe( (resp: AreaModelo) => {
@@ -182,8 +185,8 @@ export class CitaComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.cita.citaId ) {
-            this.router.navigate(['/citas']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/citas']);
           }else{
             this.limpiar();
           }
@@ -496,6 +499,13 @@ export class CitaComponent implements OnInit {
     this.funcionariosService.getFuncionario( funcionario.funcionarioId )
       .subscribe( (resp: FuncionarioModelo) => {         
         this.citaForm.get('funcionarios').patchValue(resp);
+        if( GlobalConstants.INACTIVO == resp.estado ){
+          Swal.fire({
+            icon: 'info',
+            title: 'Atención',
+            text: 'El funcionario se encuentra inactivo'
+          })
+        }
       }, e => {
           Swal.fire({
             icon: 'info',

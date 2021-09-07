@@ -90,8 +90,8 @@ export class DepartamentoComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.departamento.departamentoId ) {
-            this.router.navigate(['/departamentos']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/departamentos']);
           }else{
             this.limpiar();
           }

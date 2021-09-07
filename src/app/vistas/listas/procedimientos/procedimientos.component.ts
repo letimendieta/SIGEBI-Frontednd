@@ -14,6 +14,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PacientesService } from 'src/app/servicios/pacientes.service';
 import { FuncionariosService } from 'src/app/servicios/funcionarios.service';
 import { Router } from '@angular/router';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-procedimientos',
@@ -25,6 +26,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
   dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  buttons: any = {};
   dtOptionsBuscadorPacientes: any = {};
   dtOptionsBuscadorFuncionarios: any = {};
   dtTrigger : Subject<any> = new Subject<any>();
@@ -45,7 +47,8 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
   loadBuscadorPacientes = false;
   loadBuscadorFuncionarios = false;
 
-  constructor( private procedimientosService: ProcedimientosService,
+  constructor( private tokenService: TokenService,
+               private procedimientosService: ProcedimientosService,
               private pacientesService: PacientesService,
               private funcionariosService: FuncionariosService,
               public router: Router,
@@ -58,6 +61,13 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
 
   ngOnInit() {
     this.crearFormulario();
+    var rolesUsuario = this.comunes.obtenerRoles(); 
+    if(rolesUsuario.includes(GlobalConstants.ROL_REPORTE_LISTADOS)
+      || rolesUsuario.includes(GlobalConstants.ROL_ADMIN)){
+        this.initButtonsReports();
+    }else {
+      this.buttons = [];
+    }    
     this.crearTabla();
   }
 
@@ -87,73 +97,17 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
         {data:'#'},
         {data:'procedimientoId'}, {data:'pacientes.pacienteId'}, 
         {data:'pacientes.personas.cedula'},
-        {data:'pacientes.personas.nombres'}, {data:'pacientes.personas.apellidos'}, 
+        {data:'pacientes.personas.nombres'}, 
         {data:'funcionarios.funcionarioId'},
-        {data:'funcionarios.personas.cedula'}, {data:'funcionarios.personas.nombres'},
-        {data:'funcionarios.personas.apellidos'},{data:'cantidadInsumo'},
+        {data:'funcionarios.personas.cedula'}, 
+        {data:'funcionarios.personas.nombres'},
+        {data:'cantidadInsumo'},
         {data:'estado'},{data:'fecha'},
         {data:'Editar'}//,
         //{data:'Borrar'}
       ],
       dom: 'lBfrtip',
-      buttons: [
-        {
-          extend:    'copy',
-          text:      '<i class="far fa-copy"></i>',
-          titleAttr: 'Copiar',
-          className: 'btn btn-light',
-          title:     'Listado de procedimientos',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-          },
-        },
-        {
-          extend:    'csv',
-          title:     'Listado de procedimientos',
-          text:      '<i class="fas fa-file-csv"></i>',
-          titleAttr: 'Exportar a CSV',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-          },
-        },
-        {
-          extend:    'excelHtml5',
-          title:     'Listado de procedimientos',
-          text:      '<i class="fas fa-file-excel"></i> ',
-          titleAttr: 'Exportar a Excel',
-          className: 'btn btn-light',
-          autoFilter: true,
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-          }
-        },          
-        {
-          extend:    'print',
-          title:     'Listado de procedimientos',
-          text:      '<i class="fa fa-print"></i> ',
-          titleAttr: 'Imprimir',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-          },
-          customize: function ( win ) {
-            $(win.document.body)
-                .css( 'font-size', '10pt' )
-                .prepend(
-                    '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
-                );
-
-            $(win.document.body).find( 'table' )
-                .addClass( 'compact' )
-                .css( 'font-size', 'inherit' );
-          }              
-        }
-      ]
+      buttons: this.buttons
     };
   }
 
@@ -248,7 +202,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {
-              this.ngOnInit();
+              this.buscadorProcedimientos(event);
             }
           });
         }, e => {            
@@ -497,7 +451,7 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
 
   editar(event, id: number) {
     event.preventDefault();
-    this.router.navigate(['procedimiento', id]);
+    this.router.navigate(['inicio/procedimiento', id]);
   }
 
   onSubmit() {
@@ -517,5 +471,66 @@ export class ProcedimientosComponent implements OnDestroy,  OnInit {
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
+}
+
+  initButtonsReports(){
+    this.buttons = [
+      {
+        extend:    'copy',
+        text:      '<i class="far fa-copy"></i>',
+        titleAttr: 'Copiar',
+        className: 'btn btn-light',
+        title:     'Listado de procedimientos',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        },
+      },
+      {
+        extend:    'csv',
+        title:     'Listado de procedimientos',
+        text:      '<i class="fas fa-file-csv"></i>',
+        titleAttr: 'Exportar a CSV',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        },
+      },
+      {
+        extend:    'excelHtml5',
+        title:     'Listado de procedimientos',
+        text:      '<i class="fas fa-file-excel"></i> ',
+        titleAttr: 'Exportar a Excel',
+        className: 'btn btn-light',
+        autoFilter: true,
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        }
+      },          
+      {
+        extend:    'print',
+        title:     'Listado de procedimientos',
+        text:      '<i class="fa fa-print"></i> ',
+        titleAttr: 'Imprimir',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        },
+        customize: function ( win ) {
+          $(win.document.body)
+              .css( 'font-size', '10pt' )
+              .prepend(
+                  '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
+              );
+
+          $(win.document.body).find( 'table' )
+              .addClass( 'compact' )
+              .css( 'font-size', 'inherit' );
+        }              
+      }
+    ]
   }
 }

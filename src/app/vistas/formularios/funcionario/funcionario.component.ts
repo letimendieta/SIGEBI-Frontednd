@@ -107,7 +107,6 @@ export class FuncionarioComponent implements OnInit {
       if(resp.length > 0){
         Swal.fire({
           icon: 'info',
-          //title: 'Algo salió mal',
           text: 'La persona ya existe como funcionario'
         })
       }   
@@ -159,8 +158,8 @@ export class FuncionarioComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.funcionario.funcionarioId ) {
-            this.router.navigate(['/funcionarios']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/funcionarios']);
           }else{
             this.limpiar(event);
           }

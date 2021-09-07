@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComunesService {
-
-  constructor( ) { }
+  rolesUsuario: Array<String> = [];
+  constructor( private tokenService: TokenService ) { }
 
   obtenerError(e : any){
     var mensaje = "Ocurrió un error en el servidor";
@@ -22,5 +23,12 @@ export class ComunesService {
       }
       console.log(mensaje);
     return mensaje;  
+  }
+
+  obtenerRoles(){
+    for (let i = 0; i < this.tokenService.roles.length; i++) {
+      this.rolesUsuario.push(this.tokenService.roles[i].toString());
+    }
+    return this.rolesUsuario;
   }
 }

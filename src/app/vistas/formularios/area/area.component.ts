@@ -107,10 +107,10 @@ export class AreaComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( response.area.areaId ) {
-            this.router.navigate(['/areas']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/areas']);
           }else{
-            this.limpiar();
+            this.limpiar();            
           }
         }
       });

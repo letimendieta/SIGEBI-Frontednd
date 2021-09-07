@@ -18,6 +18,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PacientesService } from 'src/app/servicios/pacientes.service';
 import { FuncionariosService } from 'src/app/servicios/funcionarios.service';
 import { Router } from '@angular/router';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-citas',
@@ -29,6 +30,7 @@ export class CitasComponent implements OnDestroy, OnInit {
   dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  buttons: any = {};
   dtTrigger : Subject<any> = new Subject<any>();
   dtOptionsBuscadorPacientes: any = {};
   dtOptionsBuscadorFuncionarios: any = {};
@@ -43,14 +45,14 @@ export class CitasComponent implements OnDestroy, OnInit {
   listaEstados: ParametroModelo;
   buscadorForm: FormGroup;
   buscadorPacientesForm: FormGroup;
-  buscadorFuncionariosForm: FormGroup;
-  buscador: CitaModelo = new CitaModelo();
+  buscadorFuncionariosForm: FormGroup;  
   cargando = false;
   alert:boolean=false;
   loadBuscadorPacientes = false;
   loadBuscadorFuncionarios = false;
 
-  constructor( private citasService: CitasService,
+  constructor( private tokenService: TokenService,
+               private citasService: CitasService,
               public router: Router,
               private parametrosService: ParametrosService,
               private funcionariosService: FuncionariosService,
@@ -65,6 +67,13 @@ export class CitasComponent implements OnDestroy, OnInit {
 
   ngOnInit() {
     this.crearFormulario();
+    var rolesUsuario = this.comunes.obtenerRoles(); 
+    if(rolesUsuario.includes(GlobalConstants.ROL_REPORTE_LISTADOS)
+      || rolesUsuario.includes(GlobalConstants.ROL_ADMIN)){
+        this.initButtonsReports();
+    }else {
+      this.buttons = [];
+    }    
     this.crearTabla();  
     this.obtenerParametros();
     this.listarAreas();
@@ -75,6 +84,7 @@ export class CitasComponent implements OnDestroy, OnInit {
     var orderDir = "asc";
     var area = new AreaModelo();
     area.estado = "A";
+    area.tipo = "SERVICIO,CONSULTORIO";
 
     this.areasService.buscarAreasFiltros(area, orderBy, orderDir )
       .subscribe( (resp: AreaModelo[]) => {
@@ -91,8 +101,9 @@ export class CitasComponent implements OnDestroy, OnInit {
     this.funcionario = new FuncionarioModelo();
     this.pacientePersona = new PersonaModelo();
     this.funcionarioPersona = new PersonaModelo();
+    var buscador = new CitaModelo();
 
-    this.buscador = this.buscadorForm.getRawValue();
+    buscador = this.buscadorForm.getRawValue();
 
     this.pacientePersona.cedula = this.buscadorForm.get('pacientes').get('pacienteCedula').value;
     this.pacientePersona.nombres = this.buscadorForm.get('pacientes').get('pacienteNombres').value;
@@ -106,7 +117,11 @@ export class CitasComponent implements OnDestroy, OnInit {
     if(this.paciente.personas == null && !this.paciente.pacienteId){
       this.paciente = null;
     }      
-    
+    if( this.buscadorForm.get('estado').value == "null" ){
+      buscador.estado = null;
+    }else{
+      buscador.estado = this.buscadorForm.get('estado').value;
+    }
     this.funcionarioPersona.cedula = this.buscadorForm.get('funcionarios').get('funcionarioCedula').value;
     this.funcionarioPersona.nombres = this.buscadorForm.get('funcionarios').get('funcionarioNombres').value;
     this.funcionarioPersona.apellidos = this.buscadorForm.get('funcionarios').get('funcionarioApellidos').value;
@@ -121,15 +136,15 @@ export class CitasComponent implements OnDestroy, OnInit {
     if(this.funcionario.personas == null && !this.funcionario.funcionarioId){
       this.funcionario = null;
     } 
-
-    if(!this.buscador.areas.areaId){
-      this.buscador.areas = null;
+   
+    if( this.buscadorForm.get('areas').get('areaId').value == "null" ){
+      buscador.areas = null;
     }
 
-    this.buscador.pacientes = this.paciente;
-    this.buscador.funcionarios = this.funcionario;
+    buscador.pacientes = this.paciente;
+    buscador.funcionarios = this.funcionario;
 
-    this.citasService.buscarCitasFiltros(this.buscador)
+    this.citasService.buscarCitasFiltros(buscador)
     .subscribe( resp => {      
       this.citas = resp;
       this.dtTrigger.next();
@@ -241,82 +256,26 @@ export class CitasComponent implements OnDestroy, OnInit {
       processing: true,
       columns: [
         {data:'#'},
-        {data:'citaId'}, {data:'pacientes.pacienteId'}, {data:'pacientes.personas.cedula'},
-        {data:'pacientes.personas.nombres'}, {data:'pacientes.personas.apellidos'}, 
+        {data:'citaId'}, {data:'pacientes.pacienteId'}, 
+        {data:'pacientes.personas.cedula'},
+        {data:'pacientes.personas.nombres'},
         {data:'funcionarios.funcionarioId'},
-        {data:'funcionarios.personas.cedula'}, {data:'funcionarios.personas.nombres'},
-        {data: 'funcionarios.personas.apellidos'}, {data: 'areas.codigo'},
+        {data:'funcionarios.personas.cedula'}, 
+        {data:'funcionarios.personas.nombres'},
+        {data: 'areas.codigo'},
         {data: 'fecha'}, {data: 'hora'},
         {data: 'estado'},
         {data:'Editar'}//,
         //{data:'Borrar'},
       ],
       dom: 'lBfrtip',
-      buttons: [
-        {
-          extend:    'copy',
-          text:      '<i class="far fa-copy"></i>',
-          titleAttr: 'Copiar',
-          className: 'btn btn-light',
-          title:     'Listado de citas',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-          },
-        },
-        {
-          extend:    'csv',
-          title:     'Listado de citas',
-          text:      '<i class="fas fa-file-csv"></i>',
-          titleAttr: 'Exportar a CSV',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-          },
-        },
-        {
-          extend:    'excelHtml5',
-          title:     'Listado de citas',
-          text:      '<i class="fas fa-file-excel"></i> ',
-          titleAttr: 'Exportar a Excel',
-          className: 'btn btn-light',
-          autoFilter: true,
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-          }
-        },          
-        {
-          extend:    'print',
-          title:     'Listado de citas',
-          text:      '<i class="fa fa-print"></i> ',
-          titleAttr: 'Imprimir',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-          },
-          customize: function ( win ) {
-            $(win.document.body)
-                .css( 'font-size', '10pt' )
-                .prepend(
-                    '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
-                );
-
-            $(win.document.body).find( 'table' )
-                .addClass( 'compact' )
-                .css( 'font-size', 'inherit' );
-          }              
-        }
-      ]
+      buttons: this.buttons
     };
   }
 
   limpiar(event) {
     event.preventDefault();
     this.buscadorForm.reset();
-    this.buscador = new CitaModelo();    
     this.citas = [];
     this.rerender();
     this.dtTrigger.next();
@@ -535,7 +494,7 @@ export class CitasComponent implements OnDestroy, OnInit {
 
   editar(event, id: number) {
     event.preventDefault();
-    this.router.navigate(['cita', id]);
+    this.router.navigate(['inicio/cita', id]);
   }
 
   ngAfterViewInit(): void {
@@ -551,5 +510,66 @@ export class CitasComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
+}
+
+  initButtonsReports(){
+    this.buttons = [
+      {
+        extend:    'copy',
+        text:      '<i class="far fa-copy"></i>',
+        titleAttr: 'Copiar',
+        className: 'btn btn-light',
+        title:     'Listado de citas',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        },
+      },
+      {
+        extend:    'csv',
+        title:     'Listado de citas',
+        text:      '<i class="fas fa-file-csv"></i>',
+        titleAttr: 'Exportar a CSV',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        },
+      },
+      {
+        extend:    'excelHtml5',
+        title:     'Listado de citas',
+        text:      '<i class="fas fa-file-excel"></i> ',
+        titleAttr: 'Exportar a Excel',
+        className: 'btn btn-light',
+        autoFilter: true,
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        }
+      },          
+      {
+        extend:    'print',
+        title:     'Listado de citas',
+        text:      '<i class="fa fa-print"></i> ',
+        titleAttr: 'Imprimir',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        },
+        customize: function ( win ) {
+          $(win.document.body)
+              .css( 'font-size', '10pt' )
+              .prepend(
+                  '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
+              );
+
+          $(win.document.body).find( 'table' )
+              .addClass( 'compact' )
+              .css( 'font-size', 'inherit' );
+        }              
+      }
+    ]
   }
 }

@@ -40,7 +40,12 @@ export class PersonasGuardService implements CanActivate {
     })
 
     if (!this.tokenService.getToken() || !this.autorized ) {
-      this.router.navigate(['/']);
+      if( !this.tokenService.getToken() ){
+        this.router.navigate(['/']);
+      }else if( !this.autorized ){
+        this.router.navigate(['/inicio']);
+      }
+      
       return false;
     }
     return true;

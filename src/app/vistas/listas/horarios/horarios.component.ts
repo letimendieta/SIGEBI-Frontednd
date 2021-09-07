@@ -12,6 +12,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { AreaModelo } from 'src/app/modelos/area.modelo';
 import { AreasService } from 'src/app/servicios/areas.service';
 import { Router } from '@angular/router';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-horarios',
@@ -23,6 +24,7 @@ export class HorariosComponent implements OnDestroy, OnInit {
   dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  buttons: any = {};
   dtTrigger : Subject<any> = new Subject<any>();
 
   horarios: HorarioModelo[] = [];  
@@ -32,7 +34,8 @@ export class HorariosComponent implements OnDestroy, OnInit {
   funcionario: FuncionarioModelo = new FuncionarioModelo();
   funcionarioPersona: PersonaModelo = new PersonaModelo();
 
-  constructor( private horariosService: HorariosService,
+  constructor( private tokenService: TokenService,
+               private horariosService: HorariosService,
                public router: Router,
                private areasService: AreasService,
                private comunes: ComunesService,
@@ -41,6 +44,13 @@ export class HorariosComponent implements OnDestroy, OnInit {
 
   ngOnInit() {    
     this.crearFormulario();
+    var rolesUsuario = this.comunes.obtenerRoles(); 
+    if(rolesUsuario.includes(GlobalConstants.ROL_REPORTE_LISTADOS)
+      || rolesUsuario.includes(GlobalConstants.ROL_ADMIN)){
+        this.initButtonsReports();
+    }else {
+      this.buttons = [];
+    }    
     this.crearTabla();
     this.listarAreas();
   }
@@ -69,11 +79,10 @@ export class HorariosComponent implements OnDestroy, OnInit {
       processing: true,
       columns: [
         {data:'#'},
-        {data:'horarioDisponibleId'}, {data:'areas.codigo'}, {data:'fecha'}, {data:'horaInicio'},
+        {data:'horarioDisponibleId'}, {data:'areas.codigo'}, {data:'dia'}, {data:'horaInicio'},
         {data:'horaFin'}, {data:'funcionarios.funcionarioId'}, 
         {data:'funcionarios.personas.cedula'},
         {data:'funcionarios.personas.nombres'}, 
-        {data:'funcionarios.personas.apellidos'},
         {data:'estado'},
         {data:'Editar'},
         {data:'Borrar'},
@@ -85,64 +94,7 @@ export class HorariosComponent implements OnDestroy, OnInit {
       }
       ],
       dom: 'lBfrtip',
-      buttons: [
-        {
-          extend:    'copy',
-          text:      '<i class="far fa-copy"></i>',
-          titleAttr: 'Copiar',
-          className: 'btn btn-light',
-          title:     'Listado de horarios',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
-          },
-        },
-        {
-          extend:    'csv',
-          title:     'Listado de horarios',
-          text:      '<i class="fas fa-file-csv"></i>',
-          titleAttr: 'Exportar a CSV',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
-          },
-        },
-        {
-          extend:    'excelHtml5',
-          title:     'Listado de horarios',
-          text:      '<i class="fas fa-file-excel"></i> ',
-          titleAttr: 'Exportar a Excel',
-          className: 'btn btn-light',
-          autoFilter: true,
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-          }
-        },          
-        {
-          extend:    'print',
-          title:     'Listado de horarios',
-          text:      '<i class="fa fa-print"></i> ',
-          titleAttr: 'Imprimir',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-          },
-          customize: function ( win ) {
-            $(win.document.body)
-                .css( 'font-size', '10pt' )
-                .prepend(
-                    '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
-                );
-
-            $(win.document.body).find( 'table' )
-                .addClass( 'compact' )
-                .css( 'font-size', 'inherit' );
-          }              
-        }
-      ]
+      buttons: this.buttons
     };
   }
 
@@ -180,8 +132,18 @@ export class HorariosComponent implements OnDestroy, OnInit {
       this.funcionario = null;
     }
     buscador.horarioDisponibleId =  this.buscadorForm.get('horarioDisponibleId').value;
-    buscador.fecha =  this.buscadorForm.get('fecha').value;
-    buscador.estado =  this.buscadorForm.get('estado').value;
+    if(this.buscadorForm.get('dia').value != "null"){
+      buscador.dia =  this.buscadorForm.get('dia').value;
+    }else{
+      buscador.dia =  null;
+    }
+    
+    
+    if(this.buscadorForm.get('estado').value != "null"){
+      buscador.estado =  this.buscadorForm.get('estado').value;
+    }else{
+      buscador.estado =  null;
+    }
 
     buscador.funcionarios = this.funcionario;
     var orderBy = "horarioDisponibleId";
@@ -224,7 +186,7 @@ export class HorariosComponent implements OnDestroy, OnInit {
 
   editar(event, id: number) {
     event.preventDefault();
-    this.router.navigate(['horario', id]);
+    this.router.navigate(['inicio/horario', id]);
   }
 
   borrarHorario(event, horario: HorarioModelo ) {
@@ -248,7 +210,7 @@ export class HorariosComponent implements OnDestroy, OnInit {
                     text: resp.mensaje,
                   }).then( resp => {
             if ( resp.value ) {
-              this.ngOnInit();
+              this.buscadorHorarios(event);
             }
           });
         }, e => {            
@@ -284,7 +246,7 @@ export class HorariosComponent implements OnDestroy, OnInit {
 
     this.buscadorForm = this.fb.group({
       horarioDisponibleId  : ['', [] ],
-      fecha  : [null, [] ],
+      dia  : [null, [] ],
       estado: [null, [] ],
       areaId: [null, [] ],
       funcionarios : this.fb.group({
@@ -309,5 +271,66 @@ export class HorariosComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
+}
+
+  initButtonsReports(){
+    this.buttons = [
+      {
+        extend:    'copy',
+        text:      '<i class="far fa-copy"></i>',
+        titleAttr: 'Copiar',
+        className: 'btn btn-light',
+        title:     'Listado de horarios',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        },
+      },
+      {
+        extend:    'csv',
+        title:     'Listado de horarios',
+        text:      '<i class="fas fa-file-csv"></i>',
+        titleAttr: 'Exportar a CSV',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        },
+      },
+      {
+        extend:    'excelHtml5',
+        title:     'Listado de horarios',
+        text:      '<i class="fas fa-file-excel"></i> ',
+        titleAttr: 'Exportar a Excel',
+        className: 'btn btn-light',
+        autoFilter: true,
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        }
+      },          
+      {
+        extend:    'print',
+        title:     'Listado de horarios',
+        text:      '<i class="fa fa-print"></i> ',
+        titleAttr: 'Imprimir',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        },
+        customize: function ( win ) {
+          $(win.document.body)
+              .css( 'font-size', '10pt' )
+              .prepend(
+                  '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
+              );
+
+          $(win.document.body).find( 'table' )
+              .addClass( 'compact' )
+              .css( 'font-size', 'inherit' );
+        }              
+      }
+    ]
   }
 }

@@ -247,12 +247,13 @@ export class UsuarioComponent implements OnInit {
       });
     }
 
-    if( !this.crear ){
+    if( this.crear  || (!this.crear && this.esCambioContrasenha) ){
       if(!this.usuarioForm.get('password').value || this.usuarioForm.get('password').value == "" ){
         Swal.fire({
           icon: 'info',
           title: 'Ingrese la contraseña',
         }) 
+        return;
       }
     }
 
@@ -299,7 +300,7 @@ export class UsuarioComponent implements OnInit {
 
         if ( resp.value ) {
           if ( usuario.id ) {
-            this.router.navigate(['/usuarios']);
+            this.router.navigate(['/inicio/usuarios']);
           }else{
             this.limpiar(event);
             this.listarRoles(null);
@@ -376,7 +377,7 @@ export class UsuarioComponent implements OnInit {
         estado : [null, [] ]
       }),            
       nombreUsuario : [null, [Validators.required] ],
-      password : [null, [Validators.required] ],
+      password : [null, [] ],
       estado : [null, [Validators.required] ],
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],

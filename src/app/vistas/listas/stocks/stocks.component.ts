@@ -13,6 +13,7 @@ import { InsumosMedicosService } from 'src/app/servicios/insumosMedicos.service'
 import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
 import { MedicamentosService } from 'src/app/servicios/medicamentos.service';
 import { Router } from '@angular/router';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-stocks',
@@ -24,6 +25,7 @@ export class StocksComponent implements OnDestroy, OnInit {
   dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  buttons: any = {};
   dtOptionsInsumos: any = {};
   dtOptionsMedicamentos: any = {};
   dtTrigger : Subject<any> = new Subject<any>();
@@ -41,7 +43,8 @@ export class StocksComponent implements OnDestroy, OnInit {
   loadBuscadorInsumo = false;
   loadBuscadorMedicamento = false;
 
-  constructor( private stocksService: StocksService,
+  constructor( private tokenService: TokenService,
+               private stocksService: StocksService,
                private insumosService: InsumosMedicosService,
                private medicamentosService: MedicamentosService,
                private comunes: ComunesService,
@@ -55,6 +58,13 @@ export class StocksComponent implements OnDestroy, OnInit {
 
   ngOnInit() { 
     this.crearFormulario();
+    var rolesUsuario = this.comunes.obtenerRoles(); 
+    if(rolesUsuario.includes(GlobalConstants.ROL_REPORTE_LISTADOS)
+      || rolesUsuario.includes(GlobalConstants.ROL_ADMIN)){
+        this.initButtonsReports();
+    }else {
+      this.buttons = [];
+    }    
     this.crearTabla();
   }
 
@@ -95,64 +105,7 @@ export class StocksComponent implements OnDestroy, OnInit {
         //{data:'Borrar'}
       ],
       dom: 'lBfrtip',
-      buttons: [
-        {
-          extend:    'copy',
-          text:      '<i class="far fa-copy"></i>',
-          titleAttr: 'Copiar',
-          className: 'btn btn-light',
-          title:     'Listado de stocks',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
-          },
-        },
-        {
-          extend:    'csv',
-          title:     'Listado de stocks',
-          text:      '<i class="fas fa-file-csv"></i>',
-          titleAttr: 'Exportar a CSV',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
-          },
-        },
-        {
-          extend:    'excelHtml5',
-          title:     'Listado de stocks',
-          text:      '<i class="fas fa-file-excel"></i> ',
-          titleAttr: 'Exportar a Excel',
-          className: 'btn btn-light',
-          autoFilter: true,
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
-          }
-        },          
-        {
-          extend:    'print',
-          title:     'Listado de stocks',
-          text:      '<i class="fa fa-print"></i> ',
-          titleAttr: 'Imprimir',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
-          },
-          customize: function ( win ) {
-            $(win.document.body)
-                .css( 'font-size', '10pt' )
-                .prepend(
-                    '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
-                );
-
-            $(win.document.body).find( 'table' )
-                .addClass( 'compact' )
-                .css( 'font-size', 'inherit' );
-          }              
-        }
-      ]
+      buttons: this.buttons
     };
   }
 
@@ -407,7 +360,7 @@ export class StocksComponent implements OnDestroy, OnInit {
 
   editar(event, id: number) {
     event.preventDefault();
-    this.router.navigate(['stock', id]);
+    this.router.navigate(['inicio/stock', id]);
   }
 
   ngAfterViewInit(): void {
@@ -443,5 +396,66 @@ export class StocksComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
+}
+
+  initButtonsReports(){
+    this.buttons = [
+      {
+        extend:    'copy',
+        text:      '<i class="far fa-copy"></i>',
+        titleAttr: 'Copiar',
+        className: 'btn btn-light',
+        title:     'Listado de stocks',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        },
+      },
+      {
+        extend:    'csv',
+        title:     'Listado de stocks',
+        text:      '<i class="fas fa-file-csv"></i>',
+        titleAttr: 'Exportar a CSV',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ]
+        },
+      },
+      {
+        extend:    'excelHtml5',
+        title:     'Listado de stocks',
+        text:      '<i class="fas fa-file-excel"></i> ',
+        titleAttr: 'Exportar a Excel',
+        className: 'btn btn-light',
+        autoFilter: true,
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ]
+        }
+      },          
+      {
+        extend:    'print',
+        title:     'Listado de stocks',
+        text:      '<i class="fa fa-print"></i> ',
+        titleAttr: 'Imprimir',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ]
+        },
+        customize: function ( win ) {
+          $(win.document.body)
+              .css( 'font-size', '10pt' )
+              .prepend(
+                  '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
+              );
+
+          $(win.document.body).find( 'table' )
+              .addClass( 'compact' )
+              .css( 'font-size', 'inherit' );
+        }              
+      }
+    ]
   }
 }

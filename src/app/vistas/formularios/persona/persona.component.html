@@ -3,13 +3,16 @@
 </head>
 
 <body>
-  <h1>Persona </h1>
-  <hr>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+    <li class="breadcrumb-item"><a href="/inicio/personas">Listado de personas</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Persona </li>
+  </ol>
 
   <div class="row text-right">
     <div class="col">
       <button class="btn btn-danger"
-              routerLink="/personas">
+              routerLink="/inicio/personas">
         <i class="fa fa-arrow-left"></i>
         Regresar
       </button>
@@ -46,7 +49,7 @@
 
                 <div class="form-group">
                   <label><b>Nombres</b><span class="requerido"> *</span></label>
-                  <input type="text"
+                  <input autofocus type="text"
                         class="form-control" placeholder="Nombres"
                         formControlName="nombres" name="nombres"
                         [class.is-invalid]="nombreNoValido">
@@ -60,7 +63,8 @@
                     <input type="text"
                           class="form-control" placeholder="C&eacute;dula"                      
                           name="cedula" formControlName="cedula"
-                          [class.is-invalid]="cedulaNoValido">
+                          [class.is-invalid]="cedulaNoValido"
+                          (blur)="buscarPersona($event)">
                       <small *ngIf="cedulaNoValido" class="text-danger">
                         Ingrese c&eacute;dula
                       </small>

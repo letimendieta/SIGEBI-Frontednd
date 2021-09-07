@@ -3,13 +3,16 @@
 </head>
 
 <body>
-  <h1>Horario </h1>
-  <hr>
+      <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="/inicio/horarios">Listado de horarios</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Horario </li>
+      </ol>
 
   <div class="row text-right">
     <div class="col">
       <button class="btn btn-danger"
-              routerLink="/horarios">
+              routerLink="/inicio/horarios">
         <i class="fa fa-arrow-left"></i>
         Regresar
       </button>
@@ -49,7 +52,7 @@
                     <div class="form group">
                       <label><b>Funcionario id</b><span class="requerido"> *</span></label>                           
                       <div class="input-group mb-3">
-                          <input type="number"
+                          <input autofocus type="number"
                                 class="form-control"
                                 placeholder="Funcionaros Id"
                                 formControlName="funcionarioId"
@@ -202,13 +205,21 @@
               </div>
 
               <div class="col-lg-5">
+                
                 <div class="form-group col-md-10">
-                  <label for="fecha"><b>Fecha</b><span class="requerido"> *</span></label>
-                  <input type="date" class="form-control" id="fecha"
-                  formControlName="fecha" name="fecha"
-                  [class.is-invalid]="fechaNoValido">
-                  <small *ngIf="fechaNoValido" class="text-danger">
-                    Ingrese la fecha
+                  <label><b>D&iacute;a</b><span class="requerido"> *</span></label>
+                  <select autofocus class="custom-select" formControlName="dia" name = "dia" >
+                    <option value="null" [selected]="true">Seleccione</option>
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miercoles">Mi&eacute;rcoles</option>
+                    <option value="Jueves">Jueves</option>
+                    <option value="Viernes">Viernes</option>
+                    <option value="Sabado">S&aacute;bado</option>
+                    <option value="Domingo">Domingo</option>                    
+                  </select> 
+                  <small *ngIf="diaNoValido" class="text-danger">
+                        Seleccione el d&iacute;a
                   </small>
                 </div>
 

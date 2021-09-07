@@ -3,13 +3,16 @@
 </head>
 
 <body>
-  <h1>Stock </h1>
-  <hr>
+      <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="/inicio/stocks">Listado de stock</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Stock </li>
+          </ol>
 
   <div class="row text-right">
     <div class="col">
       <button class="btn btn-danger"
-              routerLink="/stocks">
+              routerLink="/inicio/stocks">
         <i class="fa fa-arrow-left"></i>
         Regresar
       </button>
@@ -336,7 +339,7 @@
               <div class="col-lg-5">
                 <div class="form-group">
                   <label><b>Stock actual</b></label>
-                  <input type="number" disabled
+                  <input type="number"
                         class="form-control"
                         formControlName="cantidad"
                         placeholder="Cantidad actual"                      
@@ -349,8 +352,21 @@
                           class="form-control"
                           placeholder="Cantidad"                      
                           name="cantidadModificar" id="cantidadModificar" >                     
-                  </div>                                      
-                </div>
+                  </div>   
+                  
+                  <div class="form-row justify-content-center">
+                        <div class="col-lg-10">
+                              <div class="form-group">
+                                    <label for="exampleFormControlTextarea1">Notas</label>
+                                    <textarea class="form-control" 
+                                    formControlName="notas"
+                                          name = "notas"
+                                          maxlength="100" rows="5">
+                                    </textarea>
+                              </div>
+                        </div>
+                  </div>
+               </div>
 
             </div>
             <div class="form-row justify-content-center" [hidden]="crear">

@@ -3,12 +3,14 @@
 </head>
 
 <body>
- <h1>Listado de horarios</h1>
-  <hr>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Listado de horarios </li>
+  </ol>  
 
   <div class="card">
     <h3 class="card-header" data-toggle="collapse" data-target="#collapseBuscador"
-        aria-expanded="true" aria-controls="collapseBuscador">Buscador</h3> 
+        aria-expanded="true" aria-controls="collapseBuscador">Filtros de b&uacute;squeda</h3> 
     <div class="card-body collapse show" id="collapseBuscador"> 
       <form [formGroup]="buscadorForm">
         <div class="form-row justify-content-center" >
@@ -23,9 +25,17 @@
           
             <p>
               <mat-form-field appearance="fill">
-                <mat-label>Fecha</mat-label>
-                <input matInput matInput type="date" placeholder="Fecha" 
-                  formControlName="fecha" name="fecha" id="fecha">
+                <mat-label>D&iacute;a</mat-label>
+                <mat-select formControlName="dia" name = "dia">                 
+                  <mat-option value=null>Seleccione</mat-option>
+                  <mat-option value="Lunes">Lunes</mat-option>
+                  <mat-option value="Martes">Martes</mat-option>
+                  <mat-option value="Miercoles">Mi&eacute;rcoles</mat-option>
+                  <mat-option value="Jueves">Jueves</mat-option>
+                  <mat-option value="Viernes">Viernes</mat-option>
+                  <mat-option value="Sabado">S&aacute;bado</mat-option>
+                  <mat-option value="Domingo">Domingo</mat-option>
+                </mat-select>
               </mat-form-field>
             </p>
           </div>
@@ -35,7 +45,7 @@
               <mat-form-field appearance="fill">
                 <mat-label>Estado</mat-label>
                 <mat-select formControlName="estado" name = "estado">
-                  <mat-option value="null">TODOS</mat-option>
+                  <mat-option value=null>TODOS</mat-option>
                   <mat-option value="A">ACTIVO</mat-option>
                   <mat-option value="I">INACTIVO</mat-option>
                 </mat-select>
@@ -71,19 +81,7 @@
                   formControlName="cedula" name="cedula" id="cedula">
               </mat-form-field>
             </p>
-            <!--p>
-              <mat-form-field appearance="fill">
-                <mat-label>Funcionario nombres</mat-label>
-                <input matInput matInput type="text" placeholder="Funcionario nombres" 
-                  formControlName="nombres" name="nombres" id="nombres">
-              </mat-form-field>
-
-              <mat-form-field appearance="fill">
-                <mat-label>Funcionario apellidos</mat-label>
-                <input matInput matInput type="text" placeholder="Funcionario apellidos" 
-                  formControlName="apellidos" name="apellidos" id="apellidos">
-              </mat-form-field>
-            </p-->           
+                      
           </div> 
           &nbsp; &nbsp; &nbsp;
           <div class="align-self-center">
@@ -97,7 +95,7 @@
   </div>
   <div class="row">
     <div class="col text-right">
-      <button routerLink="/horario/nuevo"
+      <button routerLink="/inicio/horario/nuevo"
               class="btn btn-primary">
         <i class="fa fa-plus"></i>
         Agregar
@@ -113,13 +111,12 @@
             <th scope="col">#</th>
             <th scope="col">Id</th>
             <th scope="col">&Aacute;rea</th>
-            <th scope="col">Fecha</th>
+            <th scope="col">D&iacute;a</th>
             <th scope="col">Hora inicio</th>
             <th scope="col">Hora fin</th>
             <th scope="col">Funcionario id</th>
             <th scope="col">Funcionario c&eacute;dula</th>
-            <th scope="col">Funcionario nombres</th>
-            <th scope="col">Funcionario apellidos</th>
+            <th scope="col">Funcionario </th>
             <th scope="col">Estado</th>
             <th scope="col">Editar</th>
             <th scope="col">Borrar</th>
@@ -130,13 +127,12 @@
             <th scope="row">{{ i + 1 }}</th>
             <td>{{ horario.horarioDisponibleId }}</td>
             <td>{{ horario.funcionarios.areas.codigo }}</td>
-            <td>{{ horario.fecha | date : 'dd-MM-yyyy' }}</td>
+            <td>{{ horario.dia }}</td>
             <td>{{ horario.horaInicio }}</td>
             <td>{{ horario.horaFin }}</td>
             <td>{{ horario.funcionarios.funcionarioId }}</td>
             <td>{{ horario.funcionarios.personas.cedula }}</td>
-            <td>{{ horario.funcionarios.personas.nombres }}</td>
-            <td>{{ horario.funcionarios.personas.apellidos }}</td>
+            <td>{{ horario.funcionarios.personas.nombres }}&nbsp;{{ horario.funcionarios.personas.apellidos }}</td>
             <td>{{ horario.estado }}</td>
             <td (click)="editar($event, horario.horarioDisponibleId)">
               <a class="btn btn-info">
@@ -153,7 +149,6 @@
           <td></td>
           <td></td>
           <td></td>
-          <td></td> 
           <td></td> 
           <td></td>    
           <td></td>     

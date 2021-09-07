@@ -3,12 +3,14 @@
 </head>
 
 <body>
-  <h1>Listado de Procedimientos</h1>
-  <hr>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Listado de procedimientos </li>
+  </ol>  
 
   <div class="card">
     <h3 class="card-header" data-toggle="collapse" data-target="#collapseBuscador"
-        aria-expanded="true" aria-controls="collapseBuscador">Buscador</h3>
+        aria-expanded="true" aria-controls="collapseBuscador">Filtros de b&uacute;squeda</h3>
     <div class="card-body collapse show" id="collapseBuscador">   
       <form [formGroup]="buscadorForm">
         <div class="form-row justify-content-center">
@@ -287,7 +289,7 @@
   </div>
   <div class="row">
     <div class="col text-right">
-      <button routerLink="/procedimiento/nuevo"
+      <button routerLink="/inicio/procedimiento/nuevo"
               class="btn btn-primary">
         <i class="fa fa-plus"></i>
         Agregar
@@ -304,12 +306,10 @@
             <th scope="col">Id</th>
             <th scope="col">Paciente id</th>
             <th scope="col">Paciente c&eacute;dula</th>
-            <th scope="col">Paciente nombres</th>
-            <th scope="col">Paciente apellidos</th>
+            <th scope="col">Paciente   </th>
             <th scope="col">Funcionario id</th>
             <th scope="col">Funcionario c&eacute;dula</th>
-            <th scope="col">Funcionario nombres</th>
-            <th scope="col">Funcionario apellidos</th>
+            <th scope="col">Funcionario</th>
             <th scope="col">Cantidad medicamento</th>
             <th scope="col">Estado procedimiento</th>
             <th scope="col">Fecha procedimiento</th>  
@@ -323,12 +323,10 @@
             <td>{{ procedimiento.procedimientoId }}</td>
             <td>{{ procedimiento.pacientes.pacienteId }}</td>
             <td>{{ procedimiento.pacientes.personas.cedula }}</td>
-            <td>{{ procedimiento.pacientes.personas.nombres }}</td>
-            <td>{{ procedimiento.pacientes.personas.apellidos }}</td>
+            <td>{{ procedimiento.pacientes.personas.nombres }}&nbsp;{{ procedimiento.pacientes.personas.apellidos }}</td>
             <td>{{ procedimiento.funcionarios.funcionarioId }}</td>
             <td>{{ procedimiento.funcionarios.personas.cedula }}</td>
-            <td>{{ procedimiento.funcionarios.personas.nombres }}</td>
-            <td>{{ procedimiento.funcionarios.personas.apellidos }}</td>
+            <td>{{ procedimiento.funcionarios.personas.nombres }}&nbsp;{{ procedimiento.funcionarios.personas.apellidos }}</td>
             <td>{{ procedimiento.cantidadInsumo }}</td>
             <td>{{ procedimiento.estado }}</td>
             <td>{{ procedimiento.fecha | date : 'dd-MM-yyyy HH:mm:ss'}}</td> 
@@ -348,7 +346,6 @@
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
           <td></td>       
           <td></td>
           <td>
@@ -360,7 +357,6 @@
               Espere por favor
             </p>
           </td>
-          <td></td>
           <td></td>
           <td></td>
           <td></td>

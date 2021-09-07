@@ -10,6 +10,7 @@ import { ComunesService } from 'src/app/servicios/comunes.service';
 import { DataTableDirective } from 'angular-datatables';
 import { Router } from '@angular/router';
 import { FuncionarioModelo } from 'src/app/modelos/funcionario.modelo';
+import { TokenService } from 'src/app/servicios/token.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -21,22 +22,29 @@ export class UsuariosComponent implements OnDestroy, OnInit {
   dtElement: DataTableDirective;
 
   dtOptions: any = {};
+  buttons: any = {};
   dtTrigger : Subject<any> = new Subject<any>();
 
   usuarios: Usuario2Modelo[] = [];
-  //persona: PersonaModelo = new PersonaModelo();
-  //buscador: Usuario2Modelo = new Usuario2Modelo();
   buscadorForm: FormGroup;
   cargando = false;
 
 
-  constructor( private usuariosService: UsuariosService,
+  constructor( private tokenService: TokenService,
+               private usuariosService: UsuariosService,
     private comunes: ComunesService,
     public router: Router,
     private fb: FormBuilder ) {    
   }
   ngOnInit() {
     this.crearFormulario();
+    var rolesUsuario = this.comunes.obtenerRoles(); 
+    if(rolesUsuario.includes(GlobalConstants.ROL_REPORTE_LISTADOS)
+      || rolesUsuario.includes(GlobalConstants.ROL_ADMIN)){
+        this.initButtonsReports();
+    }else {
+      this.buttons = [];
+    }    
     this.crearTabla();
   }
 
@@ -64,71 +72,15 @@ export class UsuariosComponent implements OnDestroy, OnInit {
       processing: true,
       columns: [
         {data:'#'},
-        {data:'id'}, {data:'nombreUsuario'}, {data:'funcionarios.personas.personaId'},
-        {data:'funcionarios.funcionarioId'}, {data:'funcionarios.personas.cedula'}, {data:'funcionarios.personas.nombres'},
+        {data:'id'}, {data:'nombreUsuario'},
+        {data:'funcionarios.funcionarioId'}, {data:'funcionarios.personas.cedula'}, 
+        {data:'funcionarios.personas.nombres'},
         {data:'funcionarios.personas.apellido'}, {data:'estado'},
         {data:'Editar'}//,
         //{data:'Borrar'}
       ],
       dom: 'lBfrtip',
-      buttons: [
-        {
-          extend:    'copy',
-          text:      '<i class="far fa-copy"></i>',
-          titleAttr: 'Copiar',
-          className: 'btn btn-light',
-          title:     'Listado de stocks',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
-          },
-        },
-        {
-          extend:    'csv',
-          title:     'Listado de stocks',
-          text:      '<i class="fas fa-file-csv"></i>',
-          titleAttr: 'Exportar a CSV',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
-          },
-        },
-        {
-          extend:    'excelHtml5',
-          title:     'Listado de stocks',
-          text:      '<i class="fas fa-file-excel"></i> ',
-          titleAttr: 'Exportar a Excel',
-          className: 'btn btn-light',
-          autoFilter: true,
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
-          }
-        },          
-        {
-          extend:    'print',
-          title:     'Listado de stocks',
-          text:      '<i class="fa fa-print"></i> ',
-          titleAttr: 'Imprimir',
-          className: 'btn btn-light',
-          messageTop: 'Usuario:  <br>Fecha: '+ new Date().toLocaleString(),
-          exportOptions: {
-            columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
-          },
-          customize: function ( win ) {
-            $(win.document.body)
-                .css( 'font-size', '10pt' )
-                .prepend(
-                    '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
-                );
-
-            $(win.document.body).find( 'table' )
-                .addClass( 'compact' )
-                .css( 'font-size', 'inherit' );
-          }              
-        }
-      ]
+      buttons: this.buttons
     };
   }
 
@@ -153,6 +105,12 @@ export class UsuariosComponent implements OnDestroy, OnInit {
     
     buscador.id = this.buscadorForm.get('id').value;
     buscador.nombreUsuario = this.buscadorForm.get('nombreUsuario').value;
+    if( this.buscadorForm.get('estado').value == "null" ){
+      buscador.estado = null;
+    }else{
+      buscador.estado = this.buscadorForm.get('estado').value;
+    }
+    
     var orderBy = "id";
     var orderDir = "desc";
     this.usuariosService.buscarUsuariosFiltros(buscador, orderBy, orderDir)
@@ -183,7 +141,7 @@ export class UsuariosComponent implements OnDestroy, OnInit {
 
   editar(event, id: number) {
     event.preventDefault();
-    this.router.navigate(['usuario', id]);
+    this.router.navigate(['inicio/usuario', id]);
   }
 
   borrarUsuario(event, usuario: Usuario2Modelo ) {
@@ -264,5 +222,66 @@ export class UsuariosComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
+}
+
+  initButtonsReports(){
+    this.buttons = [
+      {
+        extend:    'copy',
+        text:      '<i class="far fa-copy"></i>',
+        titleAttr: 'Copiar',
+        className: 'btn btn-light',
+        title:     'Listado de stocks',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7]
+        },
+      },
+      {
+        extend:    'csv',
+        title:     'Listado de stocks',
+        text:      '<i class="fas fa-file-csv"></i>',
+        titleAttr: 'Exportar a CSV',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7]
+        },
+      },
+      {
+        extend:    'excelHtml5',
+        title:     'Listado de stocks',
+        text:      '<i class="fas fa-file-excel"></i> ',
+        titleAttr: 'Exportar a Excel',
+        className: 'btn btn-light',
+        autoFilter: true,
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7]
+        }
+      },          
+      {
+        extend:    'print',
+        title:     'Listado de stocks',
+        text:      '<i class="fa fa-print"></i> ',
+        titleAttr: 'Imprimir',
+        className: 'btn btn-light',
+        messageTop: 'Usuario: ' + this.tokenService.getUserName().toString() + ' Fecha: '+ new Date().toLocaleString(),
+        exportOptions: {
+          columns: [ 0, 1, 2, 3, 4, 5, 6, 7]
+        },
+        customize: function ( win ) {
+          $(win.document.body)
+              .css( 'font-size', '10pt' )
+              .prepend(
+                  '<img src= ' + GlobalConstants.imagenReporteListas + ' style="position:absolute; top:400; left:400;" />'
+              );
+
+          $(win.document.body).find( 'table' )
+              .addClass( 'compact' )
+              .css( 'font-size', 'inherit' );
+        }              
+      }
+    ]
   }
 }

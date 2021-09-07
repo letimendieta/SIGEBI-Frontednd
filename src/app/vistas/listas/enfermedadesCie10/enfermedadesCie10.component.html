@@ -3,12 +3,14 @@
 </head>
 
 <body>
-  <h1>Listado de Clasificaciones de enfermedades</h1>
-  <hr>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Listado de clasificaciones de enfermedades </li>
+  </ol>  
 
   <div class="card">
     <h3 class="card-header" data-toggle="collapse" data-target="#collapseBuscador"
-        aria-expanded="true" aria-controls="collapseBuscador">Buscador</h3>
+        aria-expanded="true" aria-controls="collapseBuscador">Filtros de b&uacute;squeda</h3>
     <div class="card-body collapse show" id="collapseBuscador">
       <div class="form-row justify-content-center">
         <div class="col-lg-5">
@@ -61,7 +63,7 @@
           </div>  
           &nbsp; &nbsp; &nbsp;
           <div class="align-self-center">
-              <button type="submit" (click)="buscadorEnfermedadesCie10($event)" class="btn btn-primary"><i class="fas fa-search"></i> Buscar</button>
+              <button type="submit" (click)="buscadorEnfermedadesCie10($event)" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
               &nbsp;
               <button (click)="limpiar($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>
           </div>            
@@ -72,7 +74,7 @@
   
   <div class="row">
     <div class="col text-right">
-      <button routerLink="/enfermedadCie10/nuevo"
+      <button routerLink="/inicio/enfermedadCie10/nuevo"
               class="btn btn-primary">
         <i class="fa fa-plus"></i>
         Agregar
@@ -95,7 +97,7 @@
             <th scope="col">Fecha modificaci&oacute;n</th>
             <th scope="col">Usuario modificaci&oacute;n</th>     
             <th scope="col">Editar</th>
-            <!--th scope="col">Borrar</th-->
+            <th scope="col">Borrar</th>
           </tr>
         </thead>
         <tbody>
@@ -115,10 +117,10 @@
                 <i class="fa fa-edit"></i>
               </a>
             </td>
-            <!--td (click)="borrarEnfermedadCie10($event, enfermedadCie10)">  
+            <td (click)="borrarEnfermedadCie10($event, enfermedadCie10)">  
               <button class="btn btn-danger">
               <i class="fa fa-trash"></i></button>
-            </td-->
+            </td>
           </tr>
         </tbody>
         <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
@@ -140,7 +142,7 @@
           <td></td>
           <td></td>
           <td></td>
-          <!--td></td-->        
+          <td></td>        
         </tbody>
       </table>
     </div>

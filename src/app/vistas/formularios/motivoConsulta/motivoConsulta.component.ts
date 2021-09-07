@@ -89,8 +89,8 @@ export class MotivoConsultaComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.motivoConsulta.motivoConsultaId ) {
-            this.router.navigate(['/motivosConsulta']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/motivosConsulta']);
           }else{
             this.limpiar();
           }

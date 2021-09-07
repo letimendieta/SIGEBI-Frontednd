@@ -3,13 +3,16 @@
 </head>
 
 <body>
-  <h1>Medicamento </h1>
-  <hr>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+    <li class="breadcrumb-item"><a href="/inicio/medicamentos">Listado de medicamentos</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Medicamento </li>
+  </ol>
 
   <div class="row text-right">
     <div class="col">
       <button class="btn btn-danger"
-              routerLink="/medicamentos">
+              routerLink="/inicio/medicamentos">
         <i class="fa fa-arrow-left"></i>
         Regresar
       </button>
@@ -48,7 +51,7 @@
                   <div class="form-group">
 
                     <label><b>C&oacute;digo</b></label>
-                    <input type="text"
+                    <input autofocus type="text"
                           class="form-control"
                           placeholder="C&oacute;digo"                      
                           name="codigo"

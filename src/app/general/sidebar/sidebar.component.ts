@@ -1,6 +1,5 @@
 import { Component, OnInit,ViewChild,Output,EventEmitter} from '@angular/core';
 import { TokenService } from 'src/app/servicios/token.service';
-import { HeaderComponent } from 'src/app/general/header/header.component';
 
 
 @Component({

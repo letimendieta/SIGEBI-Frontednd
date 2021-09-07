@@ -10,7 +10,7 @@ import { HorariosService } from '../../../servicios/horarios.service';
 import { FuncionariosService } from '../../../servicios/funcionarios.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ComunesService } from 'src/app/servicios/comunes.service';
-
+import { GlobalConstants } from 'src/app/common/global-constants';
 import Swal from 'sweetalert2';
 import { TokenService } from 'src/app/servicios/token.service';
 
@@ -98,7 +98,6 @@ export class HorarioComponent implements OnInit {
     });
     Swal.showLoading();
 
-
     let peticion: Observable<any>;
 
     this.horario = this.horarioForm.getRawValue();
@@ -122,8 +121,8 @@ export class HorarioComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.horario.horarioDisponibleId ) {
-            this.router.navigate(['/horarios']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/horarios']);
           }else{
             this.limpiar();
           }
@@ -166,8 +165,8 @@ export class HorarioComponent implements OnInit {
     return this.horarioForm.get('funcionarios').get('funcionarioId').invalid 
     && this.horarioForm.get('funcionarios').get('funcionarioId').touched
   }
-  get fechaNoValido() {
-    return this.horarioForm.get('fecha').invalid && this.horarioForm.get('fecha').touched
+  get diaNoValido() {
+    return this.horarioForm.get('dia').invalid && this.horarioForm.get('dia').touched
   }
 
   get horaInicioNoValido() {
@@ -181,7 +180,7 @@ export class HorarioComponent implements OnInit {
   crearFormulario() {
     this.horarioForm = this.fb.group({
       horarioDisponibleId  : [null, [] ],
-      fecha  : [null, [Validators.required] ],
+      dia  : [null, [Validators.required] ],
       horaInicio  : [null, [Validators.required] ],
       horaFin  : [null, [Validators.required] ],
       funcionarios : this.fb.group({
@@ -305,6 +304,13 @@ export class HorarioComponent implements OnInit {
     this.funcionariosService.getFuncionario( funcionario.funcionarioId )
       .subscribe( (resp: FuncionarioModelo) => {         
         this.horarioForm.get('funcionarios').patchValue(resp);
+        if( GlobalConstants.INACTIVO == resp.estado ){
+          Swal.fire({
+            icon: 'info',
+            title: 'Atención',
+            text: 'El funcionario se encuentra inactivo'
+          })
+        }
       }, e => {
           Swal.fire({
             icon: 'info',

@@ -5,6 +5,7 @@ export class HorarioModelo {
 
     horarioDisponibleId: number;
     fecha: Date;
+    dia: string;
     horaInicio: Time;
     horaFin: Time;
     estado: string;

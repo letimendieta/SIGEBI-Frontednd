@@ -3,13 +3,16 @@
 </head>
 
 <body>
-  <h1>Par&aacute;metro </h1>
-  <hr>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+    <li class="breadcrumb-item"><a href="/inicio/parametros">Listado de par&aacute;metros</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Par&aacute;metro </li>
+  </ol>
 
   <div class="row text-right">
     <div class="col">
       <button class="btn btn-danger"
-              routerLink="/parametros">
+              routerLink="/inicio/parametros">
         <i class="fa fa-arrow-left"></i>
         Regresar
       </button>
@@ -43,7 +46,7 @@
               <div class="col-lg-5">            
                 <div class="form-group">
                   <label><b>C&oacute;digo</b></label>
-                  <input type="text"
+                  <input autofocus type="text"
                         class="form-control"
                         placeholder="C&oacute;digo par&aacute;metro"
                         formControlName="codigoParametro"

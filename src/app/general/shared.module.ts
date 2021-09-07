@@ -16,6 +16,7 @@ import { FooterComponent } from '../general/footer/footer.component';
 import { SidebarComponent } from '../general/sidebar/sidebar.component';
 import {FileUploadModule} from 'primeng/fileupload';
 
+
 @NgModule({
   declarations: [
     HeaderComponent,
@@ -36,7 +37,6 @@ import {FileUploadModule} from 'primeng/fileupload';
     MatTooltipModule,
     UiSwitchModule,
     FileUploadModule
-
   ],
   exports: [
     HeaderComponent,

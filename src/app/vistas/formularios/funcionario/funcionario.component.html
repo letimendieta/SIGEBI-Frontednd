@@ -3,13 +3,16 @@
 </head>
 
 <body>
-      <h1>Funcionario </h1>
-      <hr>
+      <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="/inicio/funcionarios">Listado de funcionarios</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Funcionario </li>
+      </ol>
 
       <div class="row text-right">
             <div class="col">
                   <button class="btn btn-danger"
-                              routerLink="/funcionarios">
+                              routerLink="/inicio/funcionarios">
                         <i class="fa fa-arrow-left"></i>
                         Regresar
                   </button>
@@ -46,7 +49,7 @@
                                           <div class="form-group">
                                                 <label><b>Persona id</b><span class="requerido"> *</span></label>
                                                 <div class="input-group mb-3">
-                                                      <input type="number"
+                                                      <input autofocus type="number"
                                                             class="form-control"
                                                             placeholder="Id"
                                                             placeholder="Persona Id"

@@ -207,8 +207,8 @@ export class StockComponent implements OnInit {
               }).then( resp => {
 
         if ( resp.value ) {
-          if ( this.stock.stockId ) {
-            this.router.navigate(['/stocks']);
+          if ( !this.crear ) {
+            this.router.navigate(['/inicio/stocks']);
           }else{
             this.limpiar(event);
           }
@@ -275,7 +275,8 @@ export class StockComponent implements OnInit {
         presentacion  : [null, [] ],
         concentracion  : [null, [] ]
       }),
-      cantidad  : [null, [ ] ],
+      cantidad  : [{ value: null, disabled: true }, [ ] ],
+      notas : [null, [ ] ],
       fechaCreacion: [null, [] ],
       fechaModificacion: [null, [] ],
       usuarioCreacion: [null, [] ],

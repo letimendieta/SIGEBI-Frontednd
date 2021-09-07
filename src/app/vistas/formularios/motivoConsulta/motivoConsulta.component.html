@@ -3,12 +3,15 @@
 </head>
 
 <body>
-  <h1>Motivo de Consulta </h1>
-  <hr>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+    <li class="breadcrumb-item"><a href="/inicio/motivosConsulta">Listado de motivos de consultas</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Motivo Consulta </li>
+  </ol>
   <div class="row text-right">
     <div class="col">
       <button class="btn btn-danger"
-              routerLink="/motivosConsulta">
+              routerLink="/inicio/motivosConsulta">
         <i class="fa fa-arrow-left"></i>
         Regresar
       </button>
@@ -41,7 +44,7 @@
               <div class="col-lg-5">
                 <div class="form-group">
                   <label><b>C&oacute;digo</b><span class="requerido"> *</span></label>
-                  <input type="text"
+                  <input autofocus type="text"
                         class="form-control"
                         placeholder="C&oacute;digo"                      
                         name="codigo"

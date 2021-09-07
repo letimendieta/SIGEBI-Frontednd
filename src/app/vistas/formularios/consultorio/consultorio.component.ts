@@ -155,6 +155,7 @@ export class ConsultorioComponent implements OnInit {
   loadBuscadorCie = false;
   loadBuscadorMedicamentos = false;
   loadBuscadorPacientes = false;
+  contadorEdicion:number=0;
   
 
   constructor( private historialClinicosService: HistorialesClinicosService,
@@ -202,6 +203,7 @@ export class ConsultorioComponent implements OnInit {
   }              
 
   ngOnInit() {
+    this.contadorEdicion=0;
     this.obtenerParametros();
     this.listarMotivosConsultas();
     this.crearTablaPatologias();
@@ -338,6 +340,15 @@ export class ConsultorioComponent implements OnInit {
     }
     
     paciente.pacienteId = this.buscadorForm.get('pacienteIdBusqueda').value;
+
+    if( !persona.cedula && !paciente.pacienteId ){
+      Swal.fire({
+        icon: 'info',
+        text: 'Debe ingresar la cédula o el identificador del paciente '
+      })
+      return;
+    }
+
     this.limpiar(event);
 
     Swal.fire({
@@ -450,7 +461,27 @@ export class ConsultorioComponent implements OnInit {
     });
   }
 
-  obtenerFichaMedica(){
+  obtenerPatologiaTratActual() {
+    this.contadorEdicion = 0;
+    var historialClinico = new HistorialClinicoModelo();
+
+    historialClinico.pacienteId = this.paciente.pacienteId;
+    
+    this.historialClinicosService.buscarHistorialClinicosFiltros(historialClinico)
+    .subscribe( ( resp : HistorialClinicoModelo[] )=> {
+      if(resp.length > 0){
+        this.historialClinicoForm.patchValue(resp[0]);
+        if(this.historialClinicoForm.get('patologiaActual').value
+          || this.historialClinicoForm.get('tratamientoActual').value){
+          this.existePatologiaActual = 1;
+        }        
+      }
+    }, e => {      
+      console.log(this.comunes.obtenerError(e));
+    });
+  }
+
+  obtenerFichaMedica(){    
     this.obtenerAntecedentes();
     this.obtenerAntecedentesFamiliares();
     this.obtenerAlergias();
@@ -688,11 +719,14 @@ export class ConsultorioComponent implements OnInit {
       this.hiddenAntePatProc = true;
       this.hiddenPatologiaActual = true;   
     }else if( opcion == "P/T" ){ 
+      this.contadorEdicion  = this.contadorEdicion + 1;
       this.hiddenPatologiaActual = false;     
       this.hiddenAlergenos = true; 
-      this.hiddenAntePatProc = true;      
-      this.selectFichaMedicaForm.get('patologiaActual').setValue(this.historialClinicoForm.get('patologiaActual').value);
-      this.selectFichaMedicaForm.get('tratamientoActual').setValue(this.historialClinicoForm.get('tratamientoActual').value);
+      this.hiddenAntePatProc = true;  
+      if( this.contadorEdicion < 2 ){//cargar la patologia y tratamiento solo la primera vez
+        this.selectFichaMedicaForm.get('patologiaActual').setValue(this.historialClinicoForm.get('patologiaActual').value);
+        this.selectFichaMedicaForm.get('tratamientoActual').setValue(this.historialClinicoForm.get('tratamientoActual').value);
+      }          
     }else if( opcion == "P/P" ){
       this.listarPatologiasProcedimientos();
       this.hiddenAlergenos = true;
@@ -1796,6 +1830,7 @@ export class ConsultorioComponent implements OnInit {
       this.limpiarDiagnosticoTratamiento();
       this.obtenerConsultas();
       this.obtenerFichaMedica();
+      this.obtenerPatologiaTratActual();
               
       Swal.fire({
         icon: 'success',
@@ -1807,7 +1842,7 @@ export class ConsultorioComponent implements OnInit {
 
       }).then( resp => {  
         if(resp.value){     
-          this.imprimirReceta(reporteModelo);
+          this.detalleConsultaImprimirReceta(reporteModelo.consultaid);
         }
       });
     }, e => {
@@ -1911,22 +1946,7 @@ export class ConsultorioComponent implements OnInit {
           text: this.comunes.obtenerError(e)
         })
       });
-      /*resp => {
-      Swal.fire({
-        icon: 'success',
-        showConfirmButton: true,
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK',
-        text: 'Receta Generada',
-      })
-    
-    }, e => {      
-      Swal.fire({
-        icon: 'info',
-        title: 'Algo salió mal',
-        text: this.comunes.obtenerError(e)
-      })
-    });*/
+      
   }
 
 }

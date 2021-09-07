@@ -3,13 +3,16 @@
 </head>
 
 <body>
-      <h1>Cita </h1>
-      <hr>
+      <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="/inicio/citas">Listado de citas</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Cita</li>
+      </ol>
 
       <div class="row text-right">
             <div class="col">
                   <button class="btn btn-danger"
-                              routerLink="/citas">
+                              routerLink="/inicio/citas">
                         <i class="fa fa-arrow-left"></i>
                         Regresar
                   </button>
@@ -47,11 +50,12 @@
                                                 <div class="form group">
                                                       <label><b>Paciente Id</b><span class="requerido"> *</span></label>
                                                       <div class="input-group mb-3">
-                                                            <input type="number"
+                                                            <input autofocus type="number"
                                                                   class="form-control"
                                                                   placeholder="Paciente Id"
                                                                   formControlName="pacienteId"
-                                                                  name="pacienteId">
+                                                                  name="pacienteId" 
+                                                                  (keyup.enter)="obtenerPaciente($event)">
                                                             <div class="input-group-append">
                                                                   <button class="btn btn-outline-info" 
                                                                         (click)="obtenerPaciente($event)">
@@ -203,7 +207,8 @@
                                                             class="form-control"
                                                             placeholder="Funcionaros Id"
                                                             formControlName="funcionarioId"
-                                                            name="funcionarioId">
+                                                            name="funcionarioId"
+                                                            (keyup.enter)="obtenerFuncionario($event)">
                                                       <div class="input-group-append">
                                                             <button class="btn btn-outline-info"
                                                             (click)="obtenerFuncionario($event)">

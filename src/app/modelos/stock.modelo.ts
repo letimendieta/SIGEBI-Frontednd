@@ -5,6 +5,7 @@ export class StockModelo {
 
     stockId: number;
     cantidad: number;
+    notas: string;
     fechaCreacion: Date;
     fechaModificacion: Date;
     usuarioCreacion: string;

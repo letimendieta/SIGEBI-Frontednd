@@ -3,12 +3,14 @@
 </head>
 
 <body>
-  <h1>Listado de Signos Vitales</h1>
-  <hr>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Listado de signos vitales </li>
+  </ol>  
 
   <div class="card">
     <h3 class="card-header" data-toggle="collapse" data-target="#collapseBuscador"
-        aria-expanded="true" aria-controls="collapseBuscador">Buscador</h3>
+        aria-expanded="true" aria-controls="collapseBuscador">Filtros de b&uacute;squeda</h3>
     <div class="card-body collapse show" id="collapseBuscador">   
       <form [formGroup]="buscadorForm">
         <div class="form-row justify-content-center">
@@ -291,21 +293,6 @@
               </mat-form-field>
             </p>
 
-            <!--p>
-              <mat-form-field appearance="fill">
-                <mat-label>Funcionario nombres</mat-label>
-                <input matInput matInput type="text" placeholder="Funcionario nombres" 
-                  formControlName="funcionarioNombres" name="funcionarioNombres" id="funcionarioNombres">
-              </mat-form-field>
-            </p>
-
-            <p>
-              <mat-form-field appearance="fill">
-                <mat-label>Funcionario apellidos</mat-label>
-                <input matInput matInput type="text" placeholder="Paciente apellidos" 
-                  formControlName="funcionarioApellidos" name="funcionarioApellidos" id="funcionarioApellidos">
-              </mat-form-field>
-            </p-->
           </div>
           &nbsp; &nbsp; &nbsp;
           <div class="align-self-center">
@@ -319,7 +306,7 @@
   </div>
   <div class="row">
     <div class="col text-right">
-      <button routerLink="/signoVital/nuevo"
+      <button routerLink="/inicio/signoVital/nuevo"
               class="btn btn-primary">
         <i class="fa fa-plus"></i>
         Agregar
@@ -335,14 +322,12 @@
             <th scope="col">#</th>
             <th scope="col">Id</th>
             <th scope="col">Paciente c&eacute;dula</th>
-            <th scope="col">Paciente nombres</th>
-            <th scope="col">Paciente apellidos</th>
+            <th scope="col">Paciente </th>
             <th scope="col">Funcionario c&eacute;dula</th>
-            <th scope="col">Funcionario nombres</th>
-            <th scope="col">Funcionario apellidos</th>
+            <th scope="col">Funcionario </th>
             <th scope="col">Fecha signoVital</th>  
             <th scope="col">Editar</th>
-            <th scope="col">Borrar</th>
+            <!--th scope="col">Borrar</th-->
           </tr>
         </thead>
         <tbody>
@@ -350,11 +335,9 @@
             <th scope="row">{{ i + 1 }}</th>
             <td>{{ signoVital.signoVitalId }}</td>
             <td>{{ signoVital.pacientes.personas.cedula }}</td>
-            <td>{{ signoVital.pacientes.personas.nombres }}</td>
-            <td>{{ signoVital.pacientes.personas.apellidos }}</td>
+            <td>{{ signoVital.pacientes.personas.nombres }}&nbsp;{{ signoVital.pacientes.personas.apellidos }}</td>
             <td>{{ signoVital.funcionarios.personas.cedula }}</td>
-            <td>{{ signoVital.funcionarios.personas.nombres }}</td>
-            <td>{{ signoVital.funcionarios.personas.apellidos }}</td>
+            <td>{{ signoVital.funcionarios.personas.nombres }}&nbsp;{{ signoVital.funcionarios.personas.apellidos }}</td>
             <td>{{ signoVital.fecha | date : 'dd-MM-yyyy HH:mm:ss'}}</td> 
 
             <td (click)="editar($event, signoVital.signoVitalId)">
@@ -362,16 +345,15 @@
                 <i class="fa fa-edit"></i>
               </a>
             </td>
-            <td (click)="borrarSignoVital($event, signoVital)">  
+            <!--td (click)="borrarSignoVital($event, signoVital)">  
               <button class="btn btn-danger">
               <i class="fa fa-trash"></i></button>
-            </td>
+            </td-->
           </tr>
         </tbody>
         <tbody *ngIf="cargando" class="alert alert-light text-center mt-3 animated fadeIn faster">
           <td></td>        
           <td></td>
-          <td></td>       
           <td></td>
           <td>
             <h4 class="alert-heading">Cargando</h4>
@@ -383,11 +365,8 @@
             </p>
           </td>
           <td></td>
-          <td></td>
-          <td></td>
           <td></td> 
           <td></td>
-          <td></td> 
         </tbody>
       </table>
     </div>

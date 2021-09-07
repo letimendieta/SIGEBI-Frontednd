@@ -37,9 +37,6 @@ import { InsumoComponent } from './vistas/formularios/insumo/insumo.component';
 import { InsumosComponent } from './vistas/listas/insumos/insumos.component';
 import { MedicamentoComponent } from './vistas/formularios/medicamento/medicamento.component';
 import { MedicamentosComponent } from './vistas/listas/medicamentos/medicamentos.component';
-import { FichaClinicaComponent } from 'src/app/vistas/formularios/fichaClinica/fichaClinica.component';
-import { HistorialesClinicosComponent } from 'src/app/vistas/listas/historialesClinicos/historialesClinicos.component';
-import { HistorialClinicoComponent } from 'src/app/vistas/formularios/historialClinico/historialClinico.component';
 import { SignosVitalesComponent } from 'src/app/vistas/listas/signosVitales/signosVitales.component';
 import { SignoVitalComponent } from 'src/app/vistas/formularios/signoVital/signoVital.component';
 import { EnfermedadesCie10Component } from 'src/app/vistas/listas/enfermedadesCie10/enfermedadesCie10.component';
@@ -69,9 +66,9 @@ import { AyudaComponent } from './vistas/formularios/ayuda/ayuda.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
-  { path: '', redirectTo: 'inicio', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
-  path: '',
+  path: 'inicio',
   component: DefaultComponent,
   children: [
   {
