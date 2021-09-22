@@ -302,7 +302,7 @@
                                                                               </thead>
                                                                               <tbody *ngIf="funcionarios?.length != 0">
                                                                                     <tr *ngFor="let funcionario of funcionarios" 
-                                                                                          (click)="selectFuncionario($event, funcionario)">                                                                                                
+                                                                                          (click)="selectFuncionario( funcionario)">                                                                                                
                                                                                           <td>{{ funcionario.funcionarioId }}</td>
                                                                                           <td>{{ funcionario.personas.cedula }}</td>
                                                                                           <td>{{ funcionario.personas.nombres }}</td>

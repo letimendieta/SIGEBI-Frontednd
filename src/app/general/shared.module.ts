@@ -15,6 +15,8 @@ import { HeaderComponent } from '../general/header/header.component';
 import { FooterComponent } from '../general/footer/footer.component';
 import { SidebarComponent } from '../general/sidebar/sidebar.component';
 import {FileUploadModule} from 'primeng/fileupload';
+import {MatCardModule} from '@angular/material/card';
+
 
 
 @NgModule({
@@ -36,7 +38,8 @@ import {FileUploadModule} from 'primeng/fileupload';
     RouterModule,
     MatTooltipModule,
     UiSwitchModule,
-    FileUploadModule
+    FileUploadModule,
+    MatCardModule
   ],
   exports: [
     HeaderComponent,

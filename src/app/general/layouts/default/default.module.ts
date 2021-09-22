@@ -42,6 +42,7 @@ import { SignoVitalComponent } from 'src/app/vistas/formularios/signoVital/signo
 import { RouterModule } from '@angular/router';
 import { EnfermedadesCie10Component } from 'src/app/vistas/listas/enfermedadesCie10/enfermedadesCie10.component';
 import { EnfermedadCie10Component } from 'src/app/vistas/formularios/enfermedadCie10/enfermedadCie10.component';
+import { EnfermeriaComponent } from 'src/app/vistas/formularios/enfermeria/enfermeria.component';
 import { AyudaComponent } from 'src/app/vistas/formularios/ayuda/ayuda.component';
 import { MatSidenavModule} from '@angular/material/sidenav';
 import { MatDividerModule} from '@angular/material/divider';
@@ -59,6 +60,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { UiSwitchModule } from 'ngx-ui-switch';
 import {FileUploadModule} from 'primeng/fileupload';
 import { AngularDualListBoxModule } from 'angular-dual-listbox';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -102,7 +105,9 @@ import { AngularDualListBoxModule } from 'angular-dual-listbox';
     MotivoConsultaComponent,
     SignosVitalesComponent,
     SignoVitalComponent,
-    AyudaComponent
+    EnfermeriaComponent,
+    AyudaComponent,
+    
   ],
   imports: [
     CommonModule,
@@ -122,7 +127,9 @@ import { AngularDualListBoxModule } from 'angular-dual-listbox';
     MatAutocompleteModule,
     UiSwitchModule,
     FileUploadModule,
-    AngularDualListBoxModule
+    AngularDualListBoxModule,
+    MatButtonModule,
+    MatCardModule
 
   ],
   providers: [

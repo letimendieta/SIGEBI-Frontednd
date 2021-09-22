@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { SignoVitalModelo } from '../../../modelos/signoVital.modelo';
 import { FuncionarioModelo } from '../../../modelos/funcionario.modelo';
@@ -14,9 +14,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { PacienteModelo } from 'src/app/modelos/paciente.modelo';
 import { StockModelo } from 'src/app/modelos/stock.modelo';
-import { ParametroModelo } from 'src/app/modelos/parametro.modelo';
-import { ParametrosService } from 'src/app/servicios/parametros.service';
 import { TokenService } from 'src/app/servicios/token.service';
+import { Usuario2Modelo } from 'src/app/modelos/usuario2.modelo';
+import { UsuariosService } from 'src/app/servicios/usuarios.service';
 
 @Component({
   selector: 'app-signoVital',
@@ -58,27 +58,48 @@ export class SignoVitalComponent implements OnInit {
                private fb2: FormBuilder,
                private fb3: FormBuilder,
                private fb4: FormBuilder,
-               private modalService: NgbModal ) { 
+               private modalService: NgbModal,
+               private usuariosService : UsuariosService ) { 
     this.crearFormulario();
   }
 
   ngOnInit() {
 
-    const id = this.route.snapshot.paramMap.get('id');
+    const valorRuta = this.route.snapshot.paramMap.get('id');
+    const rutaArray = valorRuta.split("-");
 
-    if ( id !== 'nuevo' ) {
+    const id = rutaArray.length > 0 ? rutaArray[0] : valorRuta;
+
+    if ( id !== 'nuevo' && id !== 'enfermeria' ) {
       this.signoVitalService.getSignoVital( Number(id) )
         .subscribe( (resp: SignoVitalModelo) => {         
           this.signoVitalForm.patchValue(resp);
         });
-    }else{
+    }else if( id == 'enfermeria' ){
       this.crear = true;
-      //this.signoVitalForm.get('fecha').setValue(new Date().toDateString());
+      if( rutaArray != null && rutaArray.length > 1 ){
+        this.signoVitalForm.get('pacientes').get('pacienteId').setValue(rutaArray[1]);
+
+        this.obtenerPaciente(null);
+
+        var usuario = new Usuario2Modelo();
+        usuario.nombreUsuario = this.tokenService.getUserName().toString();
+        this.usuariosService.buscarUsuariosFiltrosTabla(usuario)
+          .subscribe( resp => {      
+            if ( resp.length > 0){
+              var funcionario = new FuncionarioModelo();
+              funcionario.funcionarioId = resp[0].funcionarios.funcionarioId;
+              this.selectFuncionario( funcionario );
+            }
+        });
+      }      
+    }else {
+      this.crear = true;
     }
   }  
 
   obtenerPaciente(event ){
-    event.preventDefault();
+    if( event != null ) event.preventDefault();
     var id = this.signoVitalForm.get('pacientes').get('pacienteId').value;
     if(!id){
       return null;
@@ -464,7 +485,7 @@ export class SignoVitalComponent implements OnInit {
       );
   }
 
-  selectFuncionario(event, funcionario: FuncionarioModelo){
+  selectFuncionario( funcionario: FuncionarioModelo){
     this.modalService.dismissAll();
     if(funcionario.funcionarioId){
       this.signoVitalForm.get('funcionarios').get('funcionarioId').setValue(funcionario.funcionarioId);

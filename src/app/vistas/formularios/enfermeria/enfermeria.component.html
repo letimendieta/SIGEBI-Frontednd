@@ -1,0 +1,345 @@
+<head>
+  <link rel="stylesheet" href="enfermeria.component.css">
+</head>
+
+<body>
+  <div>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/inicio">Inicio</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Enfermer&iacute;a </li>
+    </ol>
+
+    <div class="card">
+      <div *ngIf="alertGeneral" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle"></i> {{mensajeGeneral}}
+        <button type="button" (click)="cerrarAlertGeneral()" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">      
+      <div class="row justify-content-center">
+        <form [formGroup]="buscadorForm" (ngSubmit)="buscarPaciente($event)"> 
+            <div class="d-flex p-2">
+              <div class="form-inline">
+                <div>
+                  <mat-form-field appearance="legacy">
+                    <mat-label>Paciente id</mat-label>
+                    <input matInput type="number" placeholder="Paciente id" 
+                          formControlName="pacienteIdBusqueda" id="pacienteIdBusqueda">
+                  </mat-form-field> 
+                </div> 
+              </div>
+              &nbsp; &nbsp; &nbsp;
+              <div class="form-inline">
+                <div>
+                  <mat-form-field appearance="legacy">
+                    <mat-label>C&eacute;dula</mat-label>
+                    <input autofocus matInput type="text" placeholder="C&eacute;dula" 
+                          formControlName="cedulaBusqueda" id="cedulaBusqueda">
+                  </mat-form-field> 
+                </div> 
+              </div>
+              &nbsp;
+             
+              <div>
+                <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Buscar"
+                    ><i class="fas fa-search"></i></button>
+              </div>
+              &nbsp;
+              <div>
+                <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Limpiar"
+                    (click)="limpiar($event)"><i class="fas fa-backspace"></i></button>
+              </div>
+              &nbsp;
+              <div>
+                <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Buscador de pacientes"
+                    (click)="openModal(editProfileModalPacientes)"><i class="fas fa-search"></i></button>
+              </div> 
+              &nbsp;&nbsp;
+              <b>{{pacienteForm.get('personas').get('nombres').value}}</b>
+              &nbsp;
+              <b>{{pacienteForm.get('personas').get('apellidos').value}}</b>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <div class="alert alert-danger" role="alert" [hidden]="alergias.length == 0">
+                <i class="fas fa-exclamation-triangle"></i> Tiene alergia a :
+                  <select class="custom-select">
+                    <option *ngFor="let alergia of alergias; let i = index">
+                        {{alergia.alergenos.descripcion}}
+                    </option>
+                  </select>
+              </div>    
+            </div>
+        </form>
+      </div>
+    </div>
+    
+    <!--Datos Personales-->    
+    <div class="card">
+      <!--Modal buscador de pacientes-->
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <div class="container">              
+            <div class="row">                
+              <ng-template #editProfileModalPacientes let-modal>
+                <div class="modal-header">
+                <h3 class="modal-title" id="editProfileModalPacientes">Buscador Pacientes
+                  <img *ngIf="loadBuscadorPacientes" src="../assets/images/loading2.gif">
+                </h3>
+                <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+                      <span aria-hidden="true">&times;</span> 
+                </button>
+                </div>
+                <div *ngIf="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                      Debe ingresar como m&iacute;nimo un dato de b&uacute;squeda
+                      <button type="button" (click)="cerrarAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      </button>
+                </div>
+                <div class="modal-body">
+                      <form [formGroup]="buscadorModalForm" (ngSubmit)="buscadorPacientes($event)">
+                            <div class="form-row justify-content-center">
+                                  <div>                                                                                                                                                          
+                                        <mat-form-field appearance="legacy">
+                                              <mat-label>C&eacute;dula</mat-label>
+                                              <input matInput type="text" placeholder="C&eacute;dula" 
+                                                    formControlName="cedula" id="cedula">
+                                        </mat-form-field>                                                                                                                                                         
+                                        <mat-form-field appearance="legacy">
+                                              <mat-label>Nombres</mat-label>
+                                              <input matInput type="text" placeholder="Nombres" 
+                                                    formControlName="nombres" id="nombres">
+                                        </mat-form-field>
+                                        <mat-form-field appearance="legacy">
+                                              <mat-label>Apellidos</mat-label>
+                                              <input matInput type="text" placeholder="Apellidos" 
+                                                    formControlName="apellidos" id="apellidos">
+                                        </mat-form-field>
+                                  </div>                                        
+                            </div>
+                            <div class="form-row justify-content-center">
+                              <div class="align-self-center">
+                                <button type="submit" class="btn btn-success"><i class="fas fa-search"></i> Buscar</button>
+                                &nbsp; &nbsp;
+                                <button (click)="limpiarModal($event)" class="btn btn-warning"><i class="fas fa-backspace"></i> Limpiar</button>                                                                            
+                              </div>
+                            </div>
+                      </form>
+                      <br>
+
+                      <!--Tabla vacia-->
+                      <div class="table-responsive table-hover">
+                            <table datatable [dtOptions]="dtOptionsBuscador" class="table-bordered"
+                            *ngIf="!cargando && pacientes.length === 0">
+                                  <thead>
+                                        <tr class="table-primary">
+                                              <th>Id</th>
+                                              <th>C&eacute;dula</th>
+                                              <th>Nombres</th>
+                                              <th>Apellidos</th>
+                                        </tr>
+                                  </thead>                                                                                    
+                            </table>
+                      </div>
+                      <div class="table-responsive table-hover">
+                            <table datatable [dtOptions]="dtOptionsBuscador" class="table-bordered"
+                                  *ngIf="pacientes.length > 0">
+                                  <thead>
+                                        <tr  class="table-primary">
+                                              <th>Id</th>
+                                              <th>C&eacute;dula</th>
+                                              <th>Nombres</th>
+                                              <th>Apellidos</th>
+                                        </tr>
+                                  </thead>
+                                  <tbody *ngIf="pacientes?.length != 0">
+                                        <tr *ngFor="let paciente of pacientes" 
+                                              (click)="selectPaciente($event, paciente)">                                                                                                
+                                              <td>{{ paciente.pacienteId }}</td>
+                                              <td>{{ paciente.personas.cedula }}</td>
+                                              <td>{{ paciente.personas.nombres }}</td>
+                                              <td>{{ paciente.personas.apellidos }}</td>
+                                        </tr>
+                                  </tbody>
+                                  <tbody *ngIf="cargando">
+                                        <td></td>
+                                        <td></td>
+                                        <td><h4 class="alert-heading">Cargando</h4>
+                                              <p>
+                                                    <i class="fa fa-sync-alt fa-spin fa-2x"></i>
+                                              </p>
+                                              <p class="mb-0">
+                                                    Espere por favor
+                                              </p>
+                                        </td>
+                                        <td></td>
+                                  </tbody>                                                                                    
+                            </table>
+                      </div>
+                      <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+                      </div>
+                </div>
+              </ng-template>                             
+            </div>
+          </div>              
+        </div>          
+      </div>
+      <br>
+      <!-- Datos paciente-->
+      <div class="row justify-content-center">
+        <div class="col-lg-5">
+          <div class="container">              
+            <div class="row">                
+              <div class="col-lg-5"><b>Persona id:</b></div>
+              <div class="col">{{pacienteForm.get('personas').get('personaId').value}}</div>
+              <div class="w-100"></div>
+              <div class="col-lg-5"><b>Nombres:</b></div>
+              <div class="col">{{pacienteForm.get('personas').get('nombres').value}}</div>
+              <div class="w-100"></div>
+              <div class="col-lg-5"><b>Apellidos:</b></div>
+              <div class="col">{{pacienteForm.get('personas').get('apellidos').value}}</div>
+              <div class="w-100"></div>
+              <div class="col-lg-5"><b>Fecha nacimiento:</b></div>
+              <div class="col">{{pacienteForm.get('personas').get('fechaNacimiento').value | date : 'dd-MM-yyyy'}}</div>
+              <div class="w-100"></div>
+              <div class="col-lg-5"><b>Lugar nacimiento:</b></div>
+              <div class="col">{{pacienteForm.get('personas').get('lugarNacimiento').value}}</div>
+              <div class="w-100"></div>
+              <div class="col-lg-5"><b>Edad:</b></div>
+              <div class="col">{{pacienteForm.get('personas').get('edad').value}}</div>
+              <div class="w-100"></div>
+              <div class="col-lg-5"><b>Sexo:</b></div>
+              <div class="col">{{pacienteForm.get('personas').get('sexo').value}}</div>                
+            </div>
+          </div>              
+        </div>
+
+        <div class="col-lg-5">
+          <div class="container">
+            <div class="row">                
+              <div class="col-lg-5"><b>Estado Civil:</b></div>
+              <div class="col">{{pacienteForm.get('personas').get('estadoCivil').value}}</div>
+              <div class="w-100"></div>
+              <div class="col-lg-5"><b>Nacionalidad:</b></div>
+              <div class="col">{{pacienteForm.get('personas').get('nacionalidad').value}}</div>
+              <div class="w-100"></div>                
+              <div class="col-lg-5"><b>Carrera:</b></div>
+              <div class="col">{{pacienteForm.get('personas').get('carreras').get('descripcion').value}}</div>
+              <div class="w-100"></div>
+              <div class="col-lg-5"><b>Departamento:</b></div>
+              <div class="col">{{pacienteForm.get('personas').get('departamentos').get('descripcion').value}}</div>
+              <div class="w-100"></div>
+              <div class="col-lg-5"><b>Dependencia:</b></div>
+              <div class="col">{{pacienteForm.get('personas').get('dependencias').get('descripcion').value}}</div>
+              <div class="w-100"></div>
+              <div class="col-lg-5"><b>Estamento:</b></div>
+              <div class="col">{{pacienteForm.get('personas').get('estamentos').get('descripcion').value}}</div>                
+            </div>   
+          </div>         
+        </div>
+
+        <div class="col-lg-2">
+          <div class="container">
+            <div class="row justify-content-start">                
+              <p-fileUpload name="myfile[]" disabled="true" customUpload="true"  accept="image/*"
+                maxFileSize="10000000" [auto]="true" [chooseLabel]="'Foto'" [chooseIcon]="'icon-camera'"
+                invalidFileSizeMessageDetail = "maximo 10 Mb">
+                <ng-template pTemplate="toolbar">
+                </ng-template>
+                <ng-template let-file pTemplate="file">
+                      <div class="mb-3"></div>
+                </ng-template>
+                <ng-template pTemplate="content" let-files>
+                <div class="profile-img">
+                      <img src="{{profile}}" alt="">
+                </div>
+                </ng-template>
+              </p-fileUpload>
+            </div>   
+          </div>         
+        </div>
+      </div>
+      <br>           
+    </div>   
+
+    <div class="flex-container">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Pacientes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>          
+          <div class="example-button-row">
+            <button class="btn btn-primary btn-lg" routerLink="/inicio/paciente/nuevo" mat-stroked-button>Agregar Paciente</button>     
+          </div>
+          <br>    
+          <div class="example-button-row">
+            <button class="btn btn-primary btn-lg" routerLink="/inicio/pacientes" mat-stroked-button>Listado de Pacientes</button>     
+          </div>
+          <br>              
+        </mat-card-content>      
+      </mat-card>
+
+      &nbsp;&nbsp;&nbsp;
+
+      <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Citas</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="example-button-row">
+            <button class="btn btn-primary btn-lg" (click)="agregarCita($event)" mat-stroked-button>Agregar Cita</button>     
+          </div>
+          <br>  
+          <div class="example-button-row">
+            <button class="btn btn-primary btn-lg" routerLink="/inicio/citas" mat-stroked-button>Listado de Citas</button>     
+          </div>
+          <br>                 
+        </mat-card-content>      
+      </mat-card>
+
+      &nbsp;&nbsp;&nbsp;
+
+      <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Signos Vitales</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>          
+          <div class="example-button-row">
+            <button class="btn btn-primary btn-lg" (click)="agregarSignoVital($event)" mat-stroked-button>Agregar Signo Vital</button>     
+          </div>   
+          <br>
+          <div class="example-button-row">
+            <button class="btn btn-primary btn-lg" routerLink="/inicio/signosVitales" mat-stroked-button>Listado de Signos Vitales</button>     
+          </div>
+          <br>   
+        </mat-card-content>      
+      </mat-card>
+
+      &nbsp;&nbsp;&nbsp;
+
+      <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Procedimientos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="example-button-row">
+            <button class="btn btn-primary btn-lg" (click)="agregarProcedimiento($event)" mat-stroked-button>Agregar Procedimiento</button>     
+          </div>
+          <br>
+          <div class="example-button-row">
+            <button class="btn btn-primary btn-lg" routerLink="/inicio/procedimientos" mat-stroked-button>Listado de Procedimientos</button>     
+          </div>
+          <br>
+                
+        </mat-card-content>      
+      </mat-card>
+    </div>
+  </div>
+  <br><br>
+</body>

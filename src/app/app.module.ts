@@ -20,7 +20,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { UiSwitchModule } from 'ngx-ui-switch';
 import {FileUploadModule} from 'primeng/fileupload';
 import { ReportesComponent } from './vistas/formularios/reportes/reportes.component';
-
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
 
 
 @NgModule({
@@ -45,7 +46,9 @@ import { ReportesComponent } from './vistas/formularios/reportes/reportes.compon
     NgbModule,
     MatFormFieldModule,
     UiSwitchModule,
-    FileUploadModule
+    FileUploadModule,
+    MatButtonModule,
+    MatCardModule
   ],
   providers: [interceptorProvider],
   bootstrap: [AppComponent]

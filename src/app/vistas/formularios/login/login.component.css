@@ -84,3 +84,6 @@ html {
 .custom-checkbox .custom-control-input:checked~.custom-control-label::before {
   background-color:#60a3bc !important;
 }
+.version { 
+  color: #60a3bc; 
+}

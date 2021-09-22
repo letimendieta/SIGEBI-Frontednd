@@ -19,7 +19,7 @@ import { ParametroModelo } from 'src/app/modelos/parametro.modelo';
 import { ParametrosService } from 'src/app/servicios/parametros.service';
 import { TokenService } from 'src/app/servicios/token.service';
 import { GlobalConstants } from 'src/app/common/global-constants';
-
+import { UsuariosService } from 'src/app/servicios/usuarios.service';
 @Component({
   selector: 'app-cita',
   templateUrl: './cita.component.html',
@@ -60,20 +60,34 @@ export class CitaComponent implements OnInit {
                private fb: FormBuilder,
                private fb2: FormBuilder,
                private fb3: FormBuilder,
-               private modalService: NgbModal ) { 
+               private modalService: NgbModal,
+               private usuariosService : UsuariosService ) { 
     this.crearFormulario();
   }
 
   ngOnInit() {
     this.obtenerParametros();
     this.listarAreas();
-    const id = this.route.snapshot.paramMap.get('id');
 
-    if ( id !== 'nuevo' ) {
+    const valorRuta = this.route.snapshot.paramMap.get('id');
+    const rutaArray = valorRuta.split("-");
+
+    const id = rutaArray.length > 0 ? rutaArray[0] : valorRuta;
+
+    if ( id !== 'nuevo' && id !== 'enfermeria' ) {
       this.citasService.getCita( Number(id) )
         .subscribe( (resp: CitaModelo) => {         
           this.citaForm.patchValue(resp);
         });
+    }else if( id == 'enfermeria' ){
+      this.crear = true;
+      this.citaForm.get('estado').setValue('PENDIENTE');
+      if( rutaArray != null && rutaArray.length > 1 ){
+        this.citaForm.get('pacientes').get('pacienteId').setValue(rutaArray[1]);
+
+        this.obtenerPaciente(null);
+        
+      } 
     }else{
       this.crear = true;
       this.citaForm.get('estado').setValue('PENDIENTE');
@@ -94,7 +108,7 @@ export class CitaComponent implements OnInit {
   }
 
   obtenerPaciente(event){
-    event.preventDefault();
+    if( event != null) event.preventDefault();
     var id = this.citaForm.get('pacientes').get('pacienteId').value;
     if(!id){
       return null;
@@ -491,7 +505,7 @@ export class CitaComponent implements OnInit {
       );
   }
 
-  selectFuncionario(event, funcionario: FuncionarioModelo){
+  selectFuncionario( funcionario: FuncionarioModelo){
     this.modalService.dismissAll();
     if(funcionario.funcionarioId){
       this.citaForm.get('funcionarios').get('funcionarioId').setValue(funcionario.funcionarioId);

@@ -1,0 +1,46 @@
+body {
+    font:400 16px/1.8 sans-serif;
+    height:400px;
+}
+
+.example-card {
+    max-width: 400px;   
+    display:inline-block;
+    text-align: center;
+}
+
+.example-button-row {
+    font-size: 20px;
+}
+
+.flex-container {
+     height:380px;
+      padding: 0;
+      margin: 0;
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+
+  .profile-img img{
+    height: 150px;
+}
+  
+  .profile-img{
+    padding: 5px !important;
+    background-color: #337ab7 !important;
+ }
+
+ /*estilos para la tabla*/
+ table th {
+    background-color: #337ab7 !important;
+    color: white;
+  }
+
+  table>tbody>tr>td {
+    vertical-align: middle !important;
+  }

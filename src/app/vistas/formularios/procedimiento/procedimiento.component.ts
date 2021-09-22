@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
@@ -28,6 +28,8 @@ import { InsumoMedicoModelo } from 'src/app/modelos/insumoMedico.modelo';
 import { MedicamentoModelo } from 'src/app/modelos/medicamento.modelo';
 import { DataTableDirective } from 'angular-datatables';
 import { TokenService } from 'src/app/servicios/token.service';
+import { UsuariosService } from 'src/app/servicios/usuarios.service';
+import { Usuario2Modelo } from 'src/app/modelos/usuario2.modelo';
 
 @Component({
   selector: 'app-procedimiento',
@@ -99,7 +101,8 @@ export class ProcedimientoComponent implements OnInit {
                private fb2: FormBuilder,
                private fb3: FormBuilder,
                private fb4: FormBuilder,
-               private modalService: NgbModal ) { 
+               private modalService: NgbModal,
+               private usuariosService : UsuariosService ) { 
     this.crearFormulario();
   }
 
@@ -110,10 +113,15 @@ export class ProcedimientoComponent implements OnInit {
     this.crearTablaModelFuncionarios();
     this.crearTablaModelPacientes();
     this.crearTablaModelStock();
-    const id = this.route.snapshot.paramMap.get('id');
+    
+    const valorRuta = this.route.snapshot.paramMap.get('id');
+    const rutaArray = valorRuta.split("-");
+
+    const id = rutaArray.length > 0 ? rutaArray[0] : valorRuta;
+
     this.listarAreas("");
     this.procedimientoForm.get('estado').disable();
-    if ( id !== 'nuevo' ) {
+    if ( id !== 'nuevo' && id !== 'enfermeria' ) {
       this.procedimientosService.getProcedimiento( Number(id) )
         .subscribe( (resp: ProcedimientoModelo) => {  
           this.consultaId = resp.consultaId;   
@@ -132,6 +140,25 @@ export class ProcedimientoComponent implements OnInit {
           this.obtenerProcedimientosInsumos();
           this.deshabilitarDatos();     
         });
+    }else if( id == 'enfermeria' ){
+      this.crear = true;
+      this.listarEstadosEntrega();  
+      if( rutaArray != null && rutaArray.length > 1 ){
+        this.procedimientoForm.get('pacientes').get('pacienteId').setValue(rutaArray[1]);
+
+        this.obtenerPaciente(null);
+
+        var usuario = new Usuario2Modelo();
+        usuario.nombreUsuario = this.tokenService.getUserName().toString();
+        this.usuariosService.buscarUsuariosFiltrosTabla(usuario)
+          .subscribe( resp => {      
+            if ( resp.length > 0){
+              var funcionario = new FuncionarioModelo();
+              funcionario.funcionarioId = resp[0].funcionarios.funcionarioId;
+              this.selectFuncionario( funcionario );
+            }
+        });
+      }      
     }else{
       this.crear = true;
       this.listarEstadosEntrega();      
@@ -139,7 +166,7 @@ export class ProcedimientoComponent implements OnInit {
   }  
 
   obtenerPaciente(event){
-    event.preventDefault();
+    if(event !== null) event.preventDefault();
     var id = this.procedimientoForm.get('pacientes').get('pacienteId').value;
     if(!id){
       return null;
@@ -1067,7 +1094,7 @@ export class ProcedimientoComponent implements OnInit {
       );
   }
 
-  selectFuncionario(event, funcionario: FuncionarioModelo){
+  selectFuncionario(funcionario: FuncionarioModelo){
     this.modalService.dismissAll();
     if(funcionario.funcionarioId){
       this.procedimientoForm.get('funcionarios').get('funcionarioId').setValue(funcionario.funcionarioId);

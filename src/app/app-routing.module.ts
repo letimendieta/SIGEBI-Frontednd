@@ -42,6 +42,7 @@ import { SignoVitalComponent } from 'src/app/vistas/formularios/signoVital/signo
 import { EnfermedadesCie10Component } from 'src/app/vistas/listas/enfermedadesCie10/enfermedadesCie10.component';
 import { EnfermedadCie10Component } from 'src/app/vistas/formularios/enfermedadCie10/enfermedadCie10.component';
 import { ConsultorioComponent } from 'src/app/vistas/formularios/consultorio/consultorio.component';
+import { EnfermeriaComponent } from 'src/app/vistas/formularios/enfermeria/enfermeria.component';
 import { ReportesComponent } from 'src/app/vistas/formularios/reportes/reportes.component';
 import { PersonasGuardService as personasguard } from 'src/app/guards/personas-guard.service';
 import { PacientesGuardService as pacientesguard } from 'src/app/guards/pacientes-guard.service';
@@ -59,6 +60,7 @@ import { EnfermedadesCie10GuardService as enfermedadescie10guard } from 'src/app
 import { ParametrosGuardService as parametrosguard } from 'src/app/guards/parametros-guard.service';
 import { StockGuardService as stockguard } from 'src/app/guards/stock-guard.service';
 import { ConsultorioGuardService as consultorioguard } from 'src/app/guards/consultorio-guard.service';
+import { EnfermeriaGuardService as enfermeriaguard } from 'src/app/guards/enfermeria-guard.service';
 import { ReportesGuardService as reportesguard } from 'src/app/guards/reportes-guard.service';
 import { AyudaGuardService as ayudaguard } from 'src/app/guards/ayuda-guard.service';
 import { AyudaComponent } from './vistas/formularios/ayuda/ayuda.component';
@@ -211,6 +213,10 @@ const routes: Routes = [
   {
     path: 'consultorio',canActivate: [consultorioguard], data: { expectedRol: ['admin', 'consultorio'] },
     component: ConsultorioComponent
+  },
+  {
+    path: 'enfermeria',canActivate: [enfermeriaguard], data: { expectedRol: ['admin', 'enfermeria'] },
+    component: EnfermeriaComponent
   },
   {
     path: 'reporteGeneral',canActivate: [reportesguard], data: { expectedRol: ['admin', 'reportes'] },
