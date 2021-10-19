@@ -34,4 +34,20 @@ export class ReportesService {
     );
   }
 
+  generarReporteMensual(reporte: Reporte2Modelo): Observable<Blob> {
+    const httpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    const options = {
+      headers: httpHeaders,
+      responseType: 'blob' as 'json'
+    };
+    const body = {  };
+    return this.http.post<any>(
+      this.url + '/reportes/informe-mensual?anho='+reporte.anho+'&mes='+reporte.mes+'&formato=pdf',
+      body,
+      options
+    );
+  }
+
 }

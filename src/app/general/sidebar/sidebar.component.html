@@ -77,14 +77,9 @@
         <li>
           <a routerLinkActive="list-item-active"  routerLink="/inicio/procedimientos" (click)="toggleSideBar()"><i class="fas fa-notes-medical fa-2x"></i>  Procedimientos</a>
         </li>
-        <li class="active">
-          <a href="#reporteSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-address-book fa-2x"></i>  Reportes</a>
-          <ul class="collapse list-unstyled" id="reporteSubmenu">
-           <li>
-             <a routerLinkActive="list-item-active"  routerLink="/inicio/reporteGeneral" (click)="toggleSideBar()">Reporte Mensual</a>
-           </li>     
-          </ul> 
-        </li> 
+        <li>
+          <a routerLinkActive="list-item-active"  routerLink="/inicio/reporteGeneral" (click)="toggleSideBar()"><i class="fas fa-address-book fa-2x"></i>  Reportes</a>
+        </li>
         <li class="active">
    				<a href="#stockSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-boxes fa-2x"></i> Stock</a>
    				<ul class="collapse list-unstyled" id="stockSubmenu">

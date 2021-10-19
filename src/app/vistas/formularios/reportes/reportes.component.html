@@ -11,8 +11,11 @@
     <div class="row animated fadeIn faster">
       <div class="col">
         <div class="card">
-          <h3 class="card-header">Reportes</h3>
-          <div class="card-body">
+          <h3 class="card-header"data-toggle="collapse" data-target="#reporte1"
+          aria-expanded="true" 
+                aria-controls="reporte1">
+            Reporte General&nbsp;<i class="fas fa-angle-double-up"></i></h3>
+          <div class="card-body collapse show" id="reporte1">
             <form [formGroup]="reporteForm" (ngSubmit)="guardar( )">
               
               <!-- Datos Reporte-->
@@ -39,8 +42,88 @@
                             
                     </div>
                   </div>
-                </div>
+              </div>
              
+              <div class="row justify-content-center">
+                <div class="col-lg-5">
+                  <div class="form-group">
+                      <label><b>Año</b></label>
+                      <select class="custom-select"
+                            formControlName="anho" name = "anho" required>
+                        <option disabled selected value> </option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                        
+                      </select>                                
+                  </div>
+                </div>
+              </div>
+              
+              <br>
+              <div *ngIf="alertGuardar" class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                Existen campos obligatorios. Verifique.
+                <button type="button" (click)="cerrarAlertGuardar()" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="form-group text-center">
+                <button type="submit"
+                        class="btn btn-primary ">
+                  <i class="fa fa-save"></i>
+                  Generar Reporte
+                </button>
+                &nbsp;&nbsp;               
+              </div> 
+              <hr> 
+            </form>
+            
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-header"data-toggle="collapse" data-target="#reporte2"
+          aria-expanded="true" 
+                aria-controls="reporte2">
+            Reporte Mensual&nbsp;<i class="fas fa-angle-double-up"></i></h3>
+            <div class="card-body collapse show" id="reporte2">
+              <!-- Informe Mensual-->
+              <form [formGroup]="reporteForm2" (ngSubmit)="guardarInformeMensual( )">
+                            
+                <!-- Datos Reporte-->
+                <div class="row justify-content-center">
+                  <div class="col-lg-5">
+                    <div class="form-group">
+                      <label><b>Mes</b></label>
+                      <select autofocus class="custom-select"
+                            formControlName="mes" name = "mes" required>
+                        <option disabled selected value > </option>
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Setiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                      </select> 
+                              
+                      </div>
+                    </div>
+                </div>
+              
                 <div class="row justify-content-center">
                   <div class="col-lg-5">
                     <div class="form-group">
@@ -59,29 +142,48 @@
                           <option value="2028">2028</option>
                           <option value="2029">2029</option>
                           <option value="2030">2030</option>
-                         
+                          
                         </select>                                
-                        </div>
-                      </div>
                     </div>
-              <hr>
-              <br>
-              <div *ngIf="alertGuardar" class="alert alert-danger alert-dismissible fade show text-center" role="alert">
-                Existen campos obligatorios. Verifique.
-                <button type="button" (click)="cerrarAlertGuardar()" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="form-group text-center">
-                <button type="submit"
-                        class="btn btn-primary ">
-                  <i class="fa fa-save"></i>
-                  Generar Reporte
-                </button>
-                &nbsp;&nbsp;               
-              </div>  
-            </form>
-          </div>
+                  </div>
+                </div>
+
+                <!--div class="row justify-content-center">
+                  <div formGroupName="areas" class="form-group col-lg-5">
+                    <label><b>&Aacute;rea</b><span class="requerido"> *</span></label>
+                    <select class="form-control input-sm" name="areaId"
+                          formControlName="areaId" 
+                          [class.is-invalid]="areaNoValido">
+                          <option value=null>Seleccionar</option>
+                          <option *ngFor="let item of listaAreas; let i = index"
+                                value="{{item.areaId}}">
+                                {{item.codigo}} - {{item.descripcion}}
+                          </option>
+                    </select>
+                    <small *ngIf="areaNoValido" class="text-danger">
+                          Seleccione el &aacute;rea
+                    </small>
+                  </div> 
+                </div-->
+                
+                <br>
+                <div *ngIf="alertGuardar" class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                  Existen campos obligatorios. Verifique.
+                  <button type="button" (click)="cerrarAlertGuardar()" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="form-group text-center">
+                  <button type="submit"
+                          class="btn btn-primary ">
+                    <i class="fa fa-save"></i>
+                    Generar Reporte
+                  </button>
+                  &nbsp;&nbsp;               
+                </div>  
+                <hr>
+              </form>
+            </div>
         </div>
       </div>
     </div>
