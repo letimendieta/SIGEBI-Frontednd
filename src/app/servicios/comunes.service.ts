@@ -19,8 +19,11 @@ export class ComunesService {
           mensaje = mensaje + ' ' + e.error.errors[0];
         } else if(e.error.error){
           mensaje = mensaje + ' ' + e.error.error;
+        } else if(e.status == "401"){
+          mensaje = "SESIÓN EXPIRADA, Favor vuelva a iniciar sesión";
         }
       }
+      
       console.log(mensaje);
     return mensaje;  
   }
