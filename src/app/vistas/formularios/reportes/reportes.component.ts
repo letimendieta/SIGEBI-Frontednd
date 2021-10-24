@@ -7,6 +7,8 @@ import Swal from 'sweetalert2';
 import { AreasService } from 'src/app/servicios/areas.service';
 import { AreaModelo } from 'src/app/modelos/area.modelo';
 import { GlobalConstants } from 'src/app/common/global-constants';
+import { ParametroModelo } from 'src/app/modelos/parametro.modelo';
+import { ParametrosService } from 'src/app/servicios/parametros.service';
 
 @Component({
   selector: 'app-reportes',
@@ -19,11 +21,12 @@ export class ReportesComponent implements OnInit {
   reporteForm: FormGroup;
   reporteForm2: FormGroup;
   alertGuardar:boolean=false;
-  listaAreas: AreaModelo;
+  alertGuardar2:boolean=false;
+  listaAnhos: string[];
 
   constructor( private reportesService: ReportesService,
                private comunes: ComunesService,
-               private areasService: AreasService,
+               private parametrosService: ParametrosService,
                private fb: FormBuilder,
                private fb2: FormBuilder ) { 
     this.crearFormulario();
@@ -31,20 +34,19 @@ export class ReportesComponent implements OnInit {
 
   ngOnInit() {    
     this.crear = true;
-    this.listarAreas();    
+    this.obtenerParametros();    
   }  
 
-  listarAreas() {
-    var orderBy = "descripcion";
+  obtenerParametros() {
+    var estadoCivilParam = new ParametroModelo();
+    estadoCivilParam.codigoParametro = "ANHOS_REPORTE";
+    estadoCivilParam.estado = "A";
+    var orderBy = "descripcionValor";
     var orderDir = "asc";
-    var area = new AreaModelo();
-    area.estado = "A";
-    
-    area.tipo = GlobalConstants.TIPO_AREA_SERVICIO;
-    
-    this.areasService.buscarAreasFiltrosOrder(area, orderBy, orderDir )
-      .subscribe( (resp: AreaModelo) => {
-        this.listaAreas = resp;
+
+    this.parametrosService.buscarParametrosFiltrosOrder( estadoCivilParam, orderBy, orderDir )
+      .subscribe( (resp: ParametroModelo[]) => {
+        this.listaAnhos = resp[0].valor.split(",");
     });
   }
 
@@ -83,10 +85,7 @@ export class ReportesComponent implements OnInit {
         }).then( resp => {
           const file = new Blob([data], { type: 'application/pdf' });
           const fileURL = URL.createObjectURL(file);
-          window.open(fileURL);
-        if ( resp.value ) {     
-            this.limpiar();
-        }
+          window.open(fileURL);        
       });  
       }, e => {      
         Swal.fire({
@@ -98,9 +97,9 @@ export class ReportesComponent implements OnInit {
   }
 
   guardarInformeMensual( ) {
-    this.cerrarAlertGuardar();
+    this.cerrarAlertGuardar2();
     if ( this.reporteForm2.invalid ) {
-      this.alertGuardar = true;
+      this.alertGuardar2 = true;
       return Object.values( this.reporteForm2.controls ).forEach( control => {
 
         if ( control instanceof FormGroup ) {
@@ -132,10 +131,7 @@ export class ReportesComponent implements OnInit {
         }).then( resp => {
           const file = new Blob([data], { type: 'application/pdf' });
           const fileURL = URL.createObjectURL(file);
-          window.open(fileURL);
-        if ( resp.value ) {     
-            this.limpiar();
-        }
+          window.open(fileURL);        
       });  
       }, e => {      
         Swal.fire({
@@ -147,8 +143,7 @@ export class ReportesComponent implements OnInit {
   }
 
   limpiar(){
-    this.reporteForm.reset();
-    
+    this.reporteForm.reset();    
   }
 
   get areaNoValido() {
@@ -158,17 +153,37 @@ export class ReportesComponent implements OnInit {
   
   crearFormulario() {
     this.reporteForm = this.fb.group({
-      mes  : [null, [Validators.required] ],      
-      anho: [null, [Validators.required] ]
+      mes  : ['', [Validators.required] ],      
+      anho: ['', [Validators.required] ]
     });
 
     this.reporteForm2 = this.fb2.group({
-      mes  : [null, [Validators.required] ],      
-      anho: [null, [Validators.required] ]
+      mes  : ['', [Validators.required] ],      
+      anho: ['', [Validators.required] ]
     });
+  }
+
+  get anhoNoValido() {
+    return this.reporteForm.get('anho').invalid && this.reporteForm.get('anho').touched
+  }
+
+  get anhoNoValido2() {
+    return this.reporteForm2.get('anho').invalid && this.reporteForm2.get('anho').touched
+  }
+
+  get mesNoValido() {
+    return this.reporteForm.get('mes').invalid && this.reporteForm.get('mes').touched
+  }
+
+  get mes2NoValido() {
+    return this.reporteForm2.get('mes').invalid && this.reporteForm2.get('mes').touched
   }
 
   cerrarAlertGuardar(){
     this.alertGuardar=false;
-  }  
+  }
+
+  cerrarAlertGuardar2(){
+    this.alertGuardar2=false;
+  } 
 }
